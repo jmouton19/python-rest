@@ -8,8 +8,6 @@ def server():
     return send_from_directory(app.static_folder, 'index.html')
 #######################################################################
 
-
-
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:password@localhost/students'
 db=SQLAlchemy(app)
 
@@ -21,7 +19,6 @@ def SampleData():
 @app.route('/test')
 def test():
     return "<h1>Testing</h1>"
-
 
 if __name__ == '__main__':
     app.run(debug=True)
