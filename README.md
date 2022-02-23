@@ -71,7 +71,7 @@ npm start
 
 1. Save all your changes.
 2. Test your changes!
-3. Run the build script with `npm run build` from the `client/` directory.
+3. **Run the build script** with `npm run build` from the `client/` directory.
 4. Commit your changes to git `origin` (gitlab) in whatever way you prefer.
 5. Push to git `remote` (heroku) with :
 
