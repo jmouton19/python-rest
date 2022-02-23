@@ -14,7 +14,7 @@ db=SQLAlchemy(app)
 
 @app.route('/api/getData/')
 def SampleData():
-    return {'name':'Nicol','passowrd':"123"}
+    return {'name':'Nicol','passowrd':"123456"}
 
 @app.route('/test')
 def test():
