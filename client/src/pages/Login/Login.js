@@ -26,8 +26,8 @@ function Login() {
 
 	return(
 		<React.Fragment>
-			<Container maxWidth="sm" sx={{backgroundColor: "white" }} >
-				<Box component="form">
+			<Container maxWidth="sm" >
+				<Box component="form" paddingTop={3}>
 					<Grid 
 						container
 						direction="column"
