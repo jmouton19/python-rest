@@ -43,7 +43,7 @@ function SignUp() {
 								variant="h3"
 								color="primary"
 								gutterBottom
-								alignSelf="cen"
+								align="center"
 							>
                                 Sign Up
 							</Typography>
