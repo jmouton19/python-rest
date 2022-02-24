@@ -7,9 +7,24 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
 import { Link } from "react-router-dom";
+import Drawer from "@mui/material/Drawer";
+import Divider from "@mui/material/Divider";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
+const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
+	const [open, setOpen] = React.useState(false);
+
+	const handleDrawerOpen = () => {
+		setOpen(true);
+	};
+
+	const handleDrawerClose = () => {
+		setOpen(false);
+	};
+	
+
 	return (
 		<React.Fragment>
 			<AppBar position="static" >
@@ -19,6 +34,7 @@ export default function PrimarySearchAppBar() {
 						edge="start"
 						color="inherit"
 						aria-label="open drawer"
+						onClick={handleDrawerOpen}
 						sx={{ mr: 2 }}
 					>
 						<MenuIcon />
@@ -43,6 +59,24 @@ export default function PrimarySearchAppBar() {
 					</Box>
 				</Toolbar>
 			</AppBar>
+			<Drawer
+				sx={{
+					width: drawerWidth,
+					flexShrink: 0,
+					"& .MuiDrawer-paper": {
+						width: drawerWidth,
+						boxSizing: "border-box",
+					},
+				}}
+				variant="persistent"
+				anchor="left"
+				open={open}
+			>
+				<IconButton onClick={handleDrawerClose}>
+					<ChevronLeftIcon />  
+				</IconButton>
+				<Divider />
+			</Drawer>
 		</React.Fragment>
 	);
 }
