@@ -20,6 +20,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import FormHelperText from "@mui/material/FormHelperText";
+import axios from "axios";
 
 function SignUp() {
 	const [email, setEmail] = useState("");
@@ -32,6 +33,20 @@ function SignUp() {
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
+	}
+
+	function checkUserCredentials() {
+		axios
+			.get(`https://cs334proj1group8.herokuapp.com/user=${email}`)
+			.then((res) => {
+				const { email } = res.data;
+				if (email !== null) {
+					alert("Email already in use");
+				}
+				else {
+					setActiveStep(activeStep + 1);
+				}
+			});
 	}
 
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -211,9 +226,7 @@ function SignUp() {
 								<Box sx={{ mb: 2 }}>
 									<Button
 										variant="contained"
-										onClick={() =>
-											setActiveStep(activeStep + 1)
-										}
+										onClick={checkUserCredentials}
 										sx={{ mt: 1, mr: 1 }}
 										disabled={password != passwordRepeated}
 									>
@@ -262,7 +275,7 @@ function SignUp() {
 											</FormControl>
 										</Grid>
 										<Grid item xs={12}>
-											We need more things here ...
+                                            We need more things here ...
 										</Grid>
 									</Grid>
 								</Box>
