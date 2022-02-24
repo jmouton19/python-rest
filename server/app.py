@@ -1,12 +1,14 @@
 from crypt import methods
 from flask import Flask, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 
 #######################################################################
 app = Flask(__name__,static_folder='../client/build',static_url_path='')
 @app.route('/')
 def server():
     return send_from_directory(app.static_folder, 'index.html')
+cors = CORS(app)
 #######################################################################
 
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://tqafvqemczrnoc:3505179c6cbe8351cd47495888ef496014877341e918f6dc9e76e2a1e342535f@ec2-3-220-214-162.compute-1.amazonaws.com:5432/dd2jk9t71796tm'
