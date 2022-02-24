@@ -8,8 +8,8 @@ import Login from "./pages/Login/Login";
 function App() {
 	return (
 		<React.Fragment>
-			<AppBar />
 			<Router>
+				<AppBar />
 				<Routes>
 					<Route path="/signup" element={<SignUp />} />
 					<Route path="/login" element={<Login />} />

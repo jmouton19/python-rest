@@ -6,12 +6,10 @@ import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default function PrimarySearchAppBar() {
-	
-
 	return (
 		<React.Fragment>
 			<AppBar position="static" >
@@ -33,13 +31,13 @@ export default function PrimarySearchAppBar() {
 					</Typography>
 					<Box sx={{flexGrow: 1}}/>
 					<Box>
-						<Button color="inherit">
+						<Button component={Link} to="/" color="inherit" >
 							Home
 						</Button>
-						<Button color="inherit">
+						<Button component={Link} to="/contracts" color="inherit" >
 							Contracts
 						</Button>
-						<Button color="inherit">
+						<Button component={Link} to="/about" color="inherit">
 							About
 						</Button>
 					</Box>
