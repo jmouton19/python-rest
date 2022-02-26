@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Home.css";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 
 function Home() {
 	const [data, setData] = useState({});
@@ -28,12 +27,6 @@ function Home() {
                     Get Test Data from Back End
 				</Button>
 				<p>{JSON.stringify(data)}</p>
-				<li>
-					<Link to="/signup">Sign Up Page</Link>
-				</li>
-				<li>
-					<Link to="/login">Login Page</Link>
-				</li>
 			</header>
 		</React.Fragment>
 	);

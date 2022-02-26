@@ -10,11 +10,28 @@ import { Link } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Avatar, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+
 
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
 	const [open, setOpen] = React.useState(false);
+	const [auth] = React.useState(false);
+	const [anchorEl, setAnchorEl] = React.useState(null);
+
+	
+
+	const handleMenu = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+	};
 
 	const handleDrawerOpen = () => {
 		setOpen(true);
@@ -24,6 +41,15 @@ export default function PrimarySearchAppBar() {
 		setOpen(false);
 	};
 	
+	const DrawerHeader = styled("div")(({ theme }) => ({
+		display: "flex",
+		alignItems: "center",
+		backgroundColor: theme.palette.primary.main,
+		padding: theme.spacing(0, 1),
+		// necessary for content to be below app bar
+		...theme.mixins.toolbar,
+		justifyContent: "flex-end",
+	}));
 
 	return (
 		<React.Fragment>
@@ -46,17 +72,48 @@ export default function PrimarySearchAppBar() {
 						ZenOffer
 					</Typography>
 					<Box sx={{flexGrow: 1}}/>
-					<Box>
-						<Button component={Link} to="/" color="inherit" >
-							Home
-						</Button>
-						<Button component={Link} to="/contracts" color="inherit" >
-							Contracts
-						</Button>
-						<Button component={Link} to="/about" color="inherit">
-							About
-						</Button>
-					</Box>
+					<IconButton
+						size="large"
+						aria-label="account of current user"
+						aria-controls="menu-appbar"
+						aria-haspopup="true"
+						onClick={handleMenu}
+						color="inherit"
+					>
+						<Avatar
+							//TODO:Make use uploaded pic when signed in
+						>
+
+						</Avatar>
+					</IconButton>
+					
+					<Menu
+						id="menu-appbar"
+						anchorEl={anchorEl}
+						anchorOrigin={{
+							vertical: "top",
+							horizontal: "right",
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: "top",
+							horizontal: "right",
+						}}
+						open={Boolean(anchorEl)}
+						onClose={handleMenuClose}
+					>
+						{auth ? (
+							<div>
+								<MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
+								<MenuItem onClick={handleMenuClose}>My contracts</MenuItem>
+							</div>
+						) :
+							<div>
+								<MenuItem component={Link} to="/login" onClick={handleMenuClose}>Login</MenuItem>
+								<MenuItem component={Link} to="/signup" onClick={handleMenuClose}>Sign Up</MenuItem>
+							</div>
+						}
+					</Menu>
 				</Toolbar>
 			</AppBar>
 			<Drawer
@@ -72,10 +129,23 @@ export default function PrimarySearchAppBar() {
 				anchor="left"
 				open={open}
 			>
-				<IconButton onClick={handleDrawerClose}>
-					<ChevronLeftIcon />  
-				</IconButton>
+				<DrawerHeader>
+					<IconButton onClick={handleDrawerClose} sx={{color: "white"}}>
+						<ChevronLeftIcon />  
+					</IconButton>
+				</DrawerHeader>
 				<Divider />
+				<Stack spacing={2} alignItems="stretch" color="inherit">
+					<Button component={Link} to="/" color="inherit" style={{minHeight: "63px"}}>
+						<b>Home</b>
+					</Button>
+					<Button component={Link} to="/contracts" color="inherit" style={{minHeight: "63px"}}>
+						<b>Contracts</b>
+					</Button>
+					<Button component={Link} to="/about" color="inherit" style={{minHeight: "63px"}}>
+						<b>About</b>
+					</Button>
+				</Stack>
 			</Drawer>
 		</React.Fragment>
 	);
