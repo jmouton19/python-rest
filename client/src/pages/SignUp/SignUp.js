@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Container from "@mui/material/Container";
@@ -13,6 +13,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
+import FormGroup from "@mui/material/FormGroup";
+import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
 import Stepper from "@mui/material/Stepper";
@@ -23,8 +25,26 @@ import FormHelperText from "@mui/material/FormHelperText";
 import axios from "axios";
 import AvatarPicker from "./AvatarPicker";
 
+const languageList = [
+	"Python",
+	"JavaScript",
+	"Java",
+	"C#",
+	"C",
+	"C++",
+	"Go",
+	"R",
+	"Swift",
+	"PHP",
+];
+
+const languagesInitialState = languageList.map((language) => ({
+	name: language,
+	checked: false,
+}));
+
 function SignUp() {
-	const [activeStep, setActiveStep] = React.useState(0);
+	const [activeStep, setActiveStep] = React.useState(1);
 
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -33,8 +53,10 @@ function SignUp() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [userType, setUserType] = useState("developer");
 	const [avatarUrl, setAvatarUrl] = useState(null);
+	const [languages, setLanguages] = useState(languagesInitialState);
+	const [selectedLanguages, setSelectedLanguages] = useState([]);
 
-	console.log({ username, email, password, userType, avatarUrl });
+	console.log({ username, email, password, userType, avatarUrl, selectedLanguages });
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -52,6 +74,37 @@ function SignUp() {
 				}
 			});
 	}
+
+	function toggleLanguageChecked(languageName) {
+		// looks through the language state, which is a list
+		// when it finds a match based on the language name it will toggle the checked variable
+		// then saves this as new react state
+
+		const newState = languages.map((language) => {
+			if (language.name.localeCompare(languageName) == 0) {
+				return {
+					...language,
+					checked: !language.checked,
+				};
+			}
+			return language;
+		});
+		setLanguages(newState);
+	}
+
+	useEffect(() => {
+
+
+		const newSelectedLanguage = languages.reduce((previousValue, language) => {
+			if (language.checked){
+				previousValue.push(language.name);
+			}
+			return previousValue;
+		},[]);
+
+		setSelectedLanguages(newSelectedLanguage);
+
+	}, [languages]);
 
 	return (
 		<React.Fragment>
@@ -303,8 +356,50 @@ function SignUp() {
 												}
 											/>
 										</Grid>
+
 										<Grid item xs={12}>
-                                            We need more things here ...
+											<FormControl
+												sx={{ m: 3 }}
+												component="fieldset"
+												variant="standard"
+											>
+												<FormLabel component="legend">
+                                                    Pick your programming
+                                                    languages
+												</FormLabel>
+												<FormGroup>
+													{languages.map(
+														(language) => (
+															<FormControlLabel
+																key={
+																	language.name
+																}
+																control={
+																	<Checkbox
+																		checked={
+																			language.checked
+																		}
+																		onChange={() => {
+																			toggleLanguageChecked(
+																				language.name
+																			);
+																		}}
+																		name={
+																			language.name
+																		}
+																	/>
+																}
+																label={
+																	language.name
+																}
+															/>
+														)
+													)}
+												</FormGroup>
+												<FormHelperText>
+                                                    Experience in these will be setup later.
+												</FormHelperText>
+											</FormControl>
 										</Grid>
 									</Grid>
 								</Box>
