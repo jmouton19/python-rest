@@ -44,7 +44,7 @@ const languagesInitialState = languageList.map((language) => ({
 }));
 
 function SignUp() {
-	const [activeStep, setActiveStep] = React.useState(1);
+	const [activeStep, setActiveStep] = React.useState(0);
 
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -54,9 +54,9 @@ function SignUp() {
 	const [userType, setUserType] = useState("developer");
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [languages, setLanguages] = useState(languagesInitialState);
-	const [selectedLanguages, setSelectedLanguages] = useState([]);
+	const [programmingLanguages, setProgrammingLanguages] = useState([]);
 
-	console.log({ username, email, password, userType, avatarUrl, selectedLanguages });
+	console.log({ username, email, password, userType, avatarUrl, programmingLanguages });
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -102,7 +102,7 @@ function SignUp() {
 			return previousValue;
 		},[]);
 
-		setSelectedLanguages(newSelectedLanguage);
+		setProgrammingLanguages(newSelectedLanguage);
 
 	}, [languages]);
 
