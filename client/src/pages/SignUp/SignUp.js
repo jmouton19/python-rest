@@ -277,24 +277,6 @@ function SignUp() {
 												</RadioGroup>
 											</FormControl>
 										</Grid>
-										<Grid item xs={12}>
-											<FormControl fullWidth>
-												<Button
-													variant="contained"
-													onClick={() =>
-														alert(
-															JSON.stringify({
-																email,
-																password,
-																userType,
-															})
-														)
-													}
-												>
-                                                    Test Data
-												</Button>
-											</FormControl>
-										</Grid>
 									</Grid>
 								</Box>
 								<Box sx={{ mb: 2 }}>
