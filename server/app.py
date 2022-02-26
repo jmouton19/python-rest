@@ -23,6 +23,57 @@ class User(db.Model):
         self.email=email
         self.password=password
 
+################################start db setup######################
+class Developer(db.Model):
+    developer_id = db.Column(db.Integer,primary_key=True)
+    username = db.Column(db.String(32))
+    password = db.Column(db.String(32))
+    name = db.Column(db.String(32))
+    surname = db.Column(db.String(32))
+    avatar = db.Column(db.String(32))
+    email = db.Column(db.String(32),unique=True)
+    linkedin_url = db.Column(db.String(32))
+    github_url = db.Column(db.String(32))
+    contracts = addresses = db.relationship('Contract', backref='developer', lazy=True)
+    programming_languages = db.relationship('Developer_Language', backref='developer', lazy=True)
+
+
+class Company(db.Model):
+    company_id = db.Column(db.Integer,primary_key=True)
+    password = db.Column(db.String(32))
+    avatar = db.Column(db.String(32))
+    industry = db.Column(db.String(32))
+    email = db.Column(db.String(32),unique=True)
+    company_name = db.Column(db.String(32),unique=True)
+    contracts = addresses = db.relationship('Contract', backref='company', lazy=True)
+    programming_languages = db.relationship('Contract_language', backref='company', lazy=True)
+
+
+class Developer_language(db.Model):
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+    programming_language = db.Column(db.String(32))
+    experience = db.Column(db.Integer)
+
+
+class Contract(db.Model):
+    contract_id = db.Column(db.Integer,primary_key=True)
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))
+    length = db.Column(db.Integer)
+    value = db.Column(db.Integer)
+    description = db.Column(db.String(32))
+    office = db.Column(db.Boolean)
+    remote = db.Column(db.Boolean)
+    open = db.Column(db.Boolean)
+    date_posted db.Column(db.DateTime)
+
+
+
+class Contract_language(db.Model):
+    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'))    
+    programming_language = db.Column(db.String(32))
+
+################################end db setup#########################
 
 @app.route('/api/getData/')
 def SampleData():
