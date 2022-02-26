@@ -21,15 +21,20 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import FormHelperText from "@mui/material/FormHelperText";
 import axios from "axios";
+import AvatarPicker from "./AvatarPicker";
 
 function SignUp() {
+
+	const [activeStep, setActiveStep] = React.useState(0);
+
+	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [userType, setUserType] = useState("developer");
 
-	console.log({ email, password, userType });
+	console.log({ username, email, password, userType });
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -42,14 +47,11 @@ function SignUp() {
 				const { email } = res.data;
 				if (email !== null) {
 					alert("Email already in use");
-				}
-				else {
+				} else {
 					setActiveStep(activeStep + 1);
 				}
 			});
 	}
-
-	const [activeStep, setActiveStep] = React.useState(0);
 
 	return (
 		<React.Fragment>
@@ -75,6 +77,25 @@ function SignUp() {
 										alignItems="stretch"
 										paddingTop={2}
 									>
+										<Grid item xs={12}>
+											<FormControl fullWidth>
+												<InputLabel htmlFor="username-input">
+                                                    Username
+												</InputLabel>
+												<OutlinedInput
+													id="username-input"
+													value={username}
+													type="text"
+													name="username"
+													onChange={(event) => {
+														setUsername(
+															event.target.value
+														);
+													}}
+													label="Username"
+												/>
+											</FormControl>
+										</Grid>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="email-input">
@@ -273,6 +294,12 @@ function SignUp() {
 													label="Last Name"
 												/>
 											</FormControl>
+										</Grid>
+										<Grid item xs={12}>
+											<InputLabel htmlFor="last-name-input">
+                                                    Avatar
+											</InputLabel>
+											<AvatarPicker />
 										</Grid>
 										<Grid item xs={12}>
                                             We need more things here ...
