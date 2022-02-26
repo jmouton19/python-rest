@@ -19,12 +19,11 @@ const convertToBase64 = (f) => {
 };
 
 function AvatarPicker(props) {
-
 	const [imagePath, setImagePath] = useState(null);
 
 	function uploadAndGetLink(fileBase64) {
 		const urlWithQueryParameters =
-            "https://api.imgbb.com/1/upload?key=f9f798ffd37ff7b7e88e47ac0dace3d0";
+			"https://api.imgbb.com/1/upload?key=f9f798ffd37ff7b7e88e47ac0dace3d0";
 
 		const formdata = new FormData();
 
@@ -51,9 +50,7 @@ function AvatarPicker(props) {
 					setImagePath(URL.createObjectURL(event.target.files[0]));
 					convertToBase64(event.target.files[0]).then((res) => {
 						// remove bookkeeping part of encoding
-						const fileBase64 = res.substr(
-							res.indexOf("base64,") + 7
-						);
+						const fileBase64 = res.substr(res.indexOf("base64,") + 7);
 
 						uploadAndGetLink(fileBase64);
 					});

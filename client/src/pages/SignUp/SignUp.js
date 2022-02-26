@@ -56,7 +56,14 @@ function SignUp() {
 	const [languages, setLanguages] = useState(languagesInitialState);
 	const [programmingLanguages, setProgrammingLanguages] = useState([]);
 
-	console.log({ username, email, password, userType, avatarUrl, programmingLanguages });
+	console.log({
+		username,
+		email,
+		password,
+		userType,
+		avatarUrl,
+		programmingLanguages,
+	});
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -93,29 +100,21 @@ function SignUp() {
 	}
 
 	useEffect(() => {
-
-
 		const newSelectedLanguage = languages.reduce((previousValue, language) => {
-			if (language.checked){
+			if (language.checked) {
 				previousValue.push(language.name);
 			}
 			return previousValue;
-		},[]);
+		}, []);
 
 		setProgrammingLanguages(newSelectedLanguage);
-
 	}, [languages]);
 
 	return (
 		<React.Fragment>
 			<Container maxWidth="sm">
-				<Typography
-					variant="h3"
-					color="primary"
-					gutterBottom
-					paddingTop={3}
-				>
-                    Sign Up
+				<Typography variant="h3" color="primary" gutterBottom paddingTop={3}>
+					Sign Up
 				</Typography>
 				<Box sx={{ maxWidth: 400 }}>
 					<Stepper activeStep={activeStep} orientation="vertical">
@@ -133,7 +132,7 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="username-input">
-                                                    Username
+													Username
 												</InputLabel>
 												<OutlinedInput
 													id="username-input"
@@ -141,9 +140,7 @@ function SignUp() {
 													type="text"
 													name="username"
 													onChange={(event) => {
-														setUsername(
-															event.target.value
-														);
+														setUsername(event.target.value);
 													}}
 													label="Username"
 												/>
@@ -152,7 +149,7 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="email-input">
-                                                    Email Address
+													Email Address
 												</InputLabel>
 												<OutlinedInput
 													id="email-input"
@@ -160,9 +157,7 @@ function SignUp() {
 													type="email"
 													name="email"
 													onChange={(event) => {
-														setEmail(
-															event.target.value
-														);
+														setEmail(event.target.value);
 													}}
 													label="Email Address"
 												/>
@@ -171,33 +166,23 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="password-input">
-                                                    Password
+													Password
 												</InputLabel>
 												<OutlinedInput
 													id="password-input"
-													type={
-														showPassword
-															? "text"
-															: "password"
-													}
+													type={showPassword ? "text" : "password"}
 													value={password}
 													name="password"
 													autoComplete="new-password"
 													onChange={(event) => {
-														setPassword(
-															event.target.value
-														);
+														setPassword(event.target.value);
 													}}
 													label="Password"
 													endAdornment={
 														<InputAdornment position="end">
 															<IconButton
-																onClick={
-																	toggleShowPassword
-																}
-																onMouseDown={
-																	toggleShowPassword
-																}
+																onClick={toggleShowPassword}
+																onMouseDown={toggleShowPassword}
 															>
 																{showPassword ? (
 																	<VisibilityOff />
@@ -213,55 +198,41 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="password-repeat-input">
-                                                    Repeat Password
+													Repeat Password
 												</InputLabel>
 												<OutlinedInput
 													id="password-repeat-input"
-													type={
-														showPassword
-															? "text"
-															: "password"
-													}
+													type={showPassword ? "text" : "password"}
 													value={passwordRepeated}
 													name="password"
 													autoComplete="new-password"
 													onChange={(event) => {
-														setPasswordRepeated(
-															event.target.value
-														);
+														setPasswordRepeated(event.target.value);
 													}}
 													label="Repeat Password"
-													error={
-														password !==
-                                                        passwordRepeated
-													}
+													error={password !== passwordRepeated}
 												/>
-												{password !==
-                                                passwordRepeated ? (
-														<FormHelperText
-															id="password-match-helper-text"
-															sx={{
-																color: "red",
-															}}
-														>
-                                                        Passwords do not match
-														</FormHelperText>
-													) : null}
+												{password !== passwordRepeated ? (
+													<FormHelperText
+														id="password-match-helper-text"
+														sx={{
+															color: "red",
+														}}
+													>
+														Passwords do not match
+													</FormHelperText>
+												) : null}
 											</FormControl>
 										</Grid>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<FormLabel id="developer-type-label">
-                                                    User Type
+													User Type
 												</FormLabel>
 												<RadioGroup
 													row
 													name="developer-type-group"
-													onChange={(event) =>
-														setUserType(
-															event.target.value
-														)
-													}
+													onChange={(event) => setUserType(event.target.value)}
 													defaultValue="developer"
 												>
 													<FormControlLabel
@@ -286,19 +257,17 @@ function SignUp() {
 										sx={{ mt: 1, mr: 1 }}
 										disabled={password != passwordRepeated}
 									>
-                                        Continue
+										Continue
 									</Button>
 									<Button disabled sx={{ mt: 1, mr: 1 }}>
-                                        Back
+										Back
 									</Button>
 								</Box>
 							</StepContent>
 						</Step>
 						<Step key="User Details">
 							<StepLabel>{`Tell us a bit more about ${
-								userType === "developer"
-									? "yourself"
-									: "your company"
+								userType === "developer" ? "yourself" : "your company"
 							}`}</StepLabel>
 							<StepContent>
 								<Box component="form">
@@ -311,7 +280,7 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="first-name-input">
-                                                    First Name
+													First Name
 												</InputLabel>
 												<OutlinedInput
 													id="first-name-input"
@@ -322,20 +291,15 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="last-name-input">
-                                                    Last Name
+													Last Name
 												</InputLabel>
-												<OutlinedInput
-													id="last-name-input"
-													label="Last Name"
-												/>
+												<OutlinedInput id="last-name-input" label="Last Name" />
 											</FormControl>
 										</Grid>
 										<Grid item xs={12}>
 											<InputLabel> Avatar</InputLabel>
 											<AvatarPicker
-												setAvatarUrl={(imageUrl) =>
-													setAvatarUrl(imageUrl)
-												}
+												setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
 											/>
 										</Grid>
 
@@ -346,40 +310,27 @@ function SignUp() {
 												variant="standard"
 											>
 												<FormLabel component="legend">
-                                                    Pick your programming
-                                                    languages
+													Pick your programming languages
 												</FormLabel>
 												<FormGroup>
-													{languages.map(
-														(language) => (
-															<FormControlLabel
-																key={
-																	language.name
-																}
-																control={
-																	<Checkbox
-																		checked={
-																			language.checked
-																		}
-																		onChange={() => {
-																			toggleLanguageChecked(
-																				language.name
-																			);
-																		}}
-																		name={
-																			language.name
-																		}
-																	/>
-																}
-																label={
-																	language.name
-																}
-															/>
-														)
-													)}
+													{languages.map((language) => (
+														<FormControlLabel
+															key={language.name}
+															control={
+																<Checkbox
+																	checked={language.checked}
+																	onChange={() => {
+																		toggleLanguageChecked(language.name);
+																	}}
+																	name={language.name}
+																/>
+															}
+															label={language.name}
+														/>
+													))}
 												</FormGroup>
 												<FormHelperText>
-                                                    Experience in these will be setup later.
+													Experience in these will be setup later.
 												</FormHelperText>
 											</FormControl>
 										</Grid>
@@ -387,20 +338,14 @@ function SignUp() {
 								</Box>
 								<Box sx={{ mb: 2 }}>
 									<div>
-										<Button
-											variant="contained"
-											disabled
-											sx={{ mt: 1, mr: 1 }}
-										>
-                                            Continue
+										<Button variant="contained" disabled sx={{ mt: 1, mr: 1 }}>
+											Continue
 										</Button>
 										<Button
-											onClick={() =>
-												setActiveStep(activeStep - 1)
-											}
+											onClick={() => setActiveStep(activeStep - 1)}
 											sx={{ mt: 1, mr: 1 }}
 										>
-                                            Back
+											Back
 										</Button>
 									</div>
 								</Box>

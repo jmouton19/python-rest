@@ -14,16 +14,16 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-
+import { useAuth, useUserCredentials } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
 	const [open, setOpen] = React.useState(false);
-	const [auth] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
-	
+	const auth = useAuth();
+	const user = useUserCredentials();
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -40,7 +40,7 @@ export default function PrimarySearchAppBar() {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
-	
+
 	const DrawerHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
@@ -53,7 +53,7 @@ export default function PrimarySearchAppBar() {
 
 	return (
 		<React.Fragment>
-			<AppBar position="static" >
+			<AppBar position="static">
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -65,13 +65,10 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography
-						variant="h6"
-						component="div"
-					>
-						ZenOffer
+					<Typography variant="h6" component="div">
+                        ZenOffer
 					</Typography>
-					<Box sx={{flexGrow: 1}}/>
+					<Box sx={{ flexGrow: 1 }} />
 					<IconButton
 						size="large"
 						aria-label="account of current user"
@@ -81,12 +78,14 @@ export default function PrimarySearchAppBar() {
 						color="inherit"
 					>
 						<Avatar
-							//TODO:Make use uploaded pic when signed in
-						>
-
-						</Avatar>
+							src={
+								user
+									? user.avatarUrl
+									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+							}
+						></Avatar>
 					</IconButton>
-					
+
 					<Menu
 						id="menu-appbar"
 						anchorEl={anchorEl}
@@ -104,15 +103,35 @@ export default function PrimarySearchAppBar() {
 					>
 						{auth ? (
 							<div>
-								<MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
-								<MenuItem onClick={handleMenuClose}>My contracts</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/profile"
+									onClick={handleMenuClose}
+								>
+                                    My Profile
+								</MenuItem>
+								<MenuItem onClick={handleMenuClose}>
+                                    My contracts
+								</MenuItem>
 							</div>
-						) :
+						) : (
 							<div>
-								<MenuItem component={Link} to="/login" onClick={handleMenuClose}>Login</MenuItem>
-								<MenuItem component={Link} to="/signup" onClick={handleMenuClose}>Sign Up</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/login"
+									onClick={handleMenuClose}
+								>
+                                    Login
+								</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/signup"
+									onClick={handleMenuClose}
+								>
+                                    Sign Up
+								</MenuItem>
 							</div>
-						}
+						)}
 					</Menu>
 				</Toolbar>
 			</AppBar>
@@ -130,19 +149,37 @@ export default function PrimarySearchAppBar() {
 				open={open}
 			>
 				<DrawerHeader>
-					<IconButton onClick={handleDrawerClose} sx={{color: "white"}}>
-						<ChevronLeftIcon />  
+					<IconButton
+						onClick={handleDrawerClose}
+						sx={{ color: "white" }}
+					>
+						<ChevronLeftIcon />
 					</IconButton>
 				</DrawerHeader>
 				<Divider />
 				<Stack spacing={2} alignItems="stretch" color="inherit">
-					<Button component={Link} to="/" color="inherit" style={{minHeight: "63px"}}>
+					<Button
+						component={Link}
+						to="/"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
 						<b>Home</b>
 					</Button>
-					<Button component={Link} to="/contracts" color="inherit" style={{minHeight: "63px"}}>
+					<Button
+						component={Link}
+						to="/contracts"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
 						<b>Contracts</b>
 					</Button>
-					<Button component={Link} to="/about" color="inherit" style={{minHeight: "63px"}}>
+					<Button
+						component={Link}
+						to="/about"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
 						<b>About</b>
 					</Button>
 				</Stack>
