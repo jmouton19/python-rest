@@ -4,10 +4,16 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
+import {
+	Button,
+	FormControl,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	OutlinedInput,
+} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-
 
 function Login() {
 	const [email, setEmail] = useState("");
@@ -19,28 +25,18 @@ function Login() {
 	}
 
 	let navigate = useNavigate();
-	const routeChange = () =>{
+	const routeChange = () => {
 		let path = "/";
 		navigate(path);
 	};
 
-	return(
+	return (
 		<React.Fragment>
-			<Container maxWidth="sm" >
+			<Container maxWidth="sm">
 				<Box component="form" paddingTop={3}>
-					<Grid 
-						container
-						direction="column"
-						spacing={2}
-						alignItems="stretch"
-					>
+					<Grid container direction="column" spacing={2} alignItems="stretch">
 						<Grid item xs={12}>
-							<Typography
-								inline
-								variant="h3"
-								color="primary"
-								align="center"
-							>
+							<Typography inline variant="h3" color="primary" align="center">
 								Login
 							</Typography>
 						</Grid>
@@ -62,9 +58,7 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<InputLabel htmlFor="password-input">
-									Password
-								</InputLabel>
+								<InputLabel htmlFor="password-input">Password</InputLabel>
 								<OutlinedInput
 									id="password-input"
 									value={password}
@@ -79,11 +73,7 @@ function Login() {
 												onClick={toggleShowPassword}
 												onMouseDown={toggleShowPassword}
 											>
-												{showPassword ? (
-													<VisibilityOff />
-												) : (
-													<Visibility/>
-												)}
+												{showPassword ? <VisibilityOff /> : <Visibility />}
 											</IconButton>
 										</InputAdornment>
 									}
@@ -92,10 +82,7 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<Button
-									variant="contained"
-									onClick={routeChange}
-								>
+								<Button variant="contained" onClick={routeChange}>
 									Login
 								</Button>
 							</FormControl>
