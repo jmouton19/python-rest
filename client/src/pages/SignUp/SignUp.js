@@ -24,7 +24,6 @@ import axios from "axios";
 import AvatarPicker from "./AvatarPicker";
 
 function SignUp() {
-
 	const [activeStep, setActiveStep] = React.useState(0);
 
 	const [username, setUsername] = useState("");
@@ -33,8 +32,9 @@ function SignUp() {
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [userType, setUserType] = useState("developer");
+	const [avatarUrl, setAvatarUrl] = useState(null);
 
-	console.log({ username, email, password, userType });
+	console.log({ username, email, password, userType, avatarUrl });
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -296,10 +296,12 @@ function SignUp() {
 											</FormControl>
 										</Grid>
 										<Grid item xs={12}>
-											<InputLabel htmlFor="last-name-input">
-                                                    Avatar
-											</InputLabel>
-											<AvatarPicker />
+											<InputLabel> Avatar</InputLabel>
+											<AvatarPicker
+												setAvatarUrl={(imageUrl) =>
+													setAvatarUrl(imageUrl)
+												}
+											/>
 										</Grid>
 										<Grid item xs={12}>
                                             We need more things here ...

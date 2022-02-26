@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
 import { Avatar } from "@mui/material";
 import { Input } from "@mui/material";
+import axios from "axios";
 
 const convertToBase64 = (f) => {
 	// source https://medium.com/nerd-for-tech/how-to-store-an-image-to-a-database-with-react-using-base-64-9d53147f6c4f
@@ -17,25 +18,45 @@ const convertToBase64 = (f) => {
 	});
 };
 
-function AvatarPicker() {
-	const [filePath, setFilePath] = useState(null);
-	const [fileBase64, setFileBase64] = useState(null);
+function AvatarPicker(props) {
 
-	console.log({ filePath, fileBase64 });
+	const [imagePath, setImagePath] = useState(null);
+
+	function uploadAndGetLink(fileBase64) {
+		const urlWithQueryParameters =
+            "https://api.imgbb.com/1/upload?key=f9f798ffd37ff7b7e88e47ac0dace3d0";
+
+		const formdata = new FormData();
+
+		formdata.append("image", fileBase64);
+
+		const config = {
+			headers: { "content-type": "multipart/form-data" },
+		};
+
+		axios.post(urlWithQueryParameters, formdata, config).then((res) => {
+			const urlFromImgbb = res.data.data.url;
+			props.setAvatarUrl(urlFromImgbb);
+		});
+	}
 
 	return (
 		<Stack direction="row" spacing={2}>
-			<Avatar src={filePath} />
+			<Avatar src={imagePath} />
 
 			<Input
 				type="file"
 				inputProps={{ accept: "image/*" }}
-				onLoad={() => console.log("Loading")}
 				onChange={(event) => {
-					setFilePath(URL.createObjectURL(event.target.files[0]));
-					convertToBase64(event.target.files[0]).then((res) =>
-						setFileBase64(res)
-					);
+					setImagePath(URL.createObjectURL(event.target.files[0]));
+					convertToBase64(event.target.files[0]).then((res) => {
+						// remove bookkeeping part of encoding
+						const fileBase64 = res.substr(
+							res.indexOf("base64,") + 7
+						);
+
+						uploadAndGetLink(fileBase64);
+					});
 				}}
 			/>
 		</Stack>
