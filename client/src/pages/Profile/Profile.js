@@ -49,6 +49,7 @@ function Profile() {
 												src={user.avatarUrl}
 											></Avatar>
 											<AvatarPicker
+												hideAvatar={true}
 												setAvatarUrl={(imageUrl) => user.setAvatarUrl(imageUrl)}
 											/>
 										</Stack>

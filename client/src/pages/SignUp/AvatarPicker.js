@@ -21,6 +21,10 @@ const convertToBase64 = (f) => {
 function AvatarPicker(props) {
 	const [imagePath, setImagePath] = useState(null);
 
+	const { hideAvatar } = props;
+
+	console.log(hideAvatar);
+
 	function uploadAndGetLink(fileBase64) {
 		const urlWithQueryParameters =
 			"https://api.imgbb.com/1/upload?key=f9f798ffd37ff7b7e88e47ac0dace3d0";
@@ -41,8 +45,7 @@ function AvatarPicker(props) {
 
 	return (
 		<Stack direction="row" spacing={2}>
-			<Avatar src={imagePath} />
-
+			{hideAvatar ? null : <Avatar src={imagePath} />}
 			<Input
 				type="file"
 				inputProps={{ accept: "image/*" }}
