@@ -34,8 +34,10 @@ class Developer(db.Model):
     email = db.Column(db.String(32),unique=True)
     linkedin_url = db.Column(db.String(32))
     github_url = db.Column(db.String(32))
-    contracts = addresses = db.relationship('Contract', backref='developer', lazy=True)
-    programming_languages = db.relationship('Developer_Language', backref='developer', lazy=True)
+    contracts = db.relationship('Contract', backref='developer', lazy=True)
+    applications = db.relationship('Application', backref='developer', lazy=True)
+    blocked_company = db.relationship('Blocked_Company', backref='developer', lazy=True)
+    developer_languages = db.relationship('Developer_Languages', backref='developer', lazy=True)
 
 
 class Company(db.Model):
@@ -45,14 +47,8 @@ class Company(db.Model):
     industry = db.Column(db.String(32))
     email = db.Column(db.String(32),unique=True)
     company_name = db.Column(db.String(32),unique=True)
-    contracts = addresses = db.relationship('Contract', backref='company', lazy=True)
-    programming_languages = db.relationship('Contract_language', backref='company', lazy=True)
-
-
-class Developer_language(db.Model):
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
-    programming_language = db.Column(db.String(32))
-    experience = db.Column(db.Integer)
+    contracts = db.relationship('Contract', backref='company', lazy=True)
+    blocked_company = db.relationship('Blocked_Company', backref='company', lazy=True)
 
 
 class Contract(db.Model):
@@ -65,14 +61,31 @@ class Contract(db.Model):
     office = db.Column(db.Boolean)
     remote = db.Column(db.Boolean)
     open = db.Column(db.Boolean)
-    date_posted db.Column(db.DateTime)
+    date_posted = db.Column(db.DateTime)
+    applications = db.relationship('Application', backref='contract', lazy=True)
+    contract_languages = db.relationship('Contract_languages', backref='contract', lazy=True)
 
+class Developer_languages(db.Model):
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+    c = db.Column(db.Integer)
+    java = db.Column(db.Integer)
+    r = db.Column(db.Integer)
+    python = db.Column(db.Integer)
 
-
-class Contract_language(db.Model):
+class Contract_languages(db.Model):
     contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'))    
-    programming_language = db.Column(db.String(32))
+    c = db.Column(db.Integer)
+    java = db.Column(db.Integer)
+    r = db.Column(db.Integer)
+    python = db.Column(db.Integer)
 
+class Application(db.Model):
+    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'))   
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+
+class Blocked_Company(db.Model):
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id')) 
+    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))   
 ################################end db setup#########################
 
 @app.route('/api/getData/')
