@@ -45,6 +45,7 @@ export default function PrimarySearchAppBar() {
 		display: "flex",
 		alignItems: "center",
 		backgroundColor: theme.palette.primary.main,
+		minHeight: "63px",
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
 		...theme.mixins.toolbar,
@@ -65,8 +66,9 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
+					<Box sx={{ flexGrow: 1 }} />
 					<Typography variant="h6" component="div">
-                        ZenOffer
+						<b>WOWZERS</b>
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
 					<IconButton
@@ -108,15 +110,13 @@ export default function PrimarySearchAppBar() {
 									to="/profile"
 									onClick={handleMenuClose}
 								>
-                                    My Profile
+									My Profile
 								</MenuItem>
-								<MenuItem onClick={handleMenuClose}>
-                                    My contracts
-								</MenuItem>
+								<MenuItem onClick={handleMenuClose}>My contracts</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/"
-									onClick={handleMenuClose, useLogout}
+									onClick={(handleMenuClose, useLogout)}
 								>
 									Logout
 								</MenuItem>
@@ -128,14 +128,14 @@ export default function PrimarySearchAppBar() {
 									to="/login"
 									onClick={handleMenuClose}
 								>
-                                    Login
+									Login
 								</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/signup"
 									onClick={handleMenuClose}
 								>
-                                    Sign Up
+									Sign Up
 								</MenuItem>
 							</div>
 						)}
@@ -156,10 +156,7 @@ export default function PrimarySearchAppBar() {
 				open={open}
 			>
 				<DrawerHeader>
-					<IconButton
-						onClick={handleDrawerClose}
-						sx={{ color: "white" }}
-					>
+					<IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
 						<ChevronLeftIcon />
 					</IconButton>
 				</DrawerHeader>
