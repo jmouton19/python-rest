@@ -28,6 +28,8 @@ function AuthProvider({ children }) {
 	function simulateLogin() {
 		setUser({
 			username: "johndoen",
+			firstName: "John",
+			lastName: "Doe",
 			email: "johndoe@gmail.com",
 			password: "12341234",
 			userType: "developer",
