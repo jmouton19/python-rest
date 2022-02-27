@@ -15,7 +15,7 @@ function Profile() {
 					alignItems="center"
 				>
 					<Grid item xs={12}>
-						<Paper >
+						<Paper elevation={4}>
 							<Grid 
 								container
 								alignItems="center"
