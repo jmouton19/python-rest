@@ -14,7 +14,7 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useAuth, useUserCredentials } from "../../AuthProvider";
+import { useAuth, useUserCredentials, useLogout } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
@@ -112,6 +112,13 @@ export default function PrimarySearchAppBar() {
 								</MenuItem>
 								<MenuItem onClick={handleMenuClose}>
                                     My contracts
+								</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/"
+									onClick={handleMenuClose, useLogout}
+								>
+									Logout
 								</MenuItem>
 							</div>
 						) : (

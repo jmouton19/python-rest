@@ -52,6 +52,9 @@ function SignUp() {
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [userType, setUserType] = useState("developer");
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [industry, setIndustry] = useState("");
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [languages, setLanguages] = useState(languagesInitialState);
 	const [programmingLanguages, setProgrammingLanguages] = useState([]);
@@ -63,6 +66,9 @@ function SignUp() {
 		userType,
 		avatarUrl,
 		programmingLanguages,
+		firstName,
+		lastName,
+		industry,
 	});
 
 	function toggleShowPassword() {
@@ -132,7 +138,7 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="username-input">
-													Username
+													{userType === "developer" ? <a>Username</a> : <a>Company Name</a>}
 												</InputLabel>
 												<OutlinedInput
 													id="username-input"
@@ -233,7 +239,7 @@ function SignUp() {
 													row
 													name="developer-type-group"
 													onChange={(event) => setUserType(event.target.value)}
-													defaultValue="developer"
+													value={userType}
 												>
 													<FormControlLabel
 														value="developer"
@@ -269,87 +275,151 @@ function SignUp() {
 							<StepLabel>{`Tell us a bit more about ${
 								userType === "developer" ? "yourself" : "your company"
 							}`}</StepLabel>
-							<StepContent>
-								<Box component="form">
-									<Grid
-										container
-										direction="column"
-										spacing={2}
-										alignItems="stretch"
-									>
-										<Grid item xs={12}>
-											<FormControl fullWidth>
-												<InputLabel htmlFor="first-name-input">
-													First Name
-												</InputLabel>
-												<OutlinedInput
-													id="first-name-input"
-													label="First Name"
-												/>
-											</FormControl>
-										</Grid>
-										<Grid item xs={12}>
-											<FormControl fullWidth>
-												<InputLabel htmlFor="last-name-input">
-													Last Name
-												</InputLabel>
-												<OutlinedInput id="last-name-input" label="Last Name" />
-											</FormControl>
-										</Grid>
-										<Grid item xs={12}>
-											<InputLabel> Avatar</InputLabel>
-											<AvatarPicker
-												setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
-											/>
-										</Grid>
-
-										<Grid item xs={12}>
-											<FormControl
-												sx={{ m: 3 }}
-												component="fieldset"
-												variant="standard"
-											>
-												<FormLabel component="legend">
-													Pick your programming languages
-												</FormLabel>
-												<FormGroup>
-													{languages.map((language) => (
-														<FormControlLabel
-															key={language.name}
-															control={
-																<Checkbox
-																	checked={language.checked}
-																	onChange={() => {
-																		toggleLanguageChecked(language.name);
-																	}}
-																	name={language.name}
-																/>
-															}
-															label={language.name}
-														/>
-													))}
-												</FormGroup>
-												<FormHelperText>
-													Experience in these will be setup later.
-												</FormHelperText>
-											</FormControl>
-										</Grid>
-									</Grid>
-								</Box>
-								<Box sx={{ mb: 2 }}>
-									<div>
-										<Button variant="contained" disabled sx={{ mt: 1, mr: 1 }}>
-											Continue
-										</Button>
-										<Button
-											onClick={() => setActiveStep(activeStep - 1)}
-											sx={{ mt: 1, mr: 1 }}
+							{userType === "developer" ? (
+								<StepContent>
+									<Box component="form">
+										<Grid
+											container
+											direction="column"
+											spacing={2}
+											alignItems="stretch"
 										>
-											Back
-										</Button>
-									</div>
-								</Box>
-							</StepContent>
+											<Grid item xs={12}>
+												<FormControl fullWidth>
+													<InputLabel htmlFor="first-name-input">
+														First Name
+													</InputLabel>
+													<OutlinedInput
+														id="first-name-input"
+														label="First Name"
+														onChange={(event) => {
+															setFirstName(event.target.value);
+														}}
+													/>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12}>
+												<FormControl fullWidth>
+													<InputLabel htmlFor="last-name-input">
+														Last Name
+													</InputLabel>
+													<OutlinedInput
+														id="last-name-input"
+														label="Last Name"
+														onChange={(event) => {
+															setLastName(event.target.value);
+														}}
+													/>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12}>
+												<InputLabel> Avatar</InputLabel>
+												<AvatarPicker
+													setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
+												/>
+											</Grid>
+
+											<Grid item xs={12}>
+												<FormControl
+													sx={{ m: 3 }}
+													component="fieldset"
+													variant="standard"
+												>
+													<FormLabel component="legend">
+														Pick your programming languages
+													</FormLabel>
+													<FormGroup>
+														{languages.map((language) => (
+															<FormControlLabel
+																key={language.name}
+																control={
+																	<Checkbox
+																		checked={language.checked}
+																		onChange={() => {
+																			toggleLanguageChecked(language.name);
+																		}}
+																		name={language.name}
+																	/>
+																}
+																label={language.name}
+															/>
+														))}
+													</FormGroup>
+													<FormHelperText>
+														Experience in these will be setup later.
+													</FormHelperText>
+												</FormControl>
+											</Grid>
+										</Grid>
+									</Box>
+									<Box sx={{ mb: 2 }}>
+										<div>
+											<Button
+												variant="contained"
+												disabled
+												sx={{ mt: 1, mr: 1 }}
+											>
+												Continue
+											</Button>
+											<Button
+												onClick={() => setActiveStep(activeStep - 1)}
+												sx={{ mt: 1, mr: 1 }}
+											>
+												Back
+											</Button>
+										</div>
+									</Box>
+								</StepContent>
+							) : (
+								<StepContent>
+									<Box component="form">
+										<Grid
+											container
+											direction="column"
+											spacing={2}
+											alignItems="stretch"
+										>
+											<Grid item xs={12}>
+												<FormControl fullWidth>
+													<InputLabel htmlFor="general-industry-input">
+														General Industry
+													</InputLabel>
+													<OutlinedInput
+														id="general-industry-input"
+														label="General Industry"
+														onChange={(event) => {
+															setIndustry(event.target.value);
+														}}
+													/>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12}>
+												<InputLabel> Avatar</InputLabel>
+												<AvatarPicker
+													setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
+												/>
+											</Grid>
+										</Grid>
+									</Box>
+									<Box sx={{ mb: 2 }}>
+										<div>
+											<Button
+												variant="contained"
+												disabled
+												sx={{ mt: 1, mr: 1 }}
+											>
+												Continue
+											</Button>
+											<Button
+												onClick={() => setActiveStep(activeStep - 1)}
+												sx={{ mt: 1, mr: 1 }}
+											>
+												Back
+											</Button>
+										</div>
+									</Box>
+								</StepContent>
+							)}
 						</Step>
 					</Stepper>
 				</Box>
