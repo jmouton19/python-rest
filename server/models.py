@@ -13,7 +13,6 @@ class Developer(db.Model):
     email = db.Column(db.String(254),unique=True)
     linkedin_url = db.Column(db.String(254))
     github_url = db.Column(db.String(254))
-    contracts = db.relationship('Contract', backref='developer') #1tomany
     applications = db.relationship('Application', backref='developer')#1tomany
     blocked_companies = db.relationship('BlockedCompany', backref='developer')#1tomany
     developer_languages = db.relationship('DeveloperLanguages', backref='developer', uselist=False)#1to1
@@ -29,12 +28,10 @@ class Company(db.Model):
 
 class Contract(db.Model):
     contract_id = db.Column(db.Integer,primary_key=True)
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))
     length = db.Column(db.Integer)
     value = db.Column(db.Integer)
     description = db.Column(db.String(254))
-    office = db.Column(db.Boolean)
     remote = db.Column(db.Boolean)
     open = db.Column(db.Boolean)
     date_posted = db.Column(db.DateTime)
