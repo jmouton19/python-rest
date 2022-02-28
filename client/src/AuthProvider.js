@@ -1,9 +1,14 @@
 import React, { createContext, useState, useContext } from "react";
+import axios from "axios";
+
+const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 const AuthContext = createContext();
 const UserCredentialsContext = createContext();
 const SimulateLoginContext = createContext();
 const LogoutContext = createContext();
+const CheckUsernameContext = createContext();
+const CheckEmailContext = createContext();
 
 export function useAuth() {
 	return useContext(AuthContext);
@@ -21,9 +26,37 @@ export function useLogout() {
 	return useContext(LogoutContext);
 }
 
+export function useCheckUsername() {
+	return useContext(CheckUsernameContext);
+}
+
+export function useCheckEmail() {
+	return useContext(CheckEmailContext);
+}
+
 function AuthProvider({ children }) {
 	const [, setAuth] = useState(null);
 	const [user, setUser] = useState(null);
+
+	async function checkUsername(username) {
+		const url = `${baseUrl}/api/developer?username=${username}`;
+		try {
+			await axios.get(url);
+		} catch (error) {
+			return false;
+		}
+		return true;
+	}
+
+	async function checkEmail(email) {
+		const url = `${baseUrl}/api/developer?email=${email}`;
+		try {
+			await axios.get(url);
+		} catch (error) {
+			return false;
+		}
+		return true;
+	}
 
 	function simulateLogin() {
 		setUser({
@@ -49,7 +82,11 @@ function AuthProvider({ children }) {
 			<UserCredentialsContext.Provider value={user}>
 				<SimulateLoginContext.Provider value={simulateLogin}>
 					<LogoutContext.Provider value={logout}>
-						{children}
+						<CheckUsernameContext.Provider value={checkUsername}>
+							<CheckEmailContext.Provider value={checkEmail}>
+								{children}
+							</CheckEmailContext.Provider>
+						</CheckUsernameContext.Provider>
 					</LogoutContext.Provider>
 				</SimulateLoginContext.Provider>
 			</UserCredentialsContext.Provider>

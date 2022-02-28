@@ -22,8 +22,9 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import FormHelperText from "@mui/material/FormHelperText";
-import axios from "axios";
 import AvatarPicker from "./AvatarPicker";
+
+import { useCheckUsername, useCheckEmail } from "../../AuthProvider";
 
 const languageList = [
 	"Python",
@@ -47,7 +48,9 @@ function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
 
 	const [username, setUsername] = useState("");
+	const [usernameInUseError, setUsernameInUseError] = useState(false);
 	const [email, setEmail] = useState("");
+	const [emailInUseError, setEmailInUseError] = useState(false);
 	const [password, setPassword] = useState("");
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
@@ -58,6 +61,9 @@ function SignUp() {
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [languages, setLanguages] = useState(languagesInitialState);
 	const [programmingLanguages, setProgrammingLanguages] = useState([]);
+
+	const checkUsername = useCheckUsername();
+	const checkEmail = useCheckEmail();
 
 	console.log({
 		username,
@@ -75,19 +81,6 @@ function SignUp() {
 		setShowPassword(!showPassword);
 	}
 
-	function checkUserCredentials() {
-		axios
-			.get(`https://cs334proj1group8.herokuapp.com/user=${email}`)
-			.then((res) => {
-				const { email } = res.data;
-				if (email !== null) {
-					alert("Email already in use");
-				} else {
-					setActiveStep(activeStep + 1);
-				}
-			});
-	}
-
 	function toggleLanguageChecked(languageName) {
 		// looks through the language state, which is a list
 		// when it finds a match based on the language name it will toggle the checked variable
@@ -103,6 +96,19 @@ function SignUp() {
 			return language;
 		});
 		setLanguages(newState);
+	}
+
+	function step1ButtonDisabledChecks() {
+		//Todo: Check for valid email address format
+		//Todo: Check for strong pasword
+		return (
+			username === "" ||
+			email == "" ||
+			password == "" ||
+			password != passwordRepeated ||
+			usernameInUseError ||
+			emailInUseError
+		);
 	}
 
 	useEffect(() => {
@@ -138,19 +144,39 @@ function SignUp() {
 										<Grid item xs={12}>
 											<FormControl fullWidth>
 												<InputLabel htmlFor="username-input">
-													{userType === "developer" ? <a>Username</a> : <a>Company Name</a>}
+													{userType === "developer" ? (
+														<a>Username</a>
+													) : (
+														<a>Company Name</a>
+													)}
 												</InputLabel>
 												<OutlinedInput
 													id="username-input"
-													value={username}
 													type="text"
 													name="username"
-													onChange={(event) => {
-														setUsername(event.target.value);
+													onBlur={(event) => {
+														const { value } = event.target;
+														{
+															checkUsername(value).then((res) =>
+																setUsernameInUseError(res)
+															);
+															setUsername(event.target.value);
+														}
 													}}
 													label="Username"
+													error={usernameInUseError}
 												/>
 											</FormControl>
+											{usernameInUseError ? (
+												<FormHelperText
+													id="username-helper-text"
+													sx={{
+														color: "red",
+													}}
+												>
+													Username already in use
+												</FormHelperText>
+											) : null}
 										</Grid>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
@@ -159,15 +185,31 @@ function SignUp() {
 												</InputLabel>
 												<OutlinedInput
 													id="email-input"
-													value={email}
 													type="email"
 													name="email"
-													onChange={(event) => {
-														setEmail(event.target.value);
+													onBlur={(event) => {
+														const { value } = event.target;
+														{
+															checkEmail(value).then((res) =>
+																setEmailInUseError(res)
+															);
+															setEmail(event.target.value);
+														}
 													}}
 													label="Email Address"
+													error={emailInUseError}
 												/>
 											</FormControl>
+											{emailInUseError ? (
+												<FormHelperText
+													id="email-helper-text"
+													sx={{
+														color: "red",
+													}}
+												>
+													Email already in use
+												</FormHelperText>
+											) : null}
 										</Grid>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
@@ -177,10 +219,9 @@ function SignUp() {
 												<OutlinedInput
 													id="password-input"
 													type={showPassword ? "text" : "password"}
-													value={password}
 													name="password"
 													autoComplete="new-password"
-													onChange={(event) => {
+													onBlur={(event) => {
 														setPassword(event.target.value);
 													}}
 													label="Password"
@@ -259,9 +300,9 @@ function SignUp() {
 								<Box sx={{ mb: 2 }}>
 									<Button
 										variant="contained"
-										onClick={checkUserCredentials}
+										onClick={() => setActiveStep(activeStep + 1)}
 										sx={{ mt: 1, mr: 1 }}
-										disabled={password != passwordRepeated}
+										disabled={step1ButtonDisabledChecks()}
 									>
 										Continue
 									</Button>
@@ -401,6 +442,7 @@ function SignUp() {
 											</Grid>
 										</Grid>
 									</Box>
+
 									<Box sx={{ mb: 2 }}>
 										<div>
 											<Button
