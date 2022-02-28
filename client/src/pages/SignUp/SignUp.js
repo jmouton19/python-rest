@@ -435,7 +435,9 @@ function SignUp() {
 												</FormControl>
 											</Grid>
 											<Grid item xs={12}>
-												<InputLabel> Avatar</InputLabel>
+												<InputLabel>
+													{userType === "developer" ? "Avatar" : "Company Logo"}
+												</InputLabel>
 												<AvatarPicker
 													setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
 												/>

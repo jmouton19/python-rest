@@ -7,7 +7,7 @@ function Home() {
 	const simulateLogin = useSimulateLogin();
 
 	return (
-		<React.Fragment classname="App">
+		<>
 			<Container maxWidth="md">
 				<Grid 
 					container 
@@ -23,7 +23,7 @@ function Home() {
 					</Grid>
 				</Grid>		
 			</Container>
-		</React.Fragment>
+		</>
 	);
 }
 

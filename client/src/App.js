@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
 import AuthProvider from "./AuthProvider";
 import Profile from "./pages/Profile/Profile";
+import Contracts from "./pages/Contracts/Contracts";
+import About from "./pages/About/About";
 
 function App() {
 	return (
@@ -17,6 +19,8 @@ function App() {
 						<Route path="/signup" element={<SignUp />} />
 						<Route path="/login" element={<Login />} />
 						<Route path="/profile" element={<Profile />} />
+						<Route path="/contracts" element={<Contracts />} />
+						<Route path="/about" element={<About />} />
 						<Route path="/" element={<Home />} />
 					</Routes>
 				</Router>

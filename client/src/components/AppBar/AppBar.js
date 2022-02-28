@@ -112,7 +112,7 @@ export default function PrimarySearchAppBar() {
 								>
 									My Profile
 								</MenuItem>
-								<MenuItem onClick={handleMenuClose}>My contracts</MenuItem>
+								<MenuItem onClick={handleMenuClose}>My Contracts</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/"

@@ -36,7 +36,7 @@ function Login() {
 				<Box component="form" paddingTop={3}>
 					<Grid container direction="column" spacing={2} alignItems="stretch">
 						<Grid item xs={12}>
-							<Typography inline variant="h3" color="primary" align="center">
+							<Typography variant="h3" color="primary" align="center">
 								Login
 							</Typography>
 						</Grid>
