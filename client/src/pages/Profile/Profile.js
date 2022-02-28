@@ -19,9 +19,18 @@ import {
 	TableRow,
 	TextField,
 	Typography,
+	InputLabel,
+	OutlinedInput,
+	InputAdornment,
+	IconButton,
+	FormControl,
+	FormHelperText,
+	Divider,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AvatarPicker from "../SignUp/AvatarPicker";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const fabStyle = {
 	margin: 0,
@@ -35,6 +44,14 @@ const fabStyle = {
 function Profile() {
 	const user = useUserCredentials();
 	const [edit, setEdit] = useState(false);
+	const [password, setPassword] = useState("");
+	const [passwordRepeated, setPasswordRepeated] = useState("");
+	const [oldPassword, setOldPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
+
+	function toggleShowPassword() {
+		setShowPassword(!showPassword);
+	}
 
 	const handleEditOpen = () => {
 		setEdit(true);
@@ -55,10 +72,10 @@ function Profile() {
 				<EditIcon />
 			</Fab>
 			<Dialog open={edit} onClose={handleEditClose}>
-				<DialogTitle>Edit Details</DialogTitle>
+				<DialogTitle><u>Edit Details</u></DialogTitle>
 				<Grid container padding={1} rowSpacing={3} alignItems="center">
 					<Grid item xs={12}>
-						<Grid container alignItems="center" padding={1} spacing={1}>
+						<Grid container alignItems="center" padding={1} spacing={2}>
 							<Grid item xs={12}>
 								<Stack>
 									<AvatarPicker
@@ -71,17 +88,26 @@ function Profile() {
 									<Stack spacing={1}>
 										<TextField
 											variant="outlined"
+											defaultValue={user.username}
+											label="Username"
+										/>
+										<TextField
+											variant="outlined"
 											defaultValue={user.firstName}
+											label="First Name"
 										/>
 										<TextField
 											variant="outlined"
 											defaultValue={user.lastName}
+											label="Last Name"
 										/>
-										<TextField
-											variant="outlined"
-											defaultValue={user.username}
+										<TextField 
+											variant="outlined" 
+											defaultValue={user.email}
+											label="Email" 
 										/>
-										<TextField variant="outlined" defaultValue={user.email} />
+										<Divider/>
+										
 									</Stack>
 								) : (
 									<Stack>
@@ -89,19 +115,111 @@ function Profile() {
 											variant="outlined"
 											defaultValue={user.username}
 										/>
-										<TextField variant="outlined" defaultValue={user.email} />
+										<TextField 
+											variant="outlined" 
+											defaultValue={user.email} 
+										/>
+										<TextField 
+											variant="outlined" 
+											defaultValue={user.industry}
+											label="Industry" 
+										/>
+										<Divider />
 									</Stack>
 								)}
 							</Grid>
+							<Grid item xs={12} >
+								<Stack spacing={1}>
+									<FormControl fullWidth>
+										<InputLabel htmlFor="password-input">
+											New Password
+										</InputLabel>
+										<OutlinedInput
+											id="password-input"
+											type={showPassword ? "text" : "password"}
+											name="password"
+											autoComplete="new-password"
+											onBlur={(event) => {
+												setPassword(event.target.value);
+											}}
+											label="Password"
+											endAdornment={
+												<InputAdornment position="end">
+													<IconButton
+														onClick={toggleShowPassword}
+														onMouseDown={toggleShowPassword}
+													>
+														{showPassword ? (
+															<VisibilityOff />
+														) : (
+															<Visibility />
+														)}
+													</IconButton>
+												</InputAdornment>
+											}
+										/>
+									</FormControl>
+									<FormControl fullWidth>
+										<InputLabel htmlFor="password-repeat-input">
+											Repeat New Password
+										</InputLabel>
+										<OutlinedInput
+											id="password-repeat-input"
+											type={showPassword ? "text" : "password"}
+											value={passwordRepeated}
+											name="password"
+											autoComplete="new-password"
+											onChange={(event) => {
+												setPasswordRepeated(event.target.value);
+											}}
+											label="Repeat Password"
+											error={password !== passwordRepeated}
+										/>
+										{password !== passwordRepeated ? (
+											<FormHelperText
+												id="password-match-helper-text"
+												sx={{
+													color: "red",
+												}}
+											>
+												Passwords do not match
+											</FormHelperText>
+										) : null}
+									</FormControl>
+									<Divider/>
+								</Stack>
+							</Grid>
 						</Grid>
 						<DialogActions>
-							<Button 
-								onClick={handleEditClose} 
-								variant="contained"
-								//TODO:Add server communication and updating
-							>
-								Save Changes
-							</Button>
+							<Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+								<Grid item xs={9}>
+									<FormControl fullWidth>
+										<InputLabel htmlFor="password-repeat-input">
+											Old Password
+										</InputLabel>
+										<OutlinedInput
+											id="password-old-input"
+											type={showPassword ? "text" : "password"}
+											value={oldPassword}
+											name="password"
+											autoComplete="old-password"
+											onChange={(event) => {
+												setOldPassword(event.target.value);
+											}}
+											label="Old Password"
+										/>
+									</FormControl>
+								</Grid>
+								<Grid item xs={3}>
+									<Button 
+										onClick={handleEditClose} 
+										variant="contained"
+										//TODO:Add server communication and updating
+									>
+										Save Changes
+									</Button>
+								</Grid>
+							</Grid>
 						</DialogActions>
 					</Grid>
 				</Grid>
