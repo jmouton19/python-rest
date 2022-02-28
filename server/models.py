@@ -31,12 +31,13 @@ class Contract(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))
     length = db.Column(db.Integer)
     value = db.Column(db.Integer)
+    title = db.Column(db.String(254))
     description = db.Column(db.String(254))
     remote = db.Column(db.Boolean)
     open = db.Column(db.Boolean)
     date_posted = db.Column(db.DateTime)
     applications = db.relationship('Application', backref='contract')#1tomany
-    contract_languages = db.relationship('Contractlanguages', backref='contract', uselist=False)#1to1
+    contract_languages = db.relationship('ContractLanguages', backref='contract', uselist=False)#1to1
 
 class DeveloperLanguages(db.Model):
     develepor_languages_id=db.Column(db.Integer,primary_key=True)
@@ -61,12 +62,28 @@ class DeveloperLanguages(db.Model):
     perl = db.Column(db.Integer) 
     lua = db.Column(db.Integer) 
     
-class Contractlanguages(db.Model):
+class ContractLanguages(db.Model):
     contract_languages_id=db.Column(db.Integer,primary_key=True)
     contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'),unique=True)    
-    java = db.Column(db.Integer)
-    r = db.Column(db.Integer)
     python = db.Column(db.Integer)
+    java = db.Column(db.Integer)
+    javascript = db.Column(db.Integer)
+    r = db.Column(db.Integer)
+    c = db.Column(db.Integer)
+    c_plusplus = db.Column(db.Integer)
+    c_sharp = db.Column(db.Integer)
+    swift = db.Column(db.Integer)
+    objective_c = db.Column(db.Integer)
+    php = db.Column(db.Integer)
+    matlab = db.Column(db.Integer)
+    typescript = db.Column(db.Integer)    
+    go = db.Column(db.Integer)    
+    rust = db.Column(db.Integer)    
+    vba = db.Column(db.Integer) 
+    ruby = db.Column(db.Integer) 
+    kotlin = db.Column(db.Integer) 
+    perl = db.Column(db.Integer) 
+    lua = db.Column(db.Integer) 
 
 class Application(db.Model):
     application_id=db.Column(db.Integer,primary_key=True)
