@@ -67,3 +67,10 @@ def post_contract():
     new_contract.contract_languages=new_contract_languages
     db.session.commit()
     return jsonify(success=True)
+
+@app.route('/api/contract/<contract_id>', methods=['DELETE'])
+def delete_contract(contract_id):
+    company=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
+    db.session.delete(company)
+    db.session.commit()
+    return jsonify(success=True)
