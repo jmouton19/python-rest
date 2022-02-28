@@ -11,9 +11,6 @@ import {
 	Fab,
 	Paper,
 	Stack,
-	Step,
-	Stepper,
-	StepButton,
 	TextField,
 	Typography,
 } from "@mui/material";
@@ -32,11 +29,6 @@ const fabStyle = {
 function Profile() {
 	const user = useUserCredentials();
 	const [edit, setEdit] = useState(false);
-	const [activeStep, setActiveStep] = useState(1);
-
-	const handleStep = (step) => () => {
-		setActiveStep(step);
-	};
 
 	const handleEditOpen = () => {
 		setEdit(true);
@@ -58,67 +50,55 @@ function Profile() {
 			</Fab>
 			<Dialog open={edit} onClose={handleEditClose}>
 				<DialogTitle>Edit Details</DialogTitle>
-				<Stepper nonLinear activeStep={activeStep}>
-					<Step>
-						<StepButton color="inherit" onClick={handleStep(1)}>
-							General Info
-						</StepButton>
-						<Grid container padding={1} rowSpacing={3} alignItems="center">
+				<Grid container padding={1} rowSpacing={3} alignItems="center">
+					<Grid item xs={12}>
+						<Grid container alignItems="center" padding={1} spacing={1}>
 							<Grid item xs={12}>
-								<Grid container alignItems="center" padding={1} spacing={1}>
-									<Grid item xs={12}>
-										<Stack>
-											<AvatarPicker
-												setAvatarUrl={(imageUrl) => user.setAvatarUrl(imageUrl)}
-											/>
-										</Stack>
-									</Grid>
-									<Grid item xs={12}>
-										{user.userType === "developer" ? (
-											<Stack spacing={1}>
-												<TextField
-													variant="outlined"
-													defaultValue={user.firstName}
-												/>
-												<TextField
-													variant="outlined"
-													defaultValue={user.lastName}
-												/>
-												<TextField
-													variant="outlined"
-													defaultValue={user.username}
-												/>
-												<TextField variant="outlined" defaultValue={user.email} />
-											</Stack>
-										) : (
-											<Stack>
-												<TextField
-													variant="outlined"
-													defaultValue={user.username}
-												/>
-												<TextField variant="outlined" defaultValue={user.email} />
-											</Stack>
-										)}
-									</Grid>
-								</Grid>
-								<DialogActions>
-									<Button 
-										onClick={handleEditClose} 
-										variant="contained"
-										//TODO:Add server communication and updating
-									>
-										Save Changes
-									</Button>
-								</DialogActions>
+								<Stack>
+									<AvatarPicker
+										setAvatarUrl={(imageUrl) => user.setAvatarUrl(imageUrl)}
+									/>
+								</Stack>
+							</Grid>
+							<Grid item xs={12}>
+								{user.userType === "developer" ? (
+									<Stack spacing={1}>
+										<TextField
+											variant="outlined"
+											defaultValue={user.firstName}
+										/>
+										<TextField
+											variant="outlined"
+											defaultValue={user.lastName}
+										/>
+										<TextField
+											variant="outlined"
+											defaultValue={user.username}
+										/>
+										<TextField variant="outlined" defaultValue={user.email} />
+									</Stack>
+								) : (
+									<Stack>
+										<TextField
+											variant="outlined"
+											defaultValue={user.username}
+										/>
+										<TextField variant="outlined" defaultValue={user.email} />
+									</Stack>
+								)}
 							</Grid>
 						</Grid>
-					</Step>
-					<Step>
-						<StepButton color="inherit" onClick={handleStep(2)}>
-							Additional Information
-						</StepButton>
-					</Step>
-				</Stepper>
+						<DialogActions>
+							<Button 
+								onClick={handleEditClose} 
+								variant="contained"
+								//TODO:Add server communication and updating
+							>
+								Save Changes
+							</Button>
+						</DialogActions>
+					</Grid>
+				</Grid>
 			</Dialog>
 			<Container maxWidth="md">
 				<Grid container padding={1} rowSpacing={3} alignItems="center">
