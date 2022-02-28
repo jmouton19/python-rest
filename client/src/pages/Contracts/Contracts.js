@@ -7,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
+// import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Menu from "@mui/material/Menu";
@@ -19,7 +19,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-import FavoriteIcon from "@mui/icons-material/Favorite";
+// import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { sampleData } from "./generateSampleData";
@@ -66,11 +66,11 @@ function AvailableContracts() {
 							</Typography>
 						</CardContent>
 						<CardActions disableSpacing>
-							<Tooltip title="Add to Favorites">
+							{/* <Tooltip title="Add to Favorites">
 								<IconButton>
 									<FavoriteIcon color="#ffffff" />
 								</IconButton>
-							</Tooltip>
+							</Tooltip> */}
 							<Button variant="grey">Apply Now</Button>
 						</CardActions>
 					</Card>
@@ -118,15 +118,16 @@ function Contracts() {
 					<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 						<TabList onChange={handleChange} aria-label="lab API tabs example">
 							<Tab label="Available" value="1" />
-							<Tab label="Favorited" value="2" />
-							<Tab label="Applied" value="3" />
+							{/* <Tab label="Favorited" value="2" /> */}
+							<Tab label="Applied" value="2" />
+							<Tab label="Blocked" value="3" />
 						</TabList>
 					</Box>
 					<TabPanel value="1">
 						<AvailableContracts />
 					</TabPanel>
-					<TabPanel value="2">Favourited</TabPanel>
-					<TabPanel value="3">Applied</TabPanel>
+					<TabPanel value="2">Applied</TabPanel>
+					<TabPanel value="3">Blocked</TabPanel>
 				</TabContext>
 			</Box>
 		</Container>
