@@ -43,7 +43,7 @@ class Contract(db.Model):
 
 class DeveloperLanguages(db.Model):
     develepor_languages_id=db.Column(db.Integer,primary_key=True)
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'),unique=True)
     c = db.Column(db.Integer)
     java = db.Column(db.Integer)
     r = db.Column(db.Integer)
@@ -51,7 +51,7 @@ class DeveloperLanguages(db.Model):
 
 class Contractlanguages(db.Model):
     contract_languages_id=db.Column(db.Integer,primary_key=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'))    
+    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'),unique=True)    
     java = db.Column(db.Integer)
     r = db.Column(db.Integer)
     python = db.Column(db.Integer)

@@ -1,6 +1,5 @@
-from flask import send_from_directory, jsonify, abort
+from flask import send_from_directory
 from server import app
-from server.models import db, Developer
 
 @app.route('/')
 def server():
