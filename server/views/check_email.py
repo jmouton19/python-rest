@@ -1,3 +1,4 @@
+from ast import Or
 from flask import jsonify, request
 from server import app
 from server.models import db, Developer, Company
@@ -6,8 +7,12 @@ from server.models import db, Developer, Company
 def check_email():
     request_data = request.get_json()
     email = request_data['email'],
-    result=db.session.query(Developer).filter(Developer.email==email).one_or_none()+db.session.query(Company).filter(Company.email==email).one_or_none()
+    result=db.session.query(Developer).filter(Developer.email==email).one_or_none()
     if result:
         return jsonify(success=True)
     else:
-        return jsonify(success=False)
+        result=db.session.query(Company).filter(Company.email==email).one_or_none()
+        if result:
+            return jsonify(success=True)
+        else:
+            return jsonify(success=False)
