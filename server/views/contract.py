@@ -74,3 +74,14 @@ def delete_contract(contract_id):
     db.session.delete(company)
     db.session.commit()
     return jsonify(success=True)
+
+@app.route('/api/contract', methods=['GET'])
+def get_contracts():
+    contracts=db.session.query(Contract).filter(Contract.open==True)
+    contract_list=[]
+    for contract in contracts:
+        instance = dict(contract.__dict__)
+        instance.pop('_sa_instance_state', None)
+        contract_list.append(instance)
+    response= {"success":True, "contracts": contract_list }
+    return jsonify(response)
