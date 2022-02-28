@@ -11,6 +11,12 @@ import {
 	Fab,
 	Paper,
 	Stack,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
 	TextField,
 	Typography,
 } from "@mui/material";
@@ -100,36 +106,70 @@ function Profile() {
 					</Grid>
 				</Grid>
 			</Dialog>
-			<Container maxWidth="md">
-				<Grid container padding={1} rowSpacing={3} alignItems="center">
-					<Grid item xs={12}>
+			<Container minWidth="md">
+				<Grid container alignItems="flex-start" spacing={2} padding={3}>
+					<Grid item xs={4}>
 						<Paper elevation={4}>
-							<Grid container alignItems="center" padding={2}>
-								<Grid item xs={3}>
+							<Grid container alignItems="center"  padding={2} justifyContent="space-between">
+								<Grid item >
 									<Avatar
 										sx={{ width: 100, height: 100 }}
 										src={user.avatarUrl}
 									></Avatar>
 								</Grid>
-								<Grid item xs={9} spacing={8}>
-									<Stack>
-										{user.userType === "developer" ? (
-											<div>
-												<Typography variant="h3">
-													{user.firstName} {user.lastName}
-												</Typography>
-												<Typography variant="h5">{user.username}</Typography>
-												<Typography variant="h6">{user.email}</Typography>
-											</div>
-										) : (
-											<div>
-												<Typography variant="h3">{user.username}</Typography>
-												<Typography variant="h6">{user.email}</Typography>
-											</div>
-										)}
-									</Stack>
+								<Grid item >
+									{user.userType === "developer" ? (
+										<Stack>
+											<Typography variant="h3">
+												{user.firstName} {user.lastName}
+											</Typography>
+											<Typography variant="h5">{user.username}</Typography>
+											<Typography variant="h6">{user.email}</Typography>
+										</Stack>
+									) : (
+										<Stack>
+											<Typography variant="h3">{user.username}</Typography>
+											<Typography variant="h6">{user.email}</Typography>
+										</Stack>
+									)}
 								</Grid>
 							</Grid>
+						</Paper>
+					</Grid>
+					<Grid item xs={8}>
+						<Paper elevation={4}>
+							{user.userType === "developer" ? ( //Table for developer experience
+								<TableContainer>
+									<Table >
+										<TableHead>
+											<TableRow>
+												<TableCell colSpan={2}>
+													<Typography variant="h5">
+														Experience
+													</Typography>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<Typography variant="h6">
+														Programming Languages
+													</Typography>
+												</TableCell>
+												<TableCell>
+													<Typography variant="h6">
+														Months
+													</Typography>
+												</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+
+										</TableBody>
+									</Table>
+								</TableContainer>
+							) : ( //random stuff for company? maybe money too
+								<div>Test</div>	
+							)}
 						</Paper>
 					</Grid>
 				</Grid>
