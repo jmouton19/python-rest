@@ -61,3 +61,14 @@ def signup_developer():
     db.session.add(new_dev)
     db.session.commit()
     return jsonify(success=True)
+
+@app.route('/api/developer/username=<username>', methods=['GET'])
+def check_username(username):
+    result=db.session.query(Developer).filter(Developer.username==username).one_or_none()
+    if result:
+        instance = dict(result.__dict__); 
+        instance.pop('_sa_instance_state', None)
+        response= {"success":True, "developer": instance }
+        return jsonify(response)
+    else:
+        return jsonify(success=False)
