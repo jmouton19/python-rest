@@ -12,6 +12,6 @@ def signup_company():
         avatar=request_data['avatar'],
         email=request_data['email'],
     )
-    # db.session.add(new_company)
-    # db.session.commit()
+    db.session.add(new_company)
+    db.session.commit()
     return jsonify(success=True)
