@@ -65,6 +65,7 @@ function generateSampleContract() {
 		open: Math.random() < 0.5,
 		remote: Math.random() < 0.5,
 		value: 5000 + Math.floor(Math.random() * 20) * 500,
+		favorite:  Math.random() < 0.5,
 	};
 
 	return sampleEntryFromContractsTable;
