@@ -73,15 +73,25 @@ def check_username(username):
     else:
         return jsonify(success=False)
 
-@app.route('/api/developer/<username>/contract', methods=['POST'])
+@app.route('/api/developer/<username>/contract', methods=['POST','DELETE'])
 def apply_contract(username):
     request_data = request.get_json()
     contract_id=request_data['contract_id']
     contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
     developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
-    new_application=Application()
-    developer.applications.append(new_application)
-    contract.applications.append(new_application)
+    application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
+    if request.method == 'POST':
+        if application==None:        
+            new_application=Application()
+            developer.applications.append(new_application)
+            contract.applications.append(new_application)
+        else:
+            return jsonify(success=False,message="Developer has already applied for this contract")
+    elif request.method == 'DELETE':
+        if application:
+            db.session.delete(application)
+        else:
+            return jsonify(success=False,message="Developer has not applied for this contract")
     db.session.commit()
     return jsonify(success=True)
 
