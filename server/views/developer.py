@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import Contract, db, Developer, DeveloperLanguages, Application
+from server.models import Contract, db, Developer, DeveloperLanguages, Application, Company, BlockedCompany
 
 @app.route('/api/developer', methods=['POST'])
 def signup_developer():
@@ -82,5 +82,27 @@ def apply_contract(username):
     new_application=Application()
     developer.applications.append(new_application)
     contract.applications.append(new_application)
+    db.session.commit()
+    return jsonify(success=True)
+
+@app.route('/api/developer/<username>/company', methods=['POST','DELETE'])
+def block_company(username):
+    request_data = request.get_json()
+    company_name=request_data['company_name']
+    company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
+    developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
+    blocked=db.session.query(BlockedCompany).filter(BlockedCompany.company_id==company.company_id, BlockedCompany.developer_id==developer.developer_id).one_or_none()
+    if request.method == 'POST':
+        if blocked==None:
+            new_blocked=BlockedCompany()
+            developer.blocked_companies.append(new_blocked)
+            company.blockings.append(new_blocked)
+        else:
+            return jsonify(success=False,message="Developer has already blocked this company")
+    elif request.method == 'DELETE':
+        if blocked:
+            db.session.delete(blocked)
+        else:
+            return jsonify(success=False,message="Developer has not blocked this company")
     db.session.commit()
     return jsonify(success=True)

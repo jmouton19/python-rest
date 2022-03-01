@@ -70,9 +70,9 @@ def post_contract():
 
 @app.route('/api/contract/<contract_id>', methods=['DELETE'])
 def delete_contract(contract_id):
-    company=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
-    if company:
-        db.session.delete(company)
+    contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
+    if contract:
+        db.session.delete(contract)
         db.session.commit()
         return jsonify(success=True)
     else:

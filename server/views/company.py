@@ -20,7 +20,7 @@ def signup_company():
 def check_company_name(company):
     result=db.session.query(Company).filter(Company.company_name==company).one_or_none()
     if result:
-        instance = dict(result.__dict__); 
+        instance = dict(result.__dict__) 
         instance.pop('_sa_instance_state', None)
         response= {"success":True, "company": instance }
         return jsonify(response)
