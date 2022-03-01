@@ -55,8 +55,7 @@ def signup_developer():
                 new_dev_languages.ruby=value
             case 'R':        
                 new_dev_languages.r=value
-            
-    
+
     new_dev.developer_languages=new_dev_languages
     db.session.add(new_dev)
     db.session.commit()
