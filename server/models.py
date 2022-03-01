@@ -13,9 +13,9 @@ class Developer(db.Model):
     email = db.Column(db.String(254),unique=True)
     linkedin_url = db.Column(db.String(254))
     github_url = db.Column(db.String(254))
-    applications = db.relationship('Application', backref='developer')#1tomany
+    applications = db.relationship('Application', backref='developer', cascade = "all, delete, delete-orphan")#1tomany
     blocked_companies = db.relationship('BlockedCompany', backref='developer')#1tomany
-    developer_languages = db.relationship('DeveloperLanguages', backref='developer', uselist=False)#1to1
+    developer_languages = db.relationship('DeveloperLanguages', backref='developer', uselist=False, cascade = "all, delete, delete-orphan")#1to1
 
 class Company(db.Model):
     company_id = db.Column(db.Integer,primary_key=True)
@@ -36,7 +36,7 @@ class Contract(db.Model):
     remote = db.Column(db.Boolean)
     open = db.Column(db.Boolean)
     date_posted = db.Column(db.DateTime)
-    applications = db.relationship('Application', backref='contract')#1tomany
+    applications = db.relationship('Application', backref='contract', cascade = "all, delete, delete-orphan")#1tomany
     contract_languages = db.relationship('ContractLanguages', backref='contract', uselist=False, cascade = "all, delete, delete-orphan" )#1to1
 
 class DeveloperLanguages(db.Model):
