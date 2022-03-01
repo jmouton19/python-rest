@@ -87,7 +87,6 @@ def get_contracts():
         instance.pop('_sa_instance_state', None)
         instance['company_name']=contract.company.company_name
         instance['company_avatar']=contract.company.avatar
-        print(contract.company)
         contract_list.append(instance)
     response= {"success":True, "contracts": contract_list }
     return jsonify(response)
