@@ -16,7 +16,7 @@ def signup_company():
     db.session.commit()
     return jsonify(success=True)
 
-@app.route('/api/company/company_name=<company>', methods=['GET'])
+@app.route('/api/company/<company>', methods=['GET'])
 def check_company_name(company):
     result=db.session.query(Company).filter(Company.company_name==company).one_or_none()
     if result:

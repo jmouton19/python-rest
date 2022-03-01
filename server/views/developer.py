@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Developer, DeveloperLanguages
+from server.models import Contract, db, Developer, DeveloperLanguages, Application
 
 @app.route('/api/developer', methods=['POST'])
 def signup_developer():
@@ -62,7 +62,7 @@ def signup_developer():
     db.session.commit()
     return jsonify(success=True)
 
-@app.route('/api/developer/username=<username>', methods=['GET'])
+@app.route('/api/developer/<username>', methods=['GET'])
 def check_username(username):
     result=db.session.query(Developer).filter(Developer.username==username).one_or_none()
     if result:
@@ -72,3 +72,15 @@ def check_username(username):
         return jsonify(response)
     else:
         return jsonify(success=False)
+
+@app.route('/api/developer/<username>/contract', methods=['POST'])
+def apply_contract(username):
+    request_data = request.get_json()
+    contract_id=request_data['contract_id']
+    contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
+    developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
+    new_application=Application()
+    developer.applications.append(new_application)
+    contract.applications.append(new_application)
+    db.session.commit()
+    return jsonify(success=True)
