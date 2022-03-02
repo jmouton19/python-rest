@@ -1,48 +1,32 @@
-import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import Container from "@mui/material/Container";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import FormGroup from "@mui/material/FormGroup";
-import Checkbox from "@mui/material/Checkbox";
-import Radio from "@mui/material/Radio";
-import Button from "@mui/material/Button";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import StepContent from "@mui/material/StepContent";
-import FormHelperText from "@mui/material/FormHelperText";
-import AvatarPicker from "./AvatarPicker";
+import React, { useState } from "react";
+
+import {
+	Box,
+	FormControl,
+	Container,
+	InputLabel,
+	OutlinedInput,
+	Grid,
+	Typography,
+	InputAdornment,
+	IconButton,
+	RadioGroup,
+	FormControlLabel,
+	FormLabel,
+	Radio,
+	Button,
+	Stepper,
+	Step,
+	StepLabel,
+	StepContent,
+	FormHelperText,
+} from "@mui/material";
+
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { useCheckUsername, useCheckEmail } from "../../AuthProvider";
-
-const languageList = [
-	"Python",
-	"JavaScript",
-	"Java",
-	"C#",
-	"C",
-	"C++",
-	"Go",
-	"R",
-	"Swift",
-	"PHP",
-];
-
-const languagesInitialState = languageList.map((language) => ({
-	name: language,
-	checked: false,
-}));
+import LanguagesPicker from "./LanguagesPicker";
+import AvatarPicker from "./AvatarPicker";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -59,8 +43,6 @@ function SignUp() {
 	const [lastName, setLastName] = useState("");
 	const [industry, setIndustry] = useState("");
 	const [avatarUrl, setAvatarUrl] = useState(null);
-	const [languages, setLanguages] = useState(languagesInitialState);
-	const [programmingLanguages, setProgrammingLanguages] = useState([]);
 
 	const checkUsername = useCheckUsername();
 	const checkEmail = useCheckEmail();
@@ -71,7 +53,6 @@ function SignUp() {
 		password,
 		userType,
 		avatarUrl,
-		programmingLanguages,
 		firstName,
 		lastName,
 		industry,
@@ -79,23 +60,6 @@ function SignUp() {
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
-	}
-
-	function toggleLanguageChecked(languageName) {
-		// looks through the language state, which is a list
-		// when it finds a match based on the language name it will toggle the checked variable
-		// then saves this as new react state
-
-		const newState = languages.map((language) => {
-			if (language.name.localeCompare(languageName) == 0) {
-				return {
-					...language,
-					checked: !language.checked,
-				};
-			}
-			return language;
-		});
-		setLanguages(newState);
 	}
 
 	function step1ButtonDisabledChecks() {
@@ -110,17 +74,6 @@ function SignUp() {
 			emailInUseError
 		);
 	}
-
-	useEffect(() => {
-		const newSelectedLanguage = languages.reduce((previousValue, language) => {
-			if (language.checked) {
-				previousValue.push(language.name);
-			}
-			return previousValue;
-		}, []);
-
-		setProgrammingLanguages(newSelectedLanguage);
-	}, [languages]);
 
 	return (
 		<React.Fragment>
@@ -153,14 +106,17 @@ function SignUp() {
 												<OutlinedInput
 													id="username-input"
 													type="text"
+													value={username}
 													name="username"
+													onChange={(event) => {
+														setUsername(event.target.value);
+													}}
 													onBlur={(event) => {
 														const { value } = event.target;
 														{
 															checkUsername(value).then((res) =>
 																setUsernameInUseError(res)
 															);
-															setUsername(event.target.value);
 														}
 													}}
 													label="Username"
@@ -187,13 +143,16 @@ function SignUp() {
 													id="email-input"
 													type="email"
 													name="email"
+													value={email}
+													onChange={(event) => {
+														setEmail(event.target.value);
+													}}
 													onBlur={(event) => {
 														const { value } = event.target;
 														{
 															checkEmail(value).then((res) =>
 																setEmailInUseError(res)
 															);
-															setEmail(event.target.value);
 														}
 													}}
 													label="Email Address"
@@ -221,7 +180,8 @@ function SignUp() {
 													type={showPassword ? "text" : "password"}
 													name="password"
 													autoComplete="new-password"
-													onBlur={(event) => {
+													value={password}
+													onChange={(event) => {
 														setPassword(event.target.value);
 													}}
 													label="Password"
@@ -361,35 +321,7 @@ function SignUp() {
 											</Grid>
 
 											<Grid item xs={12}>
-												<FormControl
-													sx={{ m: 3 }}
-													component="fieldset"
-													variant="standard"
-												>
-													<FormLabel component="legend">
-														Pick your programming languages
-													</FormLabel>
-													<FormGroup>
-														{languages.map((language) => (
-															<FormControlLabel
-																key={language.name}
-																control={
-																	<Checkbox
-																		checked={language.checked}
-																		onChange={() => {
-																			toggleLanguageChecked(language.name);
-																		}}
-																		name={language.name}
-																	/>
-																}
-																label={language.name}
-															/>
-														))}
-													</FormGroup>
-													<FormHelperText>
-														Experience in these will be setup later.
-													</FormHelperText>
-												</FormControl>
+												<LanguagesPicker />
 											</Grid>
 										</Grid>
 									</Box>
@@ -444,23 +376,16 @@ function SignUp() {
 											</Grid>
 										</Grid>
 									</Box>
-
-									<Box sx={{ mb: 2 }}>
-										<div>
-											<Button
-												variant="contained"
-												disabled
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Continue
-											</Button>
-											<Button
-												onClick={() => setActiveStep(activeStep - 1)}
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Back
-											</Button>
-										</div>
+									<Box>
+										<Button variant="contained" disabled sx={{ mt: 1, mr: 1 }}>
+											Continue
+										</Button>
+										<Button
+											onClick={() => setActiveStep(activeStep - 1)}
+											sx={{ mt: 1, mr: 1 }}
+										>
+											Back
+										</Button>
 									</Box>
 								</StepContent>
 							)}
