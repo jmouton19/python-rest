@@ -7,23 +7,24 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
+import { Avatar } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 
 // Todo: Get From Server
-const languageList = [
-	"Python",
-	"JavaScript",
-	"Java",
-	"C#",
-	"C",
-	"C++",
-	"Go",
-	"R",
-	"Swift",
-	"PHP",
-];
+const languageList = {
+	"Python" : 0,
+	"JavaScript" : 0,
+	"Java" : 0,
+	"C#" : 0,
+	"C" : 0,
+	"C++" : 0,
+	"Go" : 0,
+	"R" : 0,
+	"Swift" : 0,
+	"PHP" : 0
+};
 
 // Todo: Site source material ui website?
 const Search = styled("div")(({ theme }) => ({
@@ -72,12 +73,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function LanguagesPicker() {
 	const [searchValue, setSearchValue] = useState("");
-	const [selectedLanguages, setSelectedLanguages] = useState([]);
+	const [selectedLanguages, setSelectedLanguages] = useState({});
 
 	const searchBarRef = useRef();
 
-	const unselectedLanguages = languageList.filter(
-		(language) => !selectedLanguages.includes(language)
+	const addNewLanguage = (language) => {
+		let newLanguage = {};
+		newLanguage[language] = 1;
+		setSelectedLanguages(selectedLanguages =>({
+			...selectedLanguages,
+			...newLanguage
+		}));
+	};
+	
+	const removeLanguage = (language) => {
+		setSelectedLanguages(selectedLanguages => {
+			const newLanguageSet = {...selectedLanguages};
+			delete newLanguageSet[language];
+			return newLanguageSet;
+		});
+	};
+
+	const unselectedLanguages = Object.keys(languageList).filter(
+		(language) => !Object.keys(selectedLanguages).includes(language)
 	);
 
 	const filteredLanguages = unselectedLanguages.filter(
@@ -121,7 +139,7 @@ function LanguagesPicker() {
 								label={language}
 								clickable
 								onClick={() => {
-									setSelectedLanguages(selectedLanguages.concat(language));
+									addNewLanguage(language);
 									searchBarRef.current.focus();
 								}}
 							/>
@@ -134,8 +152,9 @@ function LanguagesPicker() {
 							Selected Languages:
 						</Typography>
 						<br />
-						{selectedLanguages.map((language) => (
+						{Object.keys(selectedLanguages).map((language) => (
 							<Chip
+								avatar={<Avatar>1</Avatar>}
 								sx={{
 									marginTop: 0.5,
 									marginBottom: 0.5,
@@ -145,9 +164,7 @@ function LanguagesPicker() {
 								key={language}
 								label={language}
 								onDelete={() => {
-									setSelectedLanguages(
-										selectedLanguages.filter((value) => value !== language)
-									);
+									removeLanguage(language);
 								}}
 								color="success"
 							/>
