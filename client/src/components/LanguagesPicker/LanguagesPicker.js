@@ -7,24 +7,24 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
-import { Avatar } from "@mui/material";
+import { Avatar, Dialog, Slider, DialogTitle } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 
 // Todo: Get From Server
-const languageList = {
-	"Python" : 0,
-	"JavaScript" : 0,
-	"Java" : 0,
-	"C#" : 0,
-	"C" : 0,
-	"C++" : 0,
-	"Go" : 0,
-	"R" : 0,
-	"Swift" : 0,
-	"PHP" : 0
-};
+const languageList = [
+	"Python",
+	"JavaScript",
+	"Java",
+	"C#",
+	"C",
+	"C++",
+	"Go",
+	"R",
+	"Swift",
+	"PHP" 
+];
 
 // Todo: Site source material ui website?
 const Search = styled("div")(({ theme }) => ({
@@ -74,7 +74,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function LanguagesPicker() {
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
-
+	const [currentLanguage, setCurrentLanguage] = useState("");
+	const [currentExperience, setCurrentExperience] = React.useState(0);
+	const [editExperience, setEditExperience] = useState(false);
 	const searchBarRef = useRef();
 
 	const addNewLanguage = (language) => {
@@ -98,7 +100,19 @@ function LanguagesPicker() {
 		return selectedLanguages[language];
 	};
 
-	const unselectedLanguages = Object.keys(languageList).filter(
+	const updateLanguage = (language, experience) => {
+		const updatedLanguage = {[language]: experience};
+		setSelectedLanguages({
+			...selectedLanguages,
+			...updatedLanguage
+		});
+	};
+
+	const handleExperienceChange = (event, value) => {
+		setCurrentExperience(value);
+	};
+
+	const unselectedLanguages = languageList.filter(
 		(language) => !Object.keys(selectedLanguages).includes(language)
 	);
 
@@ -170,12 +184,38 @@ function LanguagesPicker() {
 								onDelete={() => {
 									removeLanguage(language);
 								}}
+								onClick={() => {
+									setCurrentLanguage(language);
+									setCurrentExperience(selectedLanguages[language]);
+									setEditExperience(true);
+								}}
 								color="success"
 							/>
 						))}
 					</Paper>
 				) : null}
 			</Stack>
+			<Dialog 
+				open={editExperience} 
+				onClose={() => {
+					updateLanguage(currentLanguage, currentExperience);
+					setEditExperience(false);
+				}}
+			>
+				<DialogTitle>
+					<Typography>
+						Experience in Months
+					</Typography>
+					<Slider
+						value={currentExperience}
+						min={1}
+						max={120}
+						step={1}
+						onChange={handleExperienceChange}
+						valueLabelDisplay="on"
+					/>
+				</DialogTitle>
+			</Dialog>
 		</>
 	);
 }
