@@ -2,6 +2,7 @@ from flask import jsonify, request
 from server import app
 from server.models import Contract, db, Developer, DeveloperLanguages, Application, Company, BlockedCompany
 
+
 @app.route('/api/developer', methods=['POST'])
 def signup_developer():
     request_data = request.get_json()

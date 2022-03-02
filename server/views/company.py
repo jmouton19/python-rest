@@ -1,20 +1,31 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Company
+from server.models import db, Company,Developer
+from server.views.checkemail import email_checkr
 
 @app.route('/api/company', methods=['POST'])
 def signup_company():
     request_data = request.get_json()
-    new_company=Company(
-        password=request_data['password'],
-        company_name=request_data['company_name'],
-        industry=request_data['industry'],
-        avatar=request_data['avatar'],
-        email=request_data['email'],
-    )
-    db.session.add(new_company)
-    db.session.commit()
-    return jsonify(success=True)
+    email=request_data['email']
+    company_name=request_data['company_name']
+    company=db.session.query(Company).filter(Company.company_name==request_data['company_name']).one_or_none()
+    checker=email_checkr(email)
+    if checker['success']==True:
+        if company==None:
+            new_company=Company(
+                password=request_data['password'],
+                company_name=company_name,
+                industry=request_data['industry'],
+                avatar=request_data['avatar'],
+                email=email,
+            )
+            db.session.add(new_company)
+            db.session.commit()
+        else:
+            return jsonify(success=False,message="Company with this name already exists")
+    else:
+         return jsonify(checker)
+    return jsonify(success=True,message="Company has been registered")
 
 @app.route('/api/company/<company>', methods=['GET'])
 def check_company_name(company):
