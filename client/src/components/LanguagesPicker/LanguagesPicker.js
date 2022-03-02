@@ -94,6 +94,10 @@ function LanguagesPicker() {
 		});
 	};
 
+	const getExperience = (language) => {
+		return selectedLanguages[language];
+	};
+
 	const unselectedLanguages = Object.keys(languageList).filter(
 		(language) => !Object.keys(selectedLanguages).includes(language)
 	);
@@ -154,7 +158,7 @@ function LanguagesPicker() {
 						<br />
 						{Object.keys(selectedLanguages).map((language) => (
 							<Chip
-								avatar={<Avatar>1</Avatar>}
+								avatar={<Avatar>{getExperience(language)}</Avatar>}
 								sx={{
 									marginTop: 0.5,
 									marginBottom: 0.5,
