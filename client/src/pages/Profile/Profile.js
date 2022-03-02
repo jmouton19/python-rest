@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useUserCredentials } from "../../AuthProvider";
+import { useUserCredentials, useAuth } from "../../AuthProvider";
 import Grid from "@mui/material/Grid";
 import {
 	Avatar,
@@ -28,6 +28,8 @@ import {
 	Divider,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AvatarPicker from "../SignUp/AvatarPicker";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -42,8 +44,10 @@ const fabStyle = {
 };
 
 function Profile() {
+	const auth = useAuth();
 	const user = useUserCredentials();
 	const [edit, setEdit] = useState(false);
+	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [password, setPassword] = useState("");
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
@@ -61,16 +65,28 @@ function Profile() {
 		setEdit(false);
 	};
 
+	const handleConfirmDeleteOpen = () => {
+		setConfirmDelete(true);
+	};
+
+	const handleConfirmDeleteClose = () => {
+		setConfirmDelete(false);
+	};
+
 	return (
 		<React.Fragment>
-			<Fab
-				style={fabStyle}
-				color="primary"
-				aria-label="edit"
-				onClick={handleEditOpen}
-			>
-				<EditIcon />
-			</Fab>
+			{auth ? (
+				<>
+					<Fab
+						style={fabStyle}
+						color="primary"
+						aria-label="edit"
+						onClick={handleEditOpen}
+					>
+						<EditIcon />
+					</Fab>
+				</>
+			) : null}
 			<Dialog open={edit} onClose={handleEditClose}>
 				<DialogTitle><u>Edit Details</u></DialogTitle>
 				<Grid container padding={1} rowSpacing={3} alignItems="center">
@@ -191,7 +207,7 @@ function Profile() {
 							</Grid>
 						</Grid>
 						<DialogActions>
-							<Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+							<Grid container justifyContent="space-between" alignItems="center" spacing={1}>
 								<Grid item xs={9}>
 									<FormControl fullWidth>
 										<InputLabel htmlFor="password-repeat-input">
@@ -211,18 +227,53 @@ function Profile() {
 									</FormControl>
 								</Grid>
 								<Grid item xs={3}>
-									<Button 
-										onClick={handleEditClose} 
-										variant="contained"
-										//TODO:Add server communication and updating
-									>
-										Save Changes
-									</Button>
+									<Stack direction="row" spacing= {1}>
+										<Button 
+											onClick={handleEditClose} 
+											variant="contained"
+											sx={ { borderRadius: "50%" } }
+											//TODO:Add server communication and updating
+										>
+											<SaveIcon />
+										</Button>
+										<Button 
+											onClick={handleConfirmDeleteOpen} 
+											variant="contained"
+											sx={ { borderRadius: "50%", height: 60} }
+											color="error"
+											//TODO:Add server communication and updating
+										>
+											<DeleteIcon />
+										</Button>
+									</Stack>
 								</Grid>
 							</Grid>
 						</DialogActions>
 					</Grid>
 				</Grid>
+			</Dialog>
+			<Dialog open={confirmDelete} onClose={handleConfirmDeleteClose}>
+				<DialogTitle><u>Are you sure you want to delete your profile?</u></DialogTitle>
+				<DialogActions>
+					<FormControl fullWidth>
+						<Stack direction="row" divider={<Divider orientation="vertical" flexItem />} justifyContent="space-around">
+							<Button
+								variant="contained"
+								onClick={handleConfirmDeleteClose}
+								color="error"
+							>
+								Confirm
+							</Button>
+							<Button
+								variant="contained"
+								onClick={handleConfirmDeleteClose}
+								color="primary"
+							>
+								Cancel
+							</Button>
+						</Stack>
+					</FormControl>
+				</DialogActions>
 			</Dialog>
 			<Container minWidth="md">
 				<Grid container alignItems="flex-start" spacing={2} padding={3}>
