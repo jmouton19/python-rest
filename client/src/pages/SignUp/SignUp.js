@@ -25,8 +25,8 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { useCheckUsername, useCheckEmail } from "../../AuthProvider";
-import LanguagesPicker from "./LanguagesPicker";
-import AvatarPicker from "./AvatarPicker";
+import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
+import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);

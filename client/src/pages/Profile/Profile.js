@@ -30,7 +30,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AvatarPicker from "../SignUp/AvatarPicker";
+import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
@@ -241,7 +241,6 @@ function Profile() {
 											variant="contained"
 											sx={ { borderRadius: "50%", height: 60} }
 											color="error"
-											//TODO:Add server communication and updating
 										>
 											<DeleteIcon />
 										</Button>
@@ -261,6 +260,7 @@ function Profile() {
 								variant="contained"
 								onClick={handleConfirmDeleteClose}
 								color="error"
+								//TODO:Add server communication and updating
 							>
 								Confirm
 							</Button>
