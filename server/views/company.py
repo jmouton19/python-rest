@@ -8,7 +8,7 @@ def signup_company():
     request_data = request.get_json()
     email=request_data['email']
     company_name=request_data['company_name']
-    company=db.session.query(Company).filter(Company.company_name==request_data['company_name']).one_or_none()
+    company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
     checker=email_checkr(email)
     if checker['success']==True:
         if company==None:
