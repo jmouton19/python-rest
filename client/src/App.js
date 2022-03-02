@@ -8,6 +8,7 @@ import AuthProvider from "./AuthProvider";
 import Profile from "./pages/Profile/Profile";
 import Contracts from "./pages/Contracts/Contracts";
 import About from "./pages/About/About";
+import AddContract from "./pages/AddContract/AddContract";
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/contracts" element={<Contracts />} />
 						<Route path="/about" element={<About />} />
+						<Route path="/addcontract" element={<AddContract />} />
 						<Route path="/" element={<Home />} />
 					</Routes>
 				</Router>
