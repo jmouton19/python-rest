@@ -1,5 +1,3 @@
-from calendar import c
-from hashlib import new
 from flask import jsonify, request
 from server import app
 from server.models import db, Contract, Company, ContractLanguages

@@ -91,7 +91,10 @@ def apply_contract(username):
     application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
     if request.method == 'POST':
         if application==None:        
-            new_application=Application()
+            new_application=Application(
+                contract_id=contract_id,
+                developer_id=developer.developer_id
+            )
             developer.applications.append(new_application)
             contract.applications.append(new_application)
         else:
@@ -113,7 +116,10 @@ def block_company(username):
     blocked=db.session.query(BlockedCompany).filter(BlockedCompany.company_id==company.company_id, BlockedCompany.developer_id==developer.developer_id).one_or_none()
     if request.method == 'POST':
         if blocked==None:
-            new_blocked=BlockedCompany()
+            new_blocked=BlockedCompany(
+                company_id=company.company_id,
+                developer_id=developer.developer_id
+            )
             developer.blocked_companies.append(new_blocked)
             company.blockings.append(new_blocked)
         else:

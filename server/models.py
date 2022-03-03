@@ -41,8 +41,7 @@ class Contract(db.Model):
     contract_languages = db.relationship('ContractLanguages', backref='contract', uselist=False, cascade = "all, delete, delete-orphan" )#1to1
 
 class DeveloperLanguages(db.Model):
-    develepor_languages_id=db.Column(db.Integer,primary_key=True)
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'),unique=True)
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'),primary_key=True)
     python = db.Column(db.Integer)
     java = db.Column(db.Integer)
     javascript = db.Column(db.Integer)
@@ -64,8 +63,7 @@ class DeveloperLanguages(db.Model):
     lua = db.Column(db.Integer) 
     
 class ContractLanguages(db.Model):
-    contract_languages_id=db.Column(db.Integer,primary_key=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'),unique=True)    
+    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'),primary_key=True)    
     python = db.Column(db.Integer)
     java = db.Column(db.Integer)
     javascript = db.Column(db.Integer)
@@ -87,14 +85,12 @@ class ContractLanguages(db.Model):
     lua = db.Column(db.Integer) 
 
 class Application(db.Model):
-    application_id=db.Column(db.Integer,primary_key=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'))   
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
+    contract_id = db.Column(db.Integer, db.ForeignKey('contract.contract_id'),primary_key=True)   
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'),primary_key=True)
 
 class BlockedCompany(db.Model):
-    blocked_company_id=db.Column(db.Integer,primary_key=True)
-    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id')) 
-    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))   
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'),primary_key=True) 
+    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'),primary_key=True)   
 
 if __name__ == "__main__":
     db.create_all()
