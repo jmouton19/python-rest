@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ExperiencePicker from "./ExperiencePicker";
+import { useUserCredentials } from "../../AuthProvider";
 
 // Todo: Get From Server
 const languageList = [
@@ -72,12 +73,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	},
 }));
 
-function LanguagesPicker() {
+function LanguagesPicker(props) {
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
+	const { existingLanguages } = props;
 	const searchBarRef = useRef();
+	const user = useUserCredentials();
 
-	console.log(selectedLanguages);
+	useEffect(() => {
+		if(existingLanguages){
+			setSelectedLanguages({
+				...user["programmingLanguages"],
+			});
+			
+		}
+	}, [existingLanguages]);
 
 	const addNewLanguage = (language) => {
 		let newLanguage = {};
@@ -181,6 +191,11 @@ function LanguagesPicker() {
 										<ExperiencePicker
 											language={language}
 											updateLanguage={updateLanguage}
+											experience = {user === null ? (
+												0
+											) :(
+												user["programmingLanguages"][language]
+											)}
 										></ExperiencePicker>
 									</Grid>
 								</React.Fragment>

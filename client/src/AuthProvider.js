@@ -67,7 +67,7 @@ function AuthProvider({ children }) {
 			password: "12341234",
 			userType: "developer",
 			avatarUrl: "https://i.ibb.co/d5n2XtN/00e7210667fb.jpg",
-			programmingLanguages: ["Python", "JavaScript", "Java", "C", "R"],
+			programmingLanguages: { Python: 2, JavaScript: 4, Java: 3, C: 1, R: 5 },
 		});
 		setAuth(true);
 	}

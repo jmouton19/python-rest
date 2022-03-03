@@ -33,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 
 const fabStyle = {
 	margin: 0,
@@ -123,7 +124,8 @@ function Profile() {
 											label="Email" 
 										/>
 										<Divider/>
-										
+										<LanguagesPicker existingLanguages = {true} />
+										<Divider/>
 									</Stack>
 								) : (
 									<Stack>

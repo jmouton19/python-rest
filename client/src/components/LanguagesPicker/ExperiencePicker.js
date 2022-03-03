@@ -30,9 +30,15 @@ const StyledRating = styled(Rating)({
 	},
 });
 
-function ExperiencePicker({ language, updateLanguage }) {
+function ExperiencePicker({ language, updateLanguage, experience }) {
 	const [value, setValue] = React.useState(0);
 	const [hover, setHover] = React.useState(-1);
+
+	React.useEffect(() => {
+		if(experience != null) {
+			setValue(experience);
+		}
+	},[experience]);
 
 	return (
 		<Stack direction="row">
