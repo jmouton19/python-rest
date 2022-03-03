@@ -26,6 +26,8 @@ import {
 	FormControl,
 	FormHelperText,
 	Divider,
+	Rating,
+	Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -34,6 +36,10 @@ import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
+import WorkIcon from "@mui/icons-material/Work";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+
+import { styled } from "@mui/material/styles";
 
 const fabStyle = {
 	margin: 0,
@@ -43,6 +49,29 @@ const fabStyle = {
 	left: "auto",
 	position: "fixed",
 };
+
+const labels = {
+	0: "< 1 Year",
+	0.5: "1 Year",
+	1: "2 Years",
+	1.5: "3 Years",
+	2: "4 Years",
+	2.5: "5 Years",
+	3: "6 Years",
+	3.5: "7 Years",
+	4: "8 Years",
+	4.5: "9 Years",
+	5: "10+ Years",
+};
+
+const StyledRating = styled(Rating)({
+	"& .MuiRating-iconFilled": {
+		color: "#85571e",
+	},
+	"& .MuiRating-iconHover": {
+		color: "green",
+	},
+});
 
 function Profile() {
 	const auth = useAuth();
@@ -314,24 +343,41 @@ function Profile() {
 									<Table >
 										<TableHead>
 											<TableRow>
-												<TableCell colSpan={2}>
+												<TableCell>
+													<Typography variant="h5">
+														Programming Languages
+													</Typography>
+												</TableCell>
+												<TableCell>
 													<Typography variant="h5">
 														Experience
 													</Typography>
 												</TableCell>
 											</TableRow>
-											<TableRow>
-												<TableCell>
-													<Typography variant="h6">
-														Programming Languages
-													</Typography>
-												</TableCell>
-												<TableCell>
-													<Typography variant="h6">
-														Months
-													</Typography>
-												</TableCell>
-											</TableRow>
+											{Object.keys(user["programmingLanguages"]).map((language) => (
+												<TableRow key={language}>
+													<TableCell>
+														<Typography>
+															{language}
+														</Typography>
+													</TableCell>
+													<TableCell>
+														<Stack direction="row">
+															<StyledRating
+																value={user["programmingLanguages"][language]}
+																readOnly
+																icon={<WorkIcon fontSize="inherit" />}
+																emptyIcon={<WorkOutlineIcon fontSize="inherit" />}
+																max={5}
+																precision={0.5}
+															/>
+															<Typography variant="caption">
+																<Box sx={{ ml: 2 }}>{labels[user["programmingLanguages"][language]]}</Box>
+															</Typography>
+														</Stack>
+													</TableCell>
+												</TableRow>
+											))}
 										</TableHead>
 										<TableBody>
 
