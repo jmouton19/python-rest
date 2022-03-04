@@ -2,17 +2,25 @@ from flask import jsonify, request
 from server import app
 from server.models import db, Developer, Company
 
-
-def email_checkr(email):
+def email_checkr(email,login=None):
     result=db.session.query(Developer).filter(Developer.email==email).one_or_none()
     if result:
-        return dict(success=False,message="Developer with this email already exists")
+        if login:
+            return "Developer",result
+        else:
+            return dict(success=False,message="Email already exists",type="Developer")
     else:
         result=db.session.query(Company).filter(Company.email==email).one_or_none()
         if result:
-            return dict(success=False,message="Company with this email already exists")
+            if login:
+                return "Company",result
+            else:
+                 return dict(success=False,message="Email already exists",type="Company")
         else:
-            return dict(success=True,message="This email is available")
+            if login:
+               return None,None
+            else:
+                return dict(success=True,message="This email has not been registered")
 
 @app.route('/api/email', methods=['GET'])
 def check_email():

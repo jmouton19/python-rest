@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Company,Developer
+from server.models import db, Company
 from server.views.checkemail import email_checkr
 
 @app.route('/api/company', methods=['POST'])

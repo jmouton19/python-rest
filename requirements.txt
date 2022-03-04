@@ -1,3 +1,4 @@
+cffi==1.15.0
 click==8.0.4
 Flask==2.0.3
 Flask-Cors==3.0.10
@@ -8,6 +9,7 @@ itsdangerous==2.1.0
 Jinja2==3.0.3
 MarkupSafe==2.1.0
 psycopg2-binary==2.9.3
+pycparser==2.21
 six==1.16.0
 SQLAlchemy==1.4.31
 Werkzeug==2.0.3

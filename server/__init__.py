@@ -6,4 +6,4 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgresql://tqafvqemczrnoc:3505179c6cbe8
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 cors = CORS(app)
 
-from server.views import checkemail, developer, company, main, contract, languages
+from server.views import checkemail, developer, company, main, contract, languages, login
