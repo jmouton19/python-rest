@@ -381,8 +381,8 @@ function SignUp() {
 											</Grid>
 											<Grid item xs={12}>
 												<LanguagesPicker
-													setParentProgrammingLanguages={
-														setProgrammingLanguages
+													setLanguagesCallback={(languages) =>
+														setProgrammingLanguages(languages)
 													}
 												/>
 											</Grid>

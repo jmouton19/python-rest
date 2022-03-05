@@ -76,7 +76,7 @@ function AuthProvider({ children }) {
 					console.log(
 						`${userType} with username, ${username}, was logged in successfully. User profile will now be retrieved...`
 					);
-					loadUserProfile(userType, username);
+					loadUserProfile(userType.toLowerCase(), username);
 					navigate("/");
 
 					return true;
@@ -93,12 +93,25 @@ function AuthProvider({ children }) {
 			.get(`${baseUrl}/api/${userType.toLowerCase()}/${username}`)
 			.then((res_GET) => {
 				const { success } = res_GET.data;
-
 				if (success) {
-					const userData = res_GET.data[userType.toLowerCase()];
+					const userDataFromServer = res_GET.data[userType];
 					setUser({
 						userType,
-						...userData,
+						avatarUrl: userDataFromServer.avatar,
+						developerID: userDataFromServer.developerID,
+						email: userDataFromServer.email,
+						githubURL: userDataFromServer.github_url,
+						linkedInURL: userDataFromServer.linkedin_url,
+						firstName: userDataFromServer.name,
+						lastName: userDataFromServer.surname,
+						username: userDataFromServer.username,
+						programmingLanguages: {
+							Python: 2,
+							JavaScript: 4,
+							Java: 3,
+							C: 1,
+							R: 5,
+						},
 					});
 					setAuth(true);
 				} else {

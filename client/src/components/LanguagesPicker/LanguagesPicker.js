@@ -76,21 +76,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function LanguagesPicker(props) {
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
-	const { existingLanguages, setParentProgrammingLanguages } = props;
+	const { presetLanguages, setLanguagesCallback } = props;
 	const searchBarRef = useRef();
 	const user = useUser();
 
+	console.log(setLanguagesCallback);
+
 	useEffect(() => {
-		if (existingLanguages) {
+		if (presetLanguages) {
 			setSelectedLanguages({
 				...user["programmingLanguages"],
 			});
 		}
-	}, [existingLanguages]);
+	}, []);
 
-	// subscribe the parent state to this components state
+	// execute callback function, if defined, whenever the selected languages change
 	useEffect(() => {
-		setParentProgrammingLanguages(selectedLanguages);
+		if (setLanguagesCallback) {
+			setLanguagesCallback(selectedLanguages);
+		}
 	}, [selectedLanguages]);
 
 	const addNewLanguage = (language) => {
