@@ -13,22 +13,18 @@ import {
 } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import bcrypt from "bcryptjs";
 
 function Login() {
-	const saltRounds = 10;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [hashedPassword, setHashedPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
-	console.log(JSON.stringify(hashedPassword));
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
 	}
 
-	function hashPassword() {
-		setHashedPassword(bcrypt.hashSync(password, saltRounds));
+	function login() {
+		console.log(JSON.stringify(password));
 	}
 	
 
@@ -84,7 +80,7 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<Button variant="contained" onClick={hashPassword}>
+								<Button variant="contained" onClick={login}>
 									Login
 								</Button>
 							</FormControl>
