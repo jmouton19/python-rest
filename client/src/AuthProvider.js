@@ -37,9 +37,11 @@ export function useLogin() {
 }
 
 function AuthProvider({ children }) {
-	const [, setAuth] = useState(null);
+	const [auth, setAuth] = useState(false);
 	const [user, setUser] = useState(null);
 	const navigate = useNavigate();
+
+	console.log(auth);
 
 	async function checkUsername(username) {
 		const url = `${baseUrl}/api/developer?username=${username}`;
@@ -130,7 +132,7 @@ function AuthProvider({ children }) {
 	}
 
 	return (
-		<AuthContext.Provider value={user}>
+		<AuthContext.Provider value={auth}>
 			<UserContext.Provider value={user}>
 				<LogoutContext.Provider value={logout}>
 					<CheckUsernameContext.Provider value={checkUsername}>
