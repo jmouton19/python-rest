@@ -20,6 +20,7 @@ import axios from "axios";
 
 
 function AddContract() {
+	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [value, setValue] = useState("");
 	const [length, setLength] = useState("");
@@ -38,7 +39,7 @@ function AddContract() {
 			// "name": variable,
 			length: parseInt(length),
 			value: parseInt(value),
-			title: "Title",
+			title: title,
 			description: description,
 			remote: str2bool(location),
 			open: true,
@@ -69,6 +70,22 @@ function AddContract() {
 							<Typography variant="h3" color="primary" align="center">
 								Add new contract
 							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<FormControl fullWidth>
+								<InputLabel htmlFor="contract-title">
+									Contract Title
+								</InputLabel>
+								<OutlinedInput
+									id="contract-title"
+									value={title}
+									type="text"
+									onChange={(event) => {
+										setTitle(event.target.value);
+									}}
+									label="Contract Title"
+								/>
+							</FormControl>
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
