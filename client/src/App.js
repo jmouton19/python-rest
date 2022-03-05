@@ -12,8 +12,8 @@ import About from "./pages/About/About";
 function App() {
 	return (
 		<>
-			<AuthProvider>
-				<Router>
+			<Router>
+				<AuthProvider>
 					<AppBar />
 					<Routes>
 						<Route path="/signup" element={<SignUp />} />
@@ -23,8 +23,8 @@ function App() {
 						<Route path="/about" element={<About />} />
 						<Route path="/" element={<Home />} />
 					</Routes>
-				</Router>
-			</AuthProvider>
+				</AuthProvider>
+			</Router>
 		</>
 	);
 }

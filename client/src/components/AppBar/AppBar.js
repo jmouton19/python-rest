@@ -14,7 +14,7 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useAuth, useUserCredentials, useLogout } from "../../AuthProvider";
+import { useAuth, useUser, useLogout } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
@@ -23,7 +23,7 @@ export default function PrimarySearchAppBar() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const auth = useAuth();
-	const user = useUserCredentials();
+	const user = useUser();
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -82,7 +82,7 @@ export default function PrimarySearchAppBar() {
 						<Avatar
 							src={
 								user
-									? user.avatarUrl
+									? user.avatar
 									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 							}
 						></Avatar>

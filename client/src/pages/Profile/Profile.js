@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useUserCredentials, useAuth } from "../../AuthProvider";
+import { useUser, useAuth } from "../../AuthProvider";
 import Grid from "@mui/material/Grid";
 import {
 	Avatar,
@@ -75,7 +75,7 @@ const StyledRating = styled(Rating)({
 
 function Profile() {
 	const auth = useAuth();
-	const user = useUserCredentials();
+	const user = useUser();
 	const [edit, setEdit] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [password, setPassword] = useState("");

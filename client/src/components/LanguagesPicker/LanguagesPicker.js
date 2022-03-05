@@ -12,7 +12,7 @@ import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ExperiencePicker from "./ExperiencePicker";
-import { useUserCredentials } from "../../AuthProvider";
+import { useUser } from "../../AuthProvider";
 
 // Todo: Get From Server
 const languageList = [
@@ -76,18 +76,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function LanguagesPicker(props) {
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
-	const { existingLanguages } = props;
+	const { existingLanguages, setParentProgrammingLanguages } = props;
 	const searchBarRef = useRef();
-	const user = useUserCredentials();
+	const user = useUser();
 
 	useEffect(() => {
-		if(existingLanguages){
+		if (existingLanguages) {
 			setSelectedLanguages({
 				...user["programmingLanguages"],
 			});
-			
 		}
 	}, [existingLanguages]);
+
+	// subscribe the parent state to this components state
+	useEffect(() => {
+		setParentProgrammingLanguages(selectedLanguages);
+	}, [selectedLanguages]);
 
 	const addNewLanguage = (language) => {
 		let newLanguage = {};
@@ -128,7 +132,7 @@ function LanguagesPicker(props) {
 
 	return (
 		<>
-			<Stack direction="column" spacing={1} marginBottom={2}>
+			<Stack direction="column" spacing={1}>
 				<InputLabel> Add your programming languages</InputLabel>
 				<Search>
 					<SearchIconWrapper>
@@ -191,11 +195,11 @@ function LanguagesPicker(props) {
 										<ExperiencePicker
 											language={language}
 											updateLanguage={updateLanguage}
-											experience = {user === null ? (
-												0
-											) :(
-												user["programmingLanguages"][language]
-											)}
+											experience={
+												user === null
+													? 0
+													: user["programmingLanguages"][language]
+											}
 										></ExperiencePicker>
 									</Grid>
 								</React.Fragment>

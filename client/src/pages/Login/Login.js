@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -14,21 +13,18 @@ import {
 } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import { useLogin } from "../../AuthProvider";
 
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
+	const login = useLogin();
+
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
 	}
-
-	let navigate = useNavigate();
-	const routeChange = () => {
-		let path = "/";
-		navigate(path);
-	};
 
 	return (
 		<React.Fragment>
@@ -42,9 +38,7 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<InputLabel htmlFor="email-input">
-									Email Address / Company Name
-								</InputLabel>
+								<InputLabel htmlFor="email-input">Email Address</InputLabel>
 								<OutlinedInput
 									id="email-input"
 									value={email}
@@ -82,7 +76,10 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<Button variant="contained" onClick={routeChange}>
+								<Button
+									variant="contained"
+									onClick={() => login(email, password)}
+								>
 									Login
 								</Button>
 							</FormControl>

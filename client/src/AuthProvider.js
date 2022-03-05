@@ -1,25 +1,23 @@
+/* eslint-disable no-unreachable */
 import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 const AuthContext = createContext();
-const UserCredentialsContext = createContext();
-const SimulateLoginContext = createContext();
+const UserContext = createContext();
 const LogoutContext = createContext();
 const CheckUsernameContext = createContext();
 const CheckEmailContext = createContext();
+const LoginContext = createContext();
 
 export function useAuth() {
 	return useContext(AuthContext);
 }
 
-export function useUserCredentials() {
-	return useContext(UserCredentialsContext);
-}
-
-export function useSimulateLogin() {
-	return useContext(SimulateLoginContext);
+export function useUser() {
+	return useContext(UserContext);
 }
 
 export function useLogout() {
@@ -34,9 +32,14 @@ export function useCheckEmail() {
 	return useContext(CheckEmailContext);
 }
 
+export function useLogin() {
+	return useContext(LoginContext);
+}
+
 function AuthProvider({ children }) {
 	const [, setAuth] = useState(null);
 	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
 
 	async function checkUsername(username) {
 		const url = `${baseUrl}/api/developer?username=${username}`;
@@ -58,18 +61,54 @@ function AuthProvider({ children }) {
 		return true;
 	}
 
-	function simulateLogin() {
-		setUser({
-			username: "johndoen",
-			firstName: "John",
-			lastName: "Doe",
-			email: "johndoe@gmail.com",
-			password: "12341234",
-			userType: "developer",
-			avatarUrl: "https://i.ibb.co/d5n2XtN/00e7210667fb.jpg",
-			programmingLanguages: { Python: 2, JavaScript: 4, Java: 3, C: 1, R: 5 },
-		});
-		setAuth(true);
+	function login(email, password) {
+		const url = `${baseUrl}/api/login`;
+		const data_POST = {
+			email,
+			password,
+		};
+		axios
+			.post(url, data_POST)
+			.then((res_POST) => {
+				const { success, type: userType, name: username } = res_POST.data;
+
+				if (success) {
+					console.log(
+						`${userType} with username, ${username}, was logged in successfully. User profile will now be retrieved...`
+					);
+					loadUserProfile(userType, username);
+					navigate("/");
+
+					return true;
+				} else {
+					console.log("Error! Showing response data:");
+					console.log(res_POST);
+				}
+			})
+			.catch((err) => console.log(err));
+	}
+
+	function loadUserProfile(userType, username) {
+		axios
+			.get(`${baseUrl}/api/${userType.toLowerCase()}/${username}`)
+			.then((res_GET) => {
+				const { success } = res_GET.data;
+
+				if (success) {
+					const userData = res_GET.data[userType.toLowerCase()];
+					setUser({
+						userType,
+						...userData,
+					});
+					setAuth(true);
+				} else {
+					console.log("Error! Showing response data:");
+					console.log(res_GET);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	}
 
 	function logout() {
@@ -79,17 +118,17 @@ function AuthProvider({ children }) {
 
 	return (
 		<AuthContext.Provider value={user}>
-			<UserCredentialsContext.Provider value={user}>
-				<SimulateLoginContext.Provider value={simulateLogin}>
-					<LogoutContext.Provider value={logout}>
-						<CheckUsernameContext.Provider value={checkUsername}>
-							<CheckEmailContext.Provider value={checkEmail}>
+			<UserContext.Provider value={user}>
+				<LogoutContext.Provider value={logout}>
+					<CheckUsernameContext.Provider value={checkUsername}>
+						<CheckEmailContext.Provider value={checkEmail}>
+							<LoginContext.Provider value={login}>
 								{children}
-							</CheckEmailContext.Provider>
-						</CheckUsernameContext.Provider>
-					</LogoutContext.Provider>
-				</SimulateLoginContext.Provider>
-			</UserCredentialsContext.Provider>
+							</LoginContext.Provider>
+						</CheckEmailContext.Provider>
+					</CheckUsernameContext.Provider>
+				</LogoutContext.Provider>
+			</UserContext.Provider>
 		</AuthContext.Provider>
 	);
 }
