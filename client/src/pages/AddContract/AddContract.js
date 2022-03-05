@@ -9,10 +9,12 @@ import {
 	InputLabel,
 	OutlinedInput,
 	InputAdornment,
+	RadioGroup,
+	FormLabel,
+	Radio
 } from "@mui/material";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 
 import axios from "axios";
 
@@ -21,12 +23,16 @@ function AddContract() {
 	const [description, setDescription] = useState("");
 	const [value, setValue] = useState("");
 	const [length, setLength] = useState("");
-	const [checked, setChecked] = React.useState(true);
+	const [location, setLocation] = useState("");
 	
-	const handleChange = (event) => {
-		setChecked(event.target.checked);
+	var str2bool = (value) => {
+		if (value && typeof value === "string") {
+			if (value === "remote") return true;
+			if (value === "office") return false;
+		}
+		return value;
 	};
-	
+
 	function postContract() {
 		const data = {
 			// "name": variable,
@@ -34,12 +40,13 @@ function AddContract() {
 			value: parseInt(value),
 			title: "Title",
 			description: description,
-			remote: checked,
+			remote: str2bool(location),
 			open: true,
 			company_name: "Goggle3",
 			contract_languages: { Java: 6, Kotlin: 3 },
 		};
 		console.log(data);
+		
 
 		axios
 			.post("https://cs334proj1group8.herokuapp.com/api/contract", data)
@@ -130,27 +137,29 @@ function AddContract() {
 								</FormControl>
 							</Grid>
 						</Grid>
-						<Grid item xs={12}>
-							<Typography align="flex-start">
-								Select applicable work locations:
-							</Typography>
-						</Grid>
-						<Grid item
-							container
-							direction="row"
-							spacing={2}
-							justifyContent="flex-start"
-							
-						>
-							<FormControlLabel
-								control={<Checkbox checked={0} onChange={handleChange} name="open"/>}
-								label="Remote"
-							/>
-							<FormControlLabel
-								control={<Checkbox checked={checked} onChange={handleChange} name="office"/>}
-								label="Office"
-							/>
-						</Grid>
+						<FormControl>
+							<FormLabel id="location">Set work location:</FormLabel>
+							<RadioGroup
+								defaultValue="remote"
+								name="location"
+								row
+								onChange={(event) => {
+									setLocation(event.target.value);	
+									console.log(location);								
+								}}
+								value = {location}																
+							>
+								<FormControlLabel value= "remote" control={<Radio />} label="Remote" />
+								<FormControlLabel 
+									value= "office"
+									control={<Radio />} 
+									label="Office"
+								/>
+								
+								
+								
+							</RadioGroup>
+						</FormControl>
 						<Grid item xs={12} >
 							<FormControl fullWidth justifyContent="flex-end">
 								<Button variant="contained" onClick={postContract} >
