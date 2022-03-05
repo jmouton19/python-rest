@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -15,7 +14,7 @@ import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-
+import axios from "axios";
 
 
 function AddContract() {
@@ -28,12 +27,32 @@ function AddContract() {
 		setChecked(event.target.checked);
 	};
 	
-	
-	let navigate = useNavigate();
-	const routeChange = () => {
-		let path = "/";
-		navigate(path);
-	};
+	function postContract() {
+		const data = {
+			// "name": variable,
+			length: parseInt(length),
+			value: parseInt(value),
+			title: "Title",
+			description: description,
+			remote: checked,
+			open: true,
+			company_name: "Goggle3",
+			contract_languages: { Java: 6, Kotlin: 3 },
+		};
+		console.log(data);
+
+		axios
+			.post("https://cs334proj1group8.herokuapp.com/api/contract", data)
+			.then(function (response) {
+				console.log(response);
+
+				// TODO: take user to different page
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
+
 	return (
 		<React.Fragment>
 			<Container maxWidth="md">
@@ -134,7 +153,7 @@ function AddContract() {
 						</Grid>
 						<Grid item xs={12} >
 							<FormControl fullWidth justifyContent="flex-end">
-								<Button variant="contained" onClick={routeChange} >
+								<Button variant="contained" onClick={postContract} >
 									Add Contract
 								</Button>
 							</FormControl>
