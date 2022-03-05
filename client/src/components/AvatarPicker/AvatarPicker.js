@@ -23,8 +23,6 @@ function AvatarPicker(props) {
 
 	const { hideAvatar } = props;
 
-	console.log(hideAvatar);
-
 	function uploadAndGetLink(fileBase64) {
 		const urlWithQueryParameters =
 			"https://api.imgbb.com/1/upload?key=f9f798ffd37ff7b7e88e47ac0dace3d0";

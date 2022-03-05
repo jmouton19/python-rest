@@ -11,13 +11,14 @@ import {
 	InputAdornment,
 	RadioGroup,
 	FormLabel,
-	Radio
+	Radio,
 } from "@mui/material";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-import axios from "axios";
+import { useUser } from "../../AuthProvider";
 
+import axios from "axios";
 
 function AddContract() {
 	const [title, setTitle] = useState("");
@@ -25,14 +26,9 @@ function AddContract() {
 	const [value, setValue] = useState("");
 	const [length, setLength] = useState("");
 	const [location, setLocation] = useState("");
-	
-	var str2bool = (value) => {
-		if (value && typeof value === "string") {
-			if (value === "remote") return true;
-			if (value === "office") return false;
-		}
-		return value;
-	};
+	const [selectedLanguages, setSelectedLanguages] = useState({});
+
+	const user = useUser();
 
 	function postContract() {
 		const data = {
@@ -41,13 +37,14 @@ function AddContract() {
 			value: parseInt(value),
 			title: title,
 			description: description,
-			remote: str2bool(location),
+			remote: location === "remote",
 			open: true,
-			company_name: "Goggle3",
-			contract_languages: { Java: 6, Kotlin: 3 },
+			company_name: user.username,
+			contract_languages: selectedLanguages,
 		};
+
+		console.log("Trying to send contract data via API: ...");
 		console.log(data);
-		
 
 		axios
 			.post("https://cs334proj1group8.herokuapp.com/api/contract", data)
@@ -59,6 +56,12 @@ function AddContract() {
 			.catch(function (error) {
 				console.log(error);
 			});
+	}
+
+	if (user.userType == "developer") {
+		return (
+			<p> Sorry, but you are not a company. You should not be seeing this.</p>
+		);
 	}
 
 	return (
@@ -73,9 +76,7 @@ function AddContract() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<InputLabel htmlFor="contract-title">
-									Contract Title
-								</InputLabel>
+								<InputLabel htmlFor="contract-title">Contract Title</InputLabel>
 								<OutlinedInput
 									id="contract-title"
 									value={title}
@@ -105,17 +106,15 @@ function AddContract() {
 							</FormControl>
 						</Grid>
 						<Grid item xs={12}>
-							<LanguagesPicker />
+							<LanguagesPicker
+								setLanguagesCallback={(languages) => {
+									setSelectedLanguages(languages);
+								}}
+							/>
 						</Grid>
-						<Grid item
-							container
-							direction="row"
-							spacing={2}
-							justifyContent="flex-start"
-							
-						>
-							<Grid item xs={5} >
-								<FormControl >
+						<Grid item container direction="row" spacing={2}>
+							<Grid item xs={6}>
+								<FormControl fullWidth>
 									<InputLabel htmlFor="contract-value">
 										Contract Value (ZAR)
 									</InputLabel>
@@ -130,59 +129,66 @@ function AddContract() {
 										}}
 										label="Contract Value (ZAR)"
 										startAdornment={
-											<InputAdornment position="start">
-												R
-											</InputAdornment>
+											<InputAdornment position="start">R</InputAdornment>
 										}
 									/>
 								</FormControl>
 							</Grid>
-							<Grid item xs={5}>
-								<FormControl>
+							<Grid item xs={6}>
+								<FormControl fullWidth>
 									<InputLabel htmlFor="contract-length">
-										Contract Length (Months)
+										Contract Length
 									</InputLabel>
-									<OutlinedInput 
-										type = "number"
+									<OutlinedInput
+										type="number"
 										id="contract-length"
 										value={length}
 										onChange={(event) => {
 											setLength(event.target.value);
 										}}
-										label="Contract Length (Months)"
+										label="Contract Length"
+										endAdornment={
+											<InputAdornment position="end">months</InputAdornment>
+										}
 									/>
 								</FormControl>
 							</Grid>
-						</Grid>
-						<FormControl>
-							<FormLabel id="location">Set work location:</FormLabel>
-							<RadioGroup
-								defaultValue="remote"
-								name="location"
-								row
-								onChange={(event) => {
-									setLocation(event.target.value);	
-									console.log(location);								
-								}}
-								value = {location}																
-							>
-								<FormControlLabel value= "remote" control={<Radio />} label="Remote" />
-								<FormControlLabel 
-									value= "office"
-									control={<Radio />} 
-									label="Office"
-								/>
-								
-								
-								
-							</RadioGroup>
-						</FormControl>
-						<Grid item xs={12} >
-							<FormControl fullWidth justifyContent="flex-end">
-								<Button variant="contained" onClick={postContract} >
-									Add Contract
-								</Button>
-							</FormControl>
+
+							<Grid item xs={12}>
+								<FormControl fullWidth>
+									<FormLabel id="location">
+										Set work location:
+									</FormLabel>
+									<RadioGroup
+										defaultValue="remote"
+										name="location"
+										row
+										onChange={(event) => {
+											setLocation(event.target.value);
+										}}
+										value={location}
+									>
+										<FormControlLabel
+											value="remote"
+											control={<Radio />}
+											label="Remote"
+										/>
+										<FormControlLabel
+											value="office"
+											control={<Radio />}
+											label="Office"
+										/>
+									</RadioGroup>
+								</FormControl>
+							</Grid>
+
+							<Grid item xs={12}>
+								<FormControl fullWidth>
+									<Button variant="contained" onClick={postContract}>
+										Add Contract
+									</Button>
+								</FormControl>
+							</Grid>
 						</Grid>
 					</Grid>
 				</Box>

@@ -14,7 +14,7 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useAuth, useUserCredentials, useLogout } from "../../AuthProvider";
+import { useAuth, useUser, useLogout } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
@@ -23,7 +23,7 @@ export default function PrimarySearchAppBar() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const auth = useAuth();
-	const user = useUserCredentials();
+	const user = useUser();
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -113,19 +113,21 @@ export default function PrimarySearchAppBar() {
 									My Profile
 								</MenuItem>
 								<MenuItem onClick={handleMenuClose}>My Contracts</MenuItem>
+								{user.userType == "company" ? (
+									<MenuItem
+										component={Link}
+										to="/addcontract"
+										onClick={handleMenuClose}
+									>
+										Add a Contract
+									</MenuItem>
+								) : null}
 								<MenuItem
 									component={Link}
 									to="/"
 									onClick={(handleMenuClose, useLogout)}
 								>
 									Logout
-								</MenuItem>
-								<MenuItem
-									component={Link}
-									to="/addcontract"
-									onClick={handleMenuClose}
-								>
-									Add Contracts
 								</MenuItem>
 							</div>
 						) : (

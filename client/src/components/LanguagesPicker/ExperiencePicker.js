@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -30,19 +30,26 @@ const StyledRating = styled(Rating)({
 	},
 });
 
-function ExperiencePicker({ language, updateLanguage, experience }) {
+function ExperiencePicker({
+	language,
+	updateLanguage,
+	presetValue,
+	disabled,
+	width,
+}) {
 	const [value, setValue] = React.useState(0);
 	const [hover, setHover] = React.useState(-1);
 
-	React.useEffect(() => {
-		if(experience != null) {
-			setValue(experience);
+	useEffect(() => {
+		if (presetValue) {
+			setValue(presetValue / 2);
 		}
-	},[experience]);
+	}, []);
 
 	return (
-		<Stack direction="row">
+		<Stack direction="row" width={width}>
 			<StyledRating
+				disabled={disabled}
 				value={value}
 				precision={0.5}
 				onChange={(event, newValue) => {

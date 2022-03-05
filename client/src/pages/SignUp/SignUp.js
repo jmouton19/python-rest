@@ -22,11 +22,14 @@ import {
 	FormHelperText,
 } from "@mui/material";
 
+import axios from "axios";
+
+import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
+import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
+
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { useCheckUsername, useCheckEmail } from "../../AuthProvider";
-import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
-import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
+import { useCheckUsername, useCheckEmail, useLogin } from "../../AuthProvider";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -43,20 +46,11 @@ function SignUp() {
 	const [lastName, setLastName] = useState("");
 	const [industry, setIndustry] = useState("");
 	const [avatarUrl, setAvatarUrl] = useState(null);
+	const [programmingLanguages, setProgrammingLanguages] = useState({});
 
 	const checkUsername = useCheckUsername();
 	const checkEmail = useCheckEmail();
-
-	console.log({
-		username,
-		email,
-		password,
-		userType,
-		avatarUrl,
-		firstName,
-		lastName,
-		industry,
-	});
+	const login = useLogin();
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -75,13 +69,76 @@ function SignUp() {
 		);
 	}
 
+	function completeSignUp() {
+		const baseUrl = "https://cs334proj1group8.herokuapp.com";
+
+		console.log(userType);
+
+		const url = `${baseUrl}/api/${userType}`;
+
+		console.log(userType);
+		const data =
+			userType == "developer"
+				? {
+					username,
+					email,
+					name: firstName,
+					surname: lastName,
+					password,
+					avatar: avatarUrl,
+					developer_languages: programmingLanguages,
+				}
+				: {
+					company_name: username,
+					email,
+					password,
+					avatar: avatarUrl,
+					industry,
+				};
+
+		console.log("Trying to sign up with the following details: ...");
+		console.log(data);
+
+		axios
+			.post(url, data)
+			.then((res) => {
+				if (res.data.success) {
+					console.log("Sign Up was successfull. User will now be logged in...");
+					login(email, password);
+				}
+			})
+			.catch((err) => console.log(err));
+
+		axios.post();
+	}
+
+	function CompleteSignUpBox() {
+		return (
+			<Box>
+				<Button
+					variant="contained"
+					onClick={completeSignUp}
+					sx={{ mt: 2, mr: 1 }}
+				>
+					Sign Up
+				</Button>
+				<Button
+					onClick={() => setActiveStep(activeStep - 1)}
+					sx={{ mt: 2, mr: 1 }}
+				>
+					Back
+				</Button>
+			</Box>
+		);
+	}
+
 	return (
 		<React.Fragment>
 			<Container maxWidth="sm">
 				<Typography variant="h3" color="primary" gutterBottom paddingTop={3}>
 					Sign Up
 				</Typography>
-				<Box sx={{ maxWidth: 400 }}>
+				<Box>
 					<Stepper activeStep={activeStep} orientation="vertical">
 						<Step key="User Credentials">
 							<StepLabel>User Credentials</StepLabel>
@@ -96,12 +153,34 @@ function SignUp() {
 									>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
+												<FormLabel id="developer-type-label">
+													User Type
+												</FormLabel>
+												<RadioGroup
+													row
+													name="developer-type-group"
+													onChange={(event) => setUserType(event.target.value)}
+													value={userType}
+												>
+													<FormControlLabel
+														value="developer"
+														control={<Radio />}
+														label="Developer"
+													/>
+													<FormControlLabel
+														value="company"
+														control={<Radio />}
+														label="Company"
+													/>
+												</RadioGroup>
+											</FormControl>
+										</Grid>
+										<Grid item xs={12}>
+											<FormControl fullWidth>
 												<InputLabel htmlFor="username-input">
-													{userType === "developer" ? (
-														<a>Username</a>
-													) : (
-														<a>Company Name</a>
-													)}
+													{userType === "developer"
+														? "Username"
+														: "Company Name"}
 												</InputLabel>
 												<OutlinedInput
 													id="username-input"
@@ -119,7 +198,11 @@ function SignUp() {
 															);
 														}
 													}}
-													label="Username"
+													label={
+														userType === "developer"
+															? "Username"
+															: "Company Name"
+													}
 													error={usernameInUseError}
 												/>
 											</FormControl>
@@ -231,42 +314,18 @@ function SignUp() {
 												) : null}
 											</FormControl>
 										</Grid>
-										<Grid item xs={12}>
-											<FormControl fullWidth>
-												<FormLabel id="developer-type-label">
-													User Type
-												</FormLabel>
-												<RadioGroup
-													row
-													name="developer-type-group"
-													onChange={(event) => setUserType(event.target.value)}
-													value={userType}
-												>
-													<FormControlLabel
-														value="developer"
-														control={<Radio />}
-														label="Developer"
-													/>
-													<FormControlLabel
-														value="company"
-														control={<Radio />}
-														label="Company"
-													/>
-												</RadioGroup>
-											</FormControl>
-										</Grid>
 									</Grid>
 								</Box>
-								<Box sx={{ mb: 2 }}>
+								<Box>
 									<Button
 										variant="contained"
 										onClick={() => setActiveStep(activeStep + 1)}
-										sx={{ mt: 1, mr: 1 }}
+										sx={{ mt: 2, mr: 1 }}
 										disabled={step1ButtonDisabledChecks()}
 									>
 										Continue
 									</Button>
-									<Button disabled sx={{ mt: 1, mr: 1 }}>
+									<Button disabled sx={{ mt: 2, mr: 1 }}>
 										Back
 									</Button>
 								</Box>
@@ -277,6 +336,7 @@ function SignUp() {
 								userType === "developer" ? "yourself" : "your company"
 							}`}</StepLabel>
 							{userType === "developer" ? (
+								// Todo fix this approach of passing everything as state
 								<StepContent>
 									<Box component="form">
 										<Grid
@@ -319,29 +379,16 @@ function SignUp() {
 													setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
 												/>
 											</Grid>
-
 											<Grid item xs={12}>
-												<LanguagesPicker />
+												<LanguagesPicker
+													setLanguagesCallback={(languages) =>
+														setProgrammingLanguages(languages)
+													}
+												/>
 											</Grid>
 										</Grid>
 									</Box>
-									<Box sx={{ mb: 2 }}>
-										<div>
-											<Button
-												variant="contained"
-												disabled
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Continue
-											</Button>
-											<Button
-												onClick={() => setActiveStep(activeStep - 1)}
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Back
-											</Button>
-										</div>
-									</Box>
+									<CompleteSignUpBox />
 								</StepContent>
 							) : (
 								<StepContent>
@@ -367,26 +414,14 @@ function SignUp() {
 												</FormControl>
 											</Grid>
 											<Grid item xs={12}>
-												<InputLabel>
-													{userType === "developer" ? "Avatar" : "Company Logo"}
-												</InputLabel>
+												<InputLabel>Company Logo</InputLabel>
 												<AvatarPicker
 													setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
 												/>
 											</Grid>
 										</Grid>
 									</Box>
-									<Box>
-										<Button variant="contained" disabled sx={{ mt: 1, mr: 1 }}>
-											Continue
-										</Button>
-										<Button
-											onClick={() => setActiveStep(activeStep - 1)}
-											sx={{ mt: 1, mr: 1 }}
-										>
-											Back
-										</Button>
-									</Box>
+									<CompleteSignUpBox />
 								</StepContent>
 							)}
 						</Step>
