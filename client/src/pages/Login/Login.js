@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -14,21 +13,24 @@ import {
 } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import bcrypt from "bcryptjs";
 
 function Login() {
+	const saltRounds = 10;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [hashedPassword, setHashedPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	console.log(JSON.stringify(hashedPassword));
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
 	}
 
-	let navigate = useNavigate();
-	const routeChange = () => {
-		let path = "/";
-		navigate(path);
-	};
+	function hashPassword() {
+		setHashedPassword(bcrypt.hashSync(password, saltRounds));
+	}
+	
 
 	return (
 		<React.Fragment>
@@ -82,7 +84,7 @@ function Login() {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<Button variant="contained" onClick={routeChange}>
+								<Button variant="contained" onClick={hashPassword}>
 									Login
 								</Button>
 							</FormControl>
