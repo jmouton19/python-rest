@@ -53,22 +53,75 @@ function EditProfile() {
 	const [industry, setIndustry] = useState("");
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [programmingLanguages, setProgrammingLanguages] = useState({});
-	console.log(username);
-
 	const [showPassword, setShowPassword] = useState(false);
+	console.log(deepEqual(user["programmingLanguages"], programmingLanguages));
 
 	useEffect(() => {
-		setUsername(user["userName"]);
+		setUsername(user["username"]);
 		setAvatarUrl(user["avatarUrl"]);
 
 		if (user["userType"] == "developer") {
 			setFirstName(user["firstName"]);
-			setLastName(user[lastName]);
+			setLastName(user["lastName"]);
 			setProgrammingLanguages(user["programmingLanguages"]);
 		} else {
 			setIndustry(user["industry"]);
 		}
-	}, []);
+	}, [edit]);
+
+	function deepEqual(object1, object2) {
+		const keys1 = Object.keys(object1);
+		const keys2 = Object.keys(object2);
+		if (keys1.length !== keys2.length) {
+			return false;
+		}
+		for (const key of keys1) {
+			const val1 = object1[key];
+			const val2 = object2[key];
+			const areObjects = isObject(val1) && isObject(val2);
+			if (
+				(areObjects && !deepEqual(val1, val2)) ||
+				(!areObjects && val1 !== val2)
+			) {
+				return false;
+			}
+		}
+		return true;
+	}
+	function isObject(object) {
+		return object != null && typeof object === "object";
+	}
+
+	function saveEditDisableChecks() {
+		if (user["userType"] == "developer") {
+			if (
+				user["username"] != username ||
+				user["firstName"] != firstName ||
+				user["lastName"] != lastName ||
+				user["avatarUrl"] != avatarUrl ||
+				!deepEqual(user["programmingLanguages"], programmingLanguages)
+			) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			if (user["username"] != username || user["industry"] != industry) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+	
+	function saveChangePasswordChecks() {
+		return(
+			password == "" ||
+			oldPassword == "" ||
+			passwordRepeated == "" ||
+			password != passwordRepeated
+		);
+	}
 
 	function saveChangedDetails(changePasswordRoute) {
 		const baseUrl = "https://cs334proj1group8.herokuapp.com";
@@ -97,7 +150,10 @@ function EditProfile() {
 						...(user["firstName"] != firstName && { firstName: firstName }),
 						...(user["lastName"] != lastName && { lastName: lastName }),
 						...(user["avatarUrl"] != avatarUrl && { avatarUrl: avatarUrl }),
-						...(user["programmingLanguages"] !== programmingLanguages && {
+						...(!deepEqual(
+							user["programmingLanguages"],
+							programmingLanguages
+						) && {
 							programmingLanguages: programmingLanguages,
 						}),
 					}
@@ -154,7 +210,7 @@ function EditProfile() {
 									<Stack spacing={1}>
 										<TextField
 											variant="outlined"
-											defaultValue={user.username}
+											defaultValue={username}
 											onChange={(event) => {
 												setUsername(event.target.value);
 											}}
@@ -162,7 +218,7 @@ function EditProfile() {
 										/>
 										<TextField
 											variant="outlined"
-											defaultValue={user.firstName}
+											defaultValue={firstName}
 											onChange={(event) => {
 												setFirstName(event.target.value);
 											}}
@@ -170,7 +226,7 @@ function EditProfile() {
 										/>
 										<TextField
 											variant="outlined"
-											defaultValue={user.lastName}
+											defaultValue={lastName}
 											onChange={(event) => {
 												setLastName(event.target.value);
 											}}
@@ -178,7 +234,7 @@ function EditProfile() {
 										/>
 										<Divider />
 										<LanguagesPicker
-											presetLanguages={user.programmingLanguages}
+											presetLanguages={programmingLanguages}
 											setLanguagesCallback={(languages) =>
 												setProgrammingLanguages(languages)
 											}
@@ -189,7 +245,7 @@ function EditProfile() {
 									<Stack spacing={1}>
 										<TextField
 											variant="outlined"
-											defaultValue={user.username}
+											defaultValue={username}
 											onChange={(event) => {
 												setUsername(event.target.value);
 											}}
@@ -198,7 +254,7 @@ function EditProfile() {
 										/>
 										<TextField
 											variant="outlined"
-											defaultValue={user.industry}
+											defaultValue={industry}
 											onChange={(event) => {
 												setIndustry(event.target.value);
 											}}
@@ -233,7 +289,7 @@ function EditProfile() {
 										onClick={() => saveChangedDetails(false)}
 										variant="contained"
 										sx={{ borderRadius: "50%" }}
-										//TODO:Add server communication and updating
+										disabled={saveEditDisableChecks()}
 									>
 										<SaveIcon />
 									</Button>
@@ -328,6 +384,7 @@ function EditProfile() {
 								onClick={() => saveChangedDetails(true)}
 								variant="contained"
 								sx={{ borderRadius: "50%", height: 60 }}
+								disabled= {saveChangePasswordChecks()}
 								//TODO:Add server communication and updating
 							>
 								<SaveIcon />
