@@ -169,87 +169,83 @@ function EditProfile() {
 					</Grid>
 				</Grid>
 			</Dialog>
-			<Dialog open={changePassword} onClose={() => setChangePassword(false)}>
+			<Dialog open={changePassword} onClose={() => setChangePassword(false)} fullWidth>
 				<DialogTitle>
 					Change Password
 				</DialogTitle>
-				<Grid container padding={1} rowSpacing={3} alignItems="center">
-					<Grid item xs={12}>
-						<Stack spacing={1}>
-							<FormControl fullWidth>
-								<InputLabel htmlFor="password-input">
-									New Password
-								</InputLabel>
-								<OutlinedInput
-									id="password-input"
-									type={showPassword ? "text" : "password"}
-									name="password"
-									autoComplete="new-password"
-									onBlur={(event) => {
-										setPassword(event.target.value);
+				<FormControl fullWidth>
+					<Stack padding={1} spacing={1}>
+						<FormControl fullWidth>
+							<InputLabel htmlFor="password-input">
+								New Password
+							</InputLabel>
+							<OutlinedInput
+								id="password-input"
+								type={showPassword ? "text" : "password"}
+								name="password"
+								autoComplete="new-password"
+								onBlur={(event) => {
+									setPassword(event.target.value);
+								}}
+								label="Password"
+								endAdornment={
+									<InputAdornment position="end">
+										<IconButton
+											onClick={() => setShowPassword(!showPassword)}
+											onMouseDown={() => setShowPassword(!showPassword)}
+										>
+											{showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+								}
+							/>
+						</FormControl>
+						<FormControl fullWidth>
+							<InputLabel htmlFor="password-repeat-input">
+								Repeat New Password
+							</InputLabel>
+							<OutlinedInput
+								id="password-repeat-input"
+								type={showPassword ? "text" : "password"}
+								value={passwordRepeated}
+								name="password"
+								autoComplete="new-password"
+								onChange={(event) => {
+									setPasswordRepeated(event.target.value);
+								}}
+								label="Repeat Password"
+								error={password !== passwordRepeated}
+							/>
+							{password !== passwordRepeated ? (
+								<FormHelperText
+									id="password-match-helper-text"
+									sx={{
+										color: "red",
 									}}
-									label="Password"
-									endAdornment={
-										<InputAdornment position="end">
-											<IconButton
-												onClick={() => setShowPassword(!showPassword)}
-												onMouseDown={() => setShowPassword(!showPassword)}
-											>
-												{showPassword ? <VisibilityOff /> : <Visibility />}
-											</IconButton>
-										</InputAdornment>
-									}
-								/>
-							</FormControl>
-							<FormControl fullWidth>
-								<InputLabel htmlFor="password-repeat-input">
-									Repeat New Password
-								</InputLabel>
-								<OutlinedInput
-									id="password-repeat-input"
-									type={showPassword ? "text" : "password"}
-									value={passwordRepeated}
-									name="password"
-									autoComplete="new-password"
-									onChange={(event) => {
-										setPasswordRepeated(event.target.value);
-									}}
-									label="Repeat Password"
-									error={password !== passwordRepeated}
-								/>
-								{password !== passwordRepeated ? (
-									<FormHelperText
-										id="password-match-helper-text"
-										sx={{
-											color: "red",
-										}}
-									>
-										Passwords do not match
-									</FormHelperText>
-								) : null}
-							</FormControl>
-							<Divider />
-							<Grid item xs={12}>
-								<FormControl fullWidth>
-									<InputLabel htmlFor="password-old">
-										Old Password
-									</InputLabel>
-									<OutlinedInput
-										id="password-old-input"
-										type={showPassword ? "text" : "password"}
-										value={oldPassword}
-										name="old-password"
-										onChange={(event) => {
-											setOldPassword(event.target.value);
-										}}
-										label="Old Password"
-									/>
-								</FormControl>
-							</Grid>
-							<Divider />
-						</Stack>
-					</Grid>
-				</Grid>
+								>
+									Passwords do not match
+								</FormHelperText>
+							) : null}
+						</FormControl>
+						<Divider />
+						<FormControl fullWidth>
+							<InputLabel htmlFor="password-old">
+								Old Password
+							</InputLabel>
+							<OutlinedInput
+								id="password-old-input"
+								type={showPassword ? "text" : "password"}
+								value={oldPassword}
+								name="old-password"
+								onChange={(event) => {
+									setOldPassword(event.target.value);
+								}}
+								label="Old Password"
+							/>
+						</FormControl>
+						<Divider />
+					</Stack>
+				</FormControl>
 				<DialogActions>
 					<FormControl fullWidth>
 						<Stack direction="row" justifyContent="space-between">
@@ -271,27 +267,37 @@ function EditProfile() {
 					</FormControl>
 				</DialogActions>
 			</Dialog>
-			<Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
+			<Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)} fullWidth>
 				<DialogTitle>
 					Enter your password to confirm deletion
 				</DialogTitle>
-				<FormControl fullWidth>
-					<Stack padding={1}>
-						<InputLabel htmlFor="password-old">
-							Old Password
+				<Stack padding={1}>
+					<FormControl fullWidth>
+						<InputLabel htmlFor="password-input">
+							Password
 						</InputLabel>
 						<OutlinedInput
-							id="password-old-input"
+							id="password-input"
 							type={showPassword ? "text" : "password"}
-							value={oldPassword}
 							name="password"
+							autoComplete="new-password"
 							onChange={(event) => {
-								setOldPassword(event.target.value);
+								setPassword(event.target.value);
 							}}
-							label="Old Password"
+							label="Password"
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton
+										onClick={() => setShowPassword(!showPassword)}
+										onMouseDown={() => setShowPassword(!showPassword)}
+									>
+										{showPassword ? <VisibilityOff /> : <Visibility />}
+									</IconButton>
+								</InputAdornment>
+							}
 						/>
-					</Stack>
-				</FormControl>
+					</FormControl>
+				</Stack>
 				<DialogActions>
 					<FormControl fullWidth>
 						<Stack
