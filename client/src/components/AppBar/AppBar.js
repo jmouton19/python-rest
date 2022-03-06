@@ -1,119 +1,56 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
+import { Box } from "@mui/system";
+import { Link } from "react-router-dom";
+import Drawer from "@mui/material/Drawer";
+import Divider from "@mui/material/Divider";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Avatar, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
+import { useAuth, useUser, useLogout } from "../../AuthProvider";
+
+const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
+	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-	const isMenuOpen = Boolean(anchorEl);
-	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+	const auth = useAuth();
+	const user = useUser();
 
-	const handleProfileMenuOpen = (event) => {
+	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
-	};
-
-	const handleMobileMenuClose = () => {
-		setMobileMoreAnchorEl(null);
 	};
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
-		handleMobileMenuClose();
 	};
 
-	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
+	const handleDrawerOpen = () => {
+		setOpen(true);
 	};
 
-	const menuId = "primary-search-account-menu";
-	const renderMenu = (
-		<Menu
-			anchorEl={anchorEl}
-			anchorOrigin={{
-				vertical: "top",
-				horizontal: "right",
-			}}
-			id={menuId}
-			keepMounted
-			transformOrigin={{
-				vertical: "top",
-				horizontal: "right",
-			}}
-			open={isMenuOpen}
-			onClose={handleMenuClose}
-		>
-			<MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-			<MenuItem onClick={handleMenuClose}>Log In</MenuItem>
-		</Menu>
-	);
+	const handleDrawerClose = () => {
+		setOpen(false);
+	};
 
-	const mobileMenuId = "primary-search-account-menu-mobile";
-	const renderMobileMenu = (
-		<Menu
-			anchorEl={mobileMoreAnchorEl}
-			anchorOrigin={{
-				vertical: "top",
-				horizontal: "right",
-			}}
-			id={mobileMenuId}
-			keepMounted
-			transformOrigin={{
-				vertical: "top",
-				horizontal: "right",
-			}}
-			open={isMobileMenuOpen}
-			onClose={handleMobileMenuClose}
-		>
-			<MenuItem>
-				<IconButton
-					size="large"
-					aria-label="show 4 new mails"
-					color="inherit"
-				>
-					<Badge badgeContent={4} color="error">
-						<MailIcon />
-					</Badge>
-				</IconButton>
-				<p>Messages</p>
-			</MenuItem>
-			<MenuItem>
-				<IconButton
-					size="large"
-					aria-label="show 17 new notifications"
-					color="inherit"
-				>
-					<Badge badgeContent={17} color="error">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
-				<p>Notifications</p>
-			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
-				<IconButton
-					size="large"
-					aria-label="account of current user"
-					aria-controls="primary-search-account-menu"
-					aria-haspopup="true"
-					color="inherit"
-				>
-					<AccountCircle />
-				</IconButton>
-				<p>Profile</p>
-			</MenuItem>
-		</Menu>
-	);
+	const DrawerHeader = styled("div")(({ theme }) => ({
+		display: "flex",
+		alignItems: "center",
+		backgroundColor: theme.palette.primary.main,
+		minHeight: "63px",
+		padding: theme.spacing(0, 1),
+		// necessary for content to be below app bar
+		...theme.mixins.toolbar,
+		justifyContent: "flex-end",
+	}));
 
 	return (
 		<React.Fragment>
@@ -124,66 +61,142 @@ export default function PrimarySearchAppBar() {
 						edge="start"
 						color="inherit"
 						aria-label="open drawer"
+						onClick={handleDrawerOpen}
 						sx={{ mr: 2 }}
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography
-						variant="h6"
-						noWrap
-						component="div"
-						sx={{ display: { xs: "none", sm: "block" } }}
-					>
-                        ZenOffer
+					<Box sx={{ flexGrow: 1 }} />
+					<Typography variant="h6" component="div">
+						<b>WOWZERS</b>
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
-					<Box sx={{ display: { xs: "none", md: "flex" } }}>
-						<IconButton
-							size="large"
-							aria-label="show 4 new mails"
-							color="inherit"
-						>
-							<Badge badgeContent={4} color="error">
-								<MailIcon />
-							</Badge>
-						</IconButton>
-						<IconButton
-							size="large"
-							aria-label="show 17 new notifications"
-							color="inherit"
-						>
-							<Badge badgeContent={17} color="error">
-								<NotificationsIcon />
-							</Badge>
-						</IconButton>
-						<IconButton
-							size="large"
-							edge="end"
-							aria-label="account of current user"
-							aria-controls={menuId}
-							aria-haspopup="true"
-							onClick={handleProfileMenuOpen}
-							color="inherit"
-						>
-							<AccountCircle />
-						</IconButton>
-					</Box>
-					<Box sx={{ display: { xs: "flex", md: "none" } }}>
-						<IconButton
-							size="large"
-							aria-label="show more"
-							aria-controls={mobileMenuId}
-							aria-haspopup="true"
-							onClick={handleMobileMenuOpen}
-							color="inherit"
-						>
-							<MoreIcon />
-						</IconButton>
-					</Box>
+					<IconButton
+						size="large"
+						aria-label="account of current user"
+						aria-controls="menu-appbar"
+						aria-haspopup="true"
+						onClick={handleMenu}
+						color="inherit"
+					>
+						<Avatar
+							src={
+								user
+									? user.avatarUrl
+									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+							}
+						></Avatar>
+					</IconButton>
+
+					<Menu
+						id="menu-appbar"
+						anchorEl={anchorEl}
+						anchorOrigin={{
+							vertical: "top",
+							horizontal: "right",
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: "top",
+							horizontal: "right",
+						}}
+						open={Boolean(anchorEl)}
+						onClose={handleMenuClose}
+					>
+						{auth ? (
+							<div>
+								<MenuItem
+									component={Link}
+									to="/profile"
+									onClick={handleMenuClose}
+								>
+									My Profile
+								</MenuItem>
+								<MenuItem onClick={handleMenuClose}>My Contracts</MenuItem>
+								{user.userType == "company" ? (
+									<MenuItem
+										component={Link}
+										to="/addcontract"
+										onClick={handleMenuClose}
+									>
+										Add a Contract
+									</MenuItem>
+								) : null}
+								<MenuItem
+									component={Link}
+									to="/"
+									onClick={(handleMenuClose, useLogout)}
+								>
+									Logout
+								</MenuItem>
+							</div>
+						) : (
+							<div>
+								<MenuItem
+									component={Link}
+									to="/login"
+									onClick={handleMenuClose}
+								>
+									Login
+								</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/signup"
+									onClick={handleMenuClose}
+								>
+									Sign Up
+								</MenuItem>
+							</div>
+						)}
+					</Menu>
 				</Toolbar>
 			</AppBar>
-			{renderMobileMenu}
-			{renderMenu}
+			<Drawer
+				sx={{
+					width: drawerWidth,
+					flexShrink: 0,
+					"& .MuiDrawer-paper": {
+						width: drawerWidth,
+						boxSizing: "border-box",
+					},
+				}}
+				variant="persistent"
+				anchor="left"
+				open={open}
+			>
+				<DrawerHeader>
+					<IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
+						<ChevronLeftIcon />
+					</IconButton>
+				</DrawerHeader>
+				<Divider />
+				<Stack spacing={2} alignItems="stretch" color="inherit">
+					<Button
+						component={Link}
+						to="/"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
+						<b>Home</b>
+					</Button>
+					<Button
+						component={Link}
+						to="/contracts"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
+						<b>Contracts</b>
+					</Button>
+					<Button
+						component={Link}
+						to="/about"
+						color="inherit"
+						style={{ minHeight: "63px" }}
+					>
+						<b>About</b>
+					</Button>
+				</Stack>
+			</Drawer>
 		</React.Fragment>
 	);
 }

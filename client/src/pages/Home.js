@@ -1,41 +1,35 @@
-import React, { useState } from "react";
+import { Button, Container, FormControl, Grid } from "@mui/material";
+import React from "react";
+import { useLogin } from "../AuthProvider";
 import "./Home.css";
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 
 function Home() {
-	const [data, setData] = useState({});
+	const sampleLogin = useLogin();
 
-	const requestURL = "/api/getData/";
-
-	function getData() {
-		fetch(requestURL)
-			.then((res) => res.json())
-			.then(
-				(data) => {
-					console.log(data);
-					setData(data);
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
-	}
 	return (
-		<React.Fragment className="App">
-			<header className="App-header">
-				<Button variant="contained" onClick={getData}>
-                    Get Test Data from Back End
-				</Button>
-				<p>{JSON.stringify(data)}</p>
-				<li>
-					<Link to="/signup">Sign Up Page</Link>
-				</li>
-				<li>
-					<Link to="/login">Login Page</Link>
-				</li>
-			</header>
-		</React.Fragment>
+		<>
+			<Container maxWidth="md">
+				<Grid container padding={2} justifyContent="center">
+					<Grid item xs={12}>
+						<FormControl fullWidth>
+							<Button
+								variant="contained"
+								onClick={() => sampleLogin("nicolvisser@yahoo.com", "1234")}
+							>
+								Sample Login: email: nicolvisser@yahoo.com, password: 1234
+							</Button>
+							<Button
+								variant="contained"
+								sx = {{mt: 2}}
+								onClick={() => sampleLogin("admin@amazon.com", "1234")}
+							>
+								Sample Login: email: admin@amazon.com, password: 1234
+							</Button>
+						</FormControl>
+					</Grid>
+				</Grid>
+			</Container>
+		</>
 	);
 }
 
