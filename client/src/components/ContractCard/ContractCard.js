@@ -10,12 +10,21 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Divider } from "@mui/material";
+import { Chip, Divider, Stack, TextField } from "@mui/material";
+
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import BusinessIcon from "@mui/icons-material/Business";
+import RouterIcon from "@mui/icons-material/Router";
 
 function ContractCard({
 	company_name,
+	avatarUrl,
+	title,
 	description,
 	date_posted,
+	open,
+	remote,
 	length,
 	value,
 }) {
@@ -33,35 +42,66 @@ function ContractCard({
 		<>
 			<Card elevation={2}>
 				<CardHeader
-					avatar={<Avatar aria-label={company_name} />}
+					avatar={<Avatar aria-label={company_name} src={avatarUrl} />}
 					action={
 						<IconButton aria-label="settings" onClick={handleMenu}>
 							<MoreVertIcon />
 						</IconButton>
 					}
-					title={company_name}
-					subheader={date_posted}
+					title={title}
+					subheader={company_name}
 				/>
 				<Divider />
 				<CardContent>
-					<Typography component="span" variant="body2" color="text.primary">
-						{`Duration: ${length} Months`}
-					</Typography>
-					<br />
-					<Typography component="span" variant="body2" color="text.primary">
-						{`Value: $${value}`}
-					</Typography>
-					<br />
-					<Typography variant="body2" color="text.secondary">
-						{description}
+					<Stack spacing={2}>
+						<Stack direction="row" spacing={1}>
+							<TextField
+								label="Duration"
+								value={`${length} ${length == 1 ? "month" : "months"}`}
+								variant="outlined"
+								size="small"
+								fullWidth
+							/>
+							<TextField
+								label="Value"
+								value={`$ ${value}`}
+								variant="outlined"
+								size="small"
+								fullWidth
+							/>
+						</Stack>
+						<TextField
+							fullWidth
+							label="Description"
+							value={description}
+							variant="outlined"
+							size="small"
+							minRows={2}
+							multiline={true}
+						/>
+
+						<Stack spacing={1} direction="row">
+							<Chip
+								label={open ? "Looking For Applicants" : "Closed"}
+								color={open ? "success" : "info"}
+								icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
+								size="small"
+							/>
+							<Chip
+								label={remote ? "Remote" : "In-Office"}
+								color="info"
+								icon={remote ? <RouterIcon /> : <BusinessIcon />}
+								size="small"
+							/>
+						</Stack>
+					</Stack>
+
+					<Typography component="span" variant="caption" color="gray">
+						{`Posted: ${date_posted}`}
 					</Typography>
 				</CardContent>
+				<Divider />
 				<CardActions disableSpacing>
-					{/* <Tooltip title="Add to Favorites">
-								<IconButton>
-									<FavoriteIcon color="#ffffff" />
-								</IconButton>
-							</Tooltip> */}
 					<Button variant="grey">Apply Now</Button>
 				</CardActions>
 			</Card>
@@ -81,7 +121,7 @@ function ContractCard({
 				onClose={handleMenuClose}
 			>
 				<MenuItem to="/login" onClick={handleMenuClose}>
-					Block this company
+					Block {company_name}
 				</MenuItem>
 			</Menu>
 		</>

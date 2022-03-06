@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -10,21 +10,45 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-import { sampleData } from "./generateSampleData";
+import axios from "axios";
+
+// import { sampleData } from "./generateSampleData";
 import ContractCard from "../../components/ContractCard/ContractCard";
 
 function AvailableContracts() {
+	const [contractsData, setContractsData] = useState([]);
+
+	useEffect(() => {
+		axios
+			.get("https://cs334proj1group8.herokuapp.com/api/contract")
+			.then((res) => {
+				const { success } = res.data;
+				if (success) {
+					setContractsData(res.data.contracts);
+				} else {
+					console.log(res);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+
 	return (
 		<>
 			<Stack spacing={2}>
-				{sampleData.map((dataItem) => (
+				{contractsData.map((contract) => (
 					<ContractCard
-						key={dataItem.company_name}
-						company_name={dataItem.company_name}
-						description={dataItem.description}
-						date_posted={dataItem.date_posted.toUTCString()}
-						length={dataItem.length}
-						value={dataItem.value}
+						key={contract.contract_id}
+						company_name={contract.company_name}
+						avatarUrl={contract.company_avatar}
+						title={contract.title}
+						description={contract.description}
+						date_posted={contract.date_posted}
+						open={contract.open}
+						remote={contract.remote}
+						length={contract.length}
+						value={contract.value}
 					/>
 				))}
 			</Stack>
