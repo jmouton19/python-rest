@@ -33,8 +33,8 @@ def check_company_name(company):
     if result:
         instance = dict(result.__dict__) 
         instance.pop('_sa_instance_state', None)
-        response= {"success":True, "company": instance }
-        return jsonify(response)
+        instance.pop('password', None)
+        return jsonify(success=True, company= instance)
     else:
         return jsonify(success=False)
    
