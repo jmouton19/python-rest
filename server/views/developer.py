@@ -77,8 +77,12 @@ def check_username(username):
     if result:
         instance = dict(result.__dict__); 
         instance.pop('_sa_instance_state', None)
-        response= {"success":True, "developer": instance }
-        return jsonify(response)
+        instance.pop('password', None)
+        dev_lang=dict(result.developer_languages.__dict__)
+        dev_lang.pop('_sa_instance_state', None)
+        filtered={k: v for k, v in dev_lang.items() if v is not None}
+        instance['developer_languages']=filtered
+        return jsonify(success=False,developer=instance)
     else:
         return jsonify(success=False,message="Developer with this username does not exist")
 
