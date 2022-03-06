@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useUser } from "../../AuthProvider";
+import React, { useEffect, useState } from "react";
+import { useUser, useLoadUserProfile } from "../../AuthProvider";
+import axios from "axios";
 
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -23,7 +24,7 @@ import {
 	IconButton,
 	FormHelperText,
 	Stack,
-	Grid
+	Grid,
 } from "@mui/material";
 
 const fabStyle = {
@@ -37,6 +38,7 @@ const fabStyle = {
 
 function EditProfile() {
 	const user = useUser();
+	const loadUserProfile = useLoadUserProfile();
 	const [edit, setEdit] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [changePassword, setChangePassword] = useState(false);
@@ -45,16 +47,85 @@ function EditProfile() {
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
 
-	const [, setUsername] = useState("");
-	const [, setFirstName] = useState("");
-	const [, setLastName] = useState("");
-	const [, setIndustry] = useState("");
-	const [, setAvatarUrl] = useState(null);
-	const [, setProgrammingLanguages] = useState({});
+	const [username, setUsername] = useState("");
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [industry, setIndustry] = useState("");
+	const [avatarUrl, setAvatarUrl] = useState(null);
+	const [programmingLanguages, setProgrammingLanguages] = useState({});
+	console.log(username);
 
 	const [showPassword, setShowPassword] = useState(false);
 
-	return(
+	useEffect(() => {
+		setUsername(user["userName"]);
+		setAvatarUrl(user["avatarUrl"]);
+
+		if (user["userType"] == "developer") {
+			setFirstName(user["firstName"]);
+			setLastName(user[lastName]);
+			setProgrammingLanguages(user["programmingLanguages"]);
+		} else {
+			setIndustry(user["industry"]);
+		}
+	}, []);
+
+	function saveChangedDetails(changePasswordRoute) {
+		const baseUrl = "https://cs334proj1group8.herokuapp.com";
+
+		const url = `${baseUrl}/api/${user["userType"]}`;
+		let data = {};
+		if (changePasswordRoute) {
+			data =
+				user["userType"] == "developer"
+					? {
+						developerID: user["developerID"],
+						oldPassword: oldPassword,
+						newPassword: password,
+					}
+					: {
+						companyID: user["companyID"],
+						oldPassword: oldPassword,
+						newPassword: password,
+					};
+		} else {
+			data =
+				user["userType"] == "developer"
+					? {
+						developerID: user["developerID"],
+						...(user["username"] != username && { username: username }),
+						...(user["firstName"] != firstName && { firstName: firstName }),
+						...(user["lastName"] != lastName && { lastName: lastName }),
+						...(user["avatarUrl"] != avatarUrl && { avatarUrl: avatarUrl }),
+						...(user["programmingLanguages"] !== programmingLanguages && {
+							programmingLanguages: programmingLanguages,
+						}),
+					}
+					: {
+						companyID: user["companyID"],
+						...(user["industry"] != industry && { industry: industry }),
+					};
+		}
+		axios
+			.put(url, data)
+			.then((res) => {
+				if (res.data.success) {
+					console.log("Details have been updated.");
+					loadUserProfile(user["userType"], user["username"]);
+					if (!changePasswordRoute) {
+						setEdit(false);
+					}
+					setChangePassword(false);
+					return true;
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+		return false;
+	}
+
+	return (
 		<>
 			<Fab
 				style={fabStyle}
@@ -73,7 +144,9 @@ function EditProfile() {
 						<Grid container alignItems="center" padding={1} spacing={2}>
 							<Grid item xs={12}>
 								<Stack>
-									<AvatarPicker setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)} />
+									<AvatarPicker
+										setAvatarUrl={(imageUrl) => setAvatarUrl(imageUrl)}
+									/>
 								</Stack>
 							</Grid>
 							<Grid item xs={12}>
@@ -113,13 +186,14 @@ function EditProfile() {
 										<Divider />
 									</Stack>
 								) : (
-									<Stack spacing = {1}>
+									<Stack spacing={1}>
 										<TextField
 											variant="outlined"
 											defaultValue={user.username}
 											onChange={(event) => {
 												setUsername(event.target.value);
-											}}s
+											}}
+											s
 											label="Username"
 										/>
 										<TextField
@@ -156,29 +230,29 @@ function EditProfile() {
 										</Button>
 									</Stack>
 									<Button
-										onClick={() => setEdit(false)}
+										onClick={() => saveChangedDetails(false)}
 										variant="contained"
 										sx={{ borderRadius: "50%" }}
 										//TODO:Add server communication and updating
 									>
 										<SaveIcon />
 									</Button>
-								</Stack>	
+								</Stack>
 							</FormControl>
 						</DialogActions>
 					</Grid>
 				</Grid>
 			</Dialog>
-			<Dialog open={changePassword} onClose={() => setChangePassword(false)} fullWidth>
-				<DialogTitle>
-					Change Password
-				</DialogTitle>
+			<Dialog
+				open={changePassword}
+				onClose={() => setChangePassword(false)}
+				fullWidth
+			>
+				<DialogTitle>Change Password</DialogTitle>
 				<FormControl fullWidth>
 					<Stack padding={1} spacing={1}>
 						<FormControl fullWidth>
-							<InputLabel htmlFor="password-input">
-								New Password
-							</InputLabel>
+							<InputLabel htmlFor="password-input">New Password</InputLabel>
 							<OutlinedInput
 								id="password-input"
 								type={showPassword ? "text" : "password"}
@@ -229,9 +303,7 @@ function EditProfile() {
 						</FormControl>
 						<Divider />
 						<FormControl fullWidth>
-							<InputLabel htmlFor="password-old">
-								Old Password
-							</InputLabel>
+							<InputLabel htmlFor="password-old">Old Password</InputLabel>
 							<OutlinedInput
 								id="password-old-input"
 								type={showPassword ? "text" : "password"}
@@ -249,16 +321,13 @@ function EditProfile() {
 				<DialogActions>
 					<FormControl fullWidth>
 						<Stack direction="row" justifyContent="space-between">
-							<Button
-								type="text"
-								onClick={() => setChangePassword(false)}
-							>
+							<Button type="text" onClick={() => setChangePassword(false)}>
 								Cancel
 							</Button>
 							<Button
-								onClick={() => setChangePassword(false)}
+								onClick={() => saveChangedDetails(true)}
 								variant="contained"
-								sx={{borderRadius: "50%", height: 60,}}
+								sx={{ borderRadius: "50%", height: 60 }}
 								//TODO:Add server communication and updating
 							>
 								<SaveIcon />
@@ -267,15 +336,15 @@ function EditProfile() {
 					</FormControl>
 				</DialogActions>
 			</Dialog>
-			<Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)} fullWidth>
-				<DialogTitle>
-					Enter your password to confirm deletion
-				</DialogTitle>
+			<Dialog
+				open={confirmDelete}
+				onClose={() => setConfirmDelete(false)}
+				fullWidth
+			>
+				<DialogTitle>Enter your password to confirm deletion</DialogTitle>
 				<Stack padding={1}>
 					<FormControl fullWidth>
-						<InputLabel htmlFor="password-input">
-							Password
-						</InputLabel>
+						<InputLabel htmlFor="password-input">Password</InputLabel>
 						<OutlinedInput
 							id="password-input"
 							type={showPassword ? "text" : "password"}
@@ -300,10 +369,7 @@ function EditProfile() {
 				</Stack>
 				<DialogActions>
 					<FormControl fullWidth>
-						<Stack
-							direction="row"
-							justifyContent="space-between"
-						>
+						<Stack direction="row" justifyContent="space-between">
 							<Button
 								variant="text"
 								onClick={() => setConfirmDelete(false)}
