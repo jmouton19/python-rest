@@ -8,7 +8,6 @@ def login():
     request_data = request.get_json()
     email = request_data['email']
     ph = PasswordHasher()
-    hash_received = ph.hash(request_data['password'])
     type,result=email_checkr(email,True)
     if result:
         if type=="Developer":
@@ -17,6 +16,6 @@ def login():
             name=result.company_name 
     else:
         return jsonify(success=False,message="This email has not been registered")
-    if hash_received==result.password:
+    if ph.verify(result.password,request_data['password']):
          return jsonify(success=True,message="Logged in",type=type,name=name)
     return jsonify(success=False,message="Login failed")
