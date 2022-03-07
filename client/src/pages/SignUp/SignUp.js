@@ -30,6 +30,7 @@ import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { useCheckUsername, useCheckEmail, useLogin } from "../../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -52,6 +53,8 @@ function SignUp() {
 	const checkEmail = useCheckEmail();
 	const login = useLogin();
 
+	const navigate = useNavigate();
+
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
 	}
@@ -69,45 +72,57 @@ function SignUp() {
 		);
 	}
 
+	function step2ButtonDisabledChecks() {
+		if (userType == "developer") {
+			return (
+				avatarUrl === null ||
+				firstName === "" ||
+				lastName === "" ||
+				Object.entries(programmingLanguages).length === 0
+			);
+		} else {
+			return avatarUrl === null || industry === "";
+		}
+	}
+
 	function completeSignUp() {
 		const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
-		console.log(userType);
-
 		const url = `${baseUrl}/api/${userType}`;
 
-		console.log(userType);
-		const data =
-			userType == "developer"
-				? {
-					username,
-					email,
-					name: firstName,
-					surname: lastName,
-					password,
-					avatar: avatarUrl,
-					developer_languages: programmingLanguages,
-				}
-				: {
-					company_name: username,
-					email,
-					password,
-					avatar: avatarUrl,
-					industry,
-				};
+		let data;
 
-		console.log("Trying to sign up with the following details: ...");
-		console.log(data);
+		if (userType == "developer") {
+			data = {
+				username,
+				email,
+				name: firstName,
+				surname: lastName,
+				password,
+				avatar: avatarUrl,
+				developer_languages: programmingLanguages,
+			};
+		} else {
+			data = {
+				company_name: username,
+				email,
+				password,
+				avatar: avatarUrl,
+				industry,
+			};
+		}
 
 		axios
 			.post(url, data)
 			.then((res) => {
 				if (res.data.success) {
-					console.log("Sign Up was successfull. User will now be logged in...");
-					login(email, password);
+					login(email, password).then(() => navigate("/"));
 				}
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.info("Sign Up was unsuccessfull.");
+				console.error(err);
+			});
 
 		axios.post();
 	}
@@ -116,6 +131,7 @@ function SignUp() {
 		return (
 			<Box>
 				<Button
+					disabled={step2ButtonDisabledChecks()}
 					variant="contained"
 					onClick={completeSignUp}
 					sx={{ mt: 2, mr: 1 }}
