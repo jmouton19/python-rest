@@ -2,6 +2,7 @@ from flask import jsonify, request
 from server import app
 from server.models import db, Contract, Company, ContractLanguages
 import datetime
+from server.views.developer import languages_dict
 
 @app.route('/api/contract', methods=['POST','GET'])
 def contract():
@@ -22,45 +23,7 @@ def contract():
         contract_languages=request_data['contract_languages']
         new_contract_languages=ContractLanguages()
         for key, value in contract_languages.items():
-            match key:
-                case 'C':
-                    new_contract_languages.c=value
-                case 'C++':
-                    new_contract_languages.c_plusplus=value
-                case 'Go':        
-                    new_contract_languages.go=value
-                case 'Java':
-                    new_contract_languages.java=value
-                case 'JavaScript':
-                    new_contract_languages.javascript=value
-                case 'Kotlin':
-                    new_contract_languages.kotlin=value
-                case 'Lua':
-                    new_contract_languages.lua=value
-                case 'MATLAB':        
-                    new_contract_languages.matlab=value
-                case 'Objective-C':
-                    new_contract_languages.objective_c=value
-                case 'Perl':
-                    new_contract_languages.perl=value
-                case 'Python':        
-                    new_contract_languages.python=value
-                case 'PHP':        
-                    new_contract_languages.php=value
-                case 'Rust':
-                    new_contract_languages.rust=value
-                case 'Swift':
-                    new_contract_languages.swift=value
-                case 'VBA':        
-                    new_contract_languages.vba=value
-                case 'C#':
-                    new_contract_languages.c_sharp=value
-                case 'TypeScript':
-                    new_contract_languages.typescript=value
-                case 'Ruby':        
-                    new_contract_languages.ruby=value
-                case 'R':        
-                    new_contract_languages.r=value
+            exec("new_dev_languages.%s=%d"%(languages_dict[key],value))
         new_contract.contract_languages=new_contract_languages
 
     elif request.method=='GET':

@@ -1,9 +1,27 @@
-from operator import methodcaller
 from flask import jsonify, request
 from server import app
 from server.models import Contract, db, Developer, DeveloperLanguages, Application, Company, BlockedCompany
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
+
+languages_dict={'C': "c",
+'C++': "c_plusplus",
+"C#":"c_sharp",
+"Python":"python",
+"Java":"java",
+"JavaScript":"javascript",
+"R":"r",
+"Swift":"swift",
+"Objective-C":"objective_c",
+"PHP":"php",
+"MATLAB":"matlab",
+"GO":"go",
+"Rust":"rust",
+"VBA":"vba",
+"Ruby":"ruby",
+"Kotlin":"kotlin",
+"Perl":"perl",
+"Lua":"lua",}
 
 @app.route('/api/developer', methods=['POST','DELETE'])
 def signup_developer():
@@ -28,45 +46,7 @@ def signup_developer():
                 dev_languages=request_data['developer_languages']
                 new_dev_languages=DeveloperLanguages()
                 for key, value in dev_languages.items():
-                    match key:
-                        case 'C':
-                            new_dev_languages.c=value
-                        case 'C++':
-                            new_dev_languages.c_plusplus=value
-                        case 'Go':        
-                            new_dev_languages.go=value
-                        case 'Java':
-                            new_dev_languages.java=value
-                        case 'JavaScript':
-                            new_dev_languages.javascript=value
-                        case 'Kotlin':
-                            new_dev_languages.kotlin=value
-                        case 'Lua':
-                            new_dev_languages.lua=value
-                        case 'MATLAB':        
-                            new_dev_languages.matlab=value
-                        case 'Objective-C':
-                            new_dev_languages.objective_c=value
-                        case 'Perl':
-                            new_dev_languages.perl=value
-                        case 'Python':        
-                            new_dev_languages.python=value
-                        case 'PHP':        
-                            new_dev_languages.php=value
-                        case 'Rust':
-                            new_dev_languages.rust=value
-                        case 'Swift':
-                            new_dev_languages.swift=value
-                        case 'VBA':        
-                            new_dev_languages.vba=value
-                        case 'C#':
-                            new_dev_languages.c_sharp=value
-                        case 'TypeScript':
-                            new_dev_languages.typescript=value
-                        case 'Ruby':        
-                            new_dev_languages.ruby=value
-                        case 'R':        
-                            new_dev_languages.r=value
+                    exec("new_dev_languages.%s=%d"%(languages_dict[key],value))
                 new_dev.developer_languages=new_dev_languages
                 db.session.add(new_dev)
                 db.session.commit()
@@ -94,7 +74,8 @@ def check_username(username):
             dev_lang.pop('_sa_instance_state', None)
             filtered={k: v for k, v in dev_lang.items() if v is not None}
             filtered.pop('developer_id')
-            instance['developer_languages']=filtered
+            print(filtered)
+            instance['developer_languages']=dict((list(languages_dict.keys())[list(languages_dict.values()).index(key)], value) for (key, value) in filtered.items())
             return jsonify(success=True,developer=instance)
         elif request.method=='DELETE':
             db.session.delete(result)
