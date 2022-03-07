@@ -68,7 +68,7 @@ export default function PrimarySearchAppBar() {
 					</IconButton>
 					<Box sx={{ flexGrow: 1 }} />
 					<Typography variant="h6" component="div">
-						<b>WOWZERS</b>
+						<b>KONTRA</b>
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
 					<IconButton
@@ -107,7 +107,7 @@ export default function PrimarySearchAppBar() {
 							<div>
 								<MenuItem
 									component={Link}
-									to="/profile"
+									to={`/profile/${user.userType}/${user.username}`}
 									onClick={handleMenuClose}
 								>
 									My Profile

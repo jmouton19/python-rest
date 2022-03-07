@@ -21,9 +21,9 @@ function Home() {
 							<Button
 								variant="contained"
 								sx={{ mt: 2 }}
-								onClick={() => sampleLogin("admin@amazon.com", "1234")}
+								onClick={() => sampleLogin("admin@disney.com", "1234")}
 							>
-								Sample Login: email: admin@amazon.com, password: 1234
+								Sample Login: email: admin@disney.com, password: 1234
 							</Button>
 						</FormControl>
 					</Grid>

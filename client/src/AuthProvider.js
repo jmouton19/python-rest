@@ -14,6 +14,8 @@ const LoginContext = createContext();
 const LoadUserProfileContext = createContext();
 const CheckPasswordContext = createContext();
 
+import { fetchUserProfile, checkPassword } from "./utils/utils";
+
 export function useAuth() {
 	return useContext(AuthContext);
 }
@@ -46,50 +48,6 @@ export function useCheckPassword() {
 	return useContext(CheckPasswordContext);
 }
 
-async function fetchUserProfile(userType, username) {
-	return new Promise((resolve, reject) => {
-		axios
-			.get(`${baseUrl}/api/${userType.toLowerCase()}/${username}`)
-			.then((res) => {
-				if (res.data.success) {
-					resolve(res.data[userType]);
-				} else {
-					reject(res.data.message);
-				}
-			});
-	});
-}
-
-function mapUserProfileFromDBToFrontend(userType, userData) {
-	let newUserData;
-
-	if (userType == "developer") {
-		newUserData = {
-			userType,
-			avatarUrl: userData.avatar,
-			developerID: userData.developerID,
-			email: userData.email,
-			githubURL: userData.github_url,
-			linkedInURL: userData.linkedin_url,
-			firstName: userData.name,
-			lastName: userData.surname,
-			username: userData.username,
-			programmingLanguages: userData.developer_languages,
-		};
-	} else {
-		newUserData = {
-			userType,
-			avatarUrl: userData.avatar,
-			companyID: userData.developer_id,
-			username: userData.company_name,
-			email: userData.email,
-			industry: userData.industry,
-		};
-	}
-
-	return newUserData;
-}
-
 function AuthProvider({ children }) {
 	const [auth, setAuth] = useState(false);
 	const [user, setUser] = useState(null);
@@ -113,24 +71,6 @@ function AuthProvider({ children }) {
 			return false;
 		}
 		return true;
-	}
-
-	async function checkPassword(email, password) {
-		const url = `${baseUrl}/api/login`;
-		const data_POST = {
-			email,
-			password,
-		};
-		return new Promise((resolve, reject) => {
-			axios.post(url, data_POST).then((res) => {
-				const { success } = res.data;
-				if (success) {
-					resolve(true);
-				} else {
-					reject(res);
-				}
-			});
-		});
 	}
 
 	async function login(email, password) {
@@ -160,13 +100,9 @@ function AuthProvider({ children }) {
 	async function loadUserProfile(userType, username) {
 		return new Promise((resolve) => {
 			fetchUserProfile(userType, username)
-				.then((userDataFromDB) => {
-					const userData = mapUserProfileFromDBToFrontend(
-						userType,
-						userDataFromDB
-					);
-					resolve(userData);
-					setUser(userData);
+				.then((data) => {
+					resolve(data);
+					setUser(data);
 					setAuth(true);
 				})
 				.catch((err) => console.error(err));

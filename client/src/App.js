@@ -37,7 +37,7 @@ function App() {
 						<AppBar />
 						<Routes>
 							<Route
-								path="/profile"
+								path="/profile/:userType/:username"
 								element={
 									<PrivateRoute>
 										<Profile />
