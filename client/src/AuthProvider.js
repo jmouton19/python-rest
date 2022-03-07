@@ -11,7 +11,7 @@ const LogoutContext = createContext();
 const CheckUsernameContext = createContext();
 const CheckEmailContext = createContext();
 const LoginContext = createContext();
-const LoadUserProfileContext= createContext();
+const LoadUserProfileContext = createContext();
 
 export function useAuth() {
 	return useContext(AuthContext);
@@ -101,34 +101,37 @@ function AuthProvider({ children }) {
 				if (success) {
 					const userDataFromServer = res_GET.data[userType];
 
-					const newUserData =
-						userType == "developer"
-							? {
-								userType,
-								avatarUrl: userDataFromServer.avatar,
-								developerID: userDataFromServer.developerID,
-								email: userDataFromServer.email,
-								githubURL: userDataFromServer.github_url,
-								linkedInURL: userDataFromServer.linkedin_url,
-								firstName: userDataFromServer.name,
-								lastName: userDataFromServer.surname,
-								username: userDataFromServer.username,
-								programmingLanguages: {
-									Python: 2,
-									JavaScript: 4,
-									Java: 3,
-									C: 1,
-									R: 5,
-								},
-							}
-							: {
-								userType,
-								avatarUrl: userDataFromServer.avatar,
-								companyID: userDataFromServer.developer_id,
-								username: userDataFromServer.company_name,
-								email: userDataFromServer.email,
-								industry: userDataFromServer.industry,
-							};
+					let newUserData;
+
+					if (userType == "developer") {
+						newUserData = {
+							userType,
+							avatarUrl: userDataFromServer.avatar,
+							developerID: userDataFromServer.developerID,
+							email: userDataFromServer.email,
+							githubURL: userDataFromServer.github_url,
+							linkedInURL: userDataFromServer.linkedin_url,
+							firstName: userDataFromServer.name,
+							lastName: userDataFromServer.surname,
+							username: userDataFromServer.username,
+							programmingLanguages: {
+								Python: 2,
+								JavaScript: 4,
+								Java: 3,
+								C: 1,
+								R: 5,
+							},
+						};
+					} else {
+						newUserData = {
+							userType,
+							avatarUrl: userDataFromServer.avatar,
+							companyID: userDataFromServer.developer_id,
+							username: userDataFromServer.company_name,
+							email: userDataFromServer.email,
+							industry: userDataFromServer.industry,
+						};
+					}
 
 					setUser(newUserData);
 					setAuth(true);
