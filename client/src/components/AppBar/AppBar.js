@@ -14,7 +14,7 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useAuth, useUser, useLogout } from "../../AuthProvider";
+import { useUser, useLogout } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
@@ -23,7 +23,6 @@ export default function PrimarySearchAppBar() {
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
-	const auth = useAuth();
 	const user = useUser();
 
 	const handleMenu = (event) => {
@@ -104,7 +103,7 @@ export default function PrimarySearchAppBar() {
 						open={Boolean(anchorEl)}
 						onClose={handleMenuClose}
 					>
-						{auth ? (
+						{user ? (
 							<div>
 								<MenuItem
 									component={Link}
