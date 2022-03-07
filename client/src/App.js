@@ -4,6 +4,7 @@ import {
 	Routes,
 	Route,
 	Navigate,
+	useLocation,
 } from "react-router-dom";
 import AppBar from "./components/AppBar/AppBar";
 import Home from "./pages/Home";
@@ -25,7 +26,13 @@ const theme = createTheme({
 // source: https://dev.to/iamandrewluca/private-route-in-react-router-v6-lg5
 function PrivateRoute({ children }) {
 	const auth = useAuth();
-	return auth ? children : <Navigate to="/login" />;
+	const location = useLocation();
+	console.log(location);
+	return auth ? (
+		children
+	) : (
+		<Navigate to={`/login?redirect=${location.pathname}`} />
+	);
 }
 
 function App() {

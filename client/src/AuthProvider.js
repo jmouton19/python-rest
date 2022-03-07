@@ -1,7 +1,6 @@
 /* eslint-disable no-unreachable */
 import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
@@ -51,7 +50,6 @@ export function useCheckPassword() {
 function AuthProvider({ children }) {
 	const [auth, setAuth] = useState(false);
 	const [user, setUser] = useState(null);
-	const navigate = useNavigate();
 
 	async function checkUsername(username) {
 		const url = `${baseUrl}/api/developer?username=${username}`;
@@ -86,10 +84,8 @@ function AuthProvider({ children }) {
 
 				if (success) {
 					loadUserProfile(userType.toLowerCase(), username)
-						.then(navigate("/"))
+						.then(() => resolve(true))
 						.catch((err) => console.error(err));
-
-					resolve(true);
 				} else {
 					reject(res);
 				}
