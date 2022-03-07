@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -12,20 +13,6 @@ import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ExperiencePicker from "./ExperiencePicker";
-
-// Todo: Get From Server
-const languageList = [
-	"Python",
-	"JavaScript",
-	"Java",
-	"C#",
-	"C",
-	"C++",
-	"Go",
-	"R",
-	"Swift",
-	"PHP",
-];
 
 // Todo: Site source material ui website?
 const Search = styled("div")(({ theme }) => ({
@@ -73,18 +60,54 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function LanguagesPicker(props) {
+	const [languageList, setLanguageList] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
 	const { presetLanguages, setLanguagesCallback } = props;
 	const searchBarRef = useRef();
 
+	//Populate exisiting languages and get language list from server
 	useEffect(() => {
+		getLanguages();
 		if (presetLanguages) {
 			setSelectedLanguages({
 				...presetLanguages,
 			});
 		}
 	}, []);
+
+	function getLanguages() {
+		const baseUrl = "https://cs334proj1group8.herokuapp.com";
+
+		const url = `${baseUrl}/api/languages`;
+
+		axios
+			.get(url)
+			.then((res_GET) => {
+				const { success } = res_GET.data;
+				if (success) {
+					setLanguageList(res_GET.data["languages"]);
+					console.log("Language List successfully retrieved!");
+				} else {
+					setLanguageList([
+						"Python",
+						"JavaScript",
+						"Java",
+						"C#",
+						"C",
+						"C++",
+						"Go",
+						"R",
+						"Swift",
+						"PHP",
+					]);
+					console.log("Unable to retrieve languages, falling back on default 10.");
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
 
 	// execute callback function, if defined, whenever the selected languages change
 	useEffect(() => {
