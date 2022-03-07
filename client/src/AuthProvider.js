@@ -1,5 +1,4 @@
-/* eslint-disable no-unreachable */
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 
 const baseUrl = "https://cs334proj1group8.herokuapp.com";
@@ -50,6 +49,20 @@ export function useCheckPassword() {
 function AuthProvider({ children }) {
 	const [auth, setAuth] = useState(false);
 	const [user, setUser] = useState(null);
+
+	console.log(auth);
+	console.log(user);
+
+	useEffect(() => {
+		console.log("KONTRAAAA");
+		setAuth(window.sessionStorage.getItem("kontra-auth"));
+		setUser(JSON.parse(window.sessionStorage.getItem("kontra-user")));
+	}, []);
+
+	useEffect(() => {
+		window.sessionStorage.setItem("kontra-auth", auth);
+		window.sessionStorage.setItem("kontra-user", JSON.stringify(user));
+	}, [auth, user]);
 
 	async function checkUsername(username) {
 		const url = `${baseUrl}/api/developer?username=${username}`;

@@ -30,6 +30,7 @@ import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { useCheckUsername, useCheckEmail, useLogin } from "../../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -51,6 +52,8 @@ function SignUp() {
 	const checkUsername = useCheckUsername();
 	const checkEmail = useCheckEmail();
 	const login = useLogin();
+
+	const navigate = useNavigate();
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -113,12 +116,11 @@ function SignUp() {
 			.post(url, data)
 			.then((res) => {
 				if (res.data.success) {
-					console.log("Sign Up was successfull. User will now be logged in...");
-					login(email, password);
+					login(email, password).then(() => navigate("/"));
 				}
 			})
 			.catch((err) => {
-				console.log("Sign Up was unsuccessfull.");
+				console.info("Sign Up was unsuccessfull.");
 				console.error(err);
 			});
 

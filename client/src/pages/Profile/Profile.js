@@ -37,7 +37,6 @@ function Profile() {
 
 	console.log(viewUser);
 
-	// eslint-disable-next-line no-constant-condition
 	if (!viewUser) {
 		// shows user is loading
 		return <LoadingPage />;

@@ -85,7 +85,13 @@ function Login() {
 								<Button
 									variant="contained"
 									onClick={() => {
-										login(email, password).then(() => navigate(redirect));
+										login(email, password).then(() => {
+											if (redirect) {
+												navigate(redirect);
+											} else {
+												navigate("/");
+											}
+										});
 									}}
 								>
 									Login
