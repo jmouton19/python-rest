@@ -76,7 +76,9 @@ def signup_developer():
             return jsonify(checker)
         return jsonify(success=True,message="Developer has been registered")
     elif request.method=='DELETE':
-        db.session.query(Developer).delete()
+        users=db.session.query(Developer).all()
+        for user in users:
+            db.session.delete(user)
         db.session.commit()
         return jsonify(success=True,message="All developers deleted")
 

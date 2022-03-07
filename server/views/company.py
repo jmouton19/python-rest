@@ -31,7 +31,9 @@ def signup_company():
             return jsonify(checker)
         return jsonify(success=True,message="Company has been registered")
     elif request.method=='DELETE':
-        db.session.query(Company).delete()
+        users=db.session.query(Company).all()
+        for user in users:
+            db.session.delete(user)
         db.session.commit()
         return jsonify(success=True,message="All companies deleted")
 
