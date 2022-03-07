@@ -212,7 +212,7 @@ function EditProfile() {
 							</Grid>
 							<Grid item xs={12}>
 								{user.userType === "developer" ? (
-									<Stack spacing={1}>
+									<Stack spacing={2}>
 										<TextField
 											variant="outlined"
 											defaultValue={username}
@@ -322,7 +322,7 @@ function EditProfile() {
 								onBlur={(event) => {
 									setPassword(event.target.value);
 								}}
-								label="Password"
+								label="New Password"
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
@@ -348,7 +348,7 @@ function EditProfile() {
 								onChange={(event) => {
 									setPasswordRepeated(event.target.value);
 								}}
-								label="Repeat Password"
+								label="Repeat New Password"
 								error={password !== passwordRepeated}
 							/>
 							{password !== passwordRepeated ? (
