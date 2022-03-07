@@ -93,6 +93,7 @@ def check_username(username):
             dev_lang=dict(result.developer_languages.__dict__)
             dev_lang.pop('_sa_instance_state', None)
             filtered={k: v for k, v in dev_lang.items() if v is not None}
+            filtered.pop('developer_id')
             instance['developer_languages']=filtered
             return jsonify(success=True,developer=instance)
         elif request.method=='DELETE':
