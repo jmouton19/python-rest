@@ -2,6 +2,7 @@ from flask import jsonify, request
 from server import app
 from server.models import db, Company
 from server.views.checkemail import email_checkr
+from argon2 import PasswordHasher
 
 @app.route('/api/company', methods=['POST'])
 def signup_company():
@@ -12,8 +13,10 @@ def signup_company():
     checker=email_checkr(email)
     if checker['success']==True:
         if company==None:
+            ph = PasswordHasher()
+            hashed = ph.hash(request_data['password'])
             new_company=Company(
-                password=request_data['password'],
+                password=hashed,
                 company_name=company_name,
                 industry=request_data['industry'],
                 avatar=request_data['avatar'],
@@ -27,14 +30,19 @@ def signup_company():
          return jsonify(checker)
     return jsonify(success=True,message="Company has been registered")
 
-@app.route('/api/company/<company>', methods=['GET'])
+@app.route('/api/company/<company>', methods=['GET','DELETE'])
 def check_company_name(company):
     result=db.session.query(Company).filter(Company.company_name==company).one_or_none()
     if result:
-        instance = dict(result.__dict__) 
-        instance.pop('_sa_instance_state', None)
-        instance.pop('password', None)
-        return jsonify(success=True, company= instance)
+        if request.method=='GET':
+            instance = dict(result.__dict__) 
+            instance.pop('_sa_instance_state', None)
+            instance.pop('password', None)
+            return jsonify(success=True, company= instance)
+        elif request.method=='DELETE':
+            db.session.delete(result)
+            db.session.commit()
+            return jsonify(success=True, message="Company Deleted")
     else:
         return jsonify(success=False)
    

@@ -2,6 +2,7 @@ from flask import jsonify, request
 from server import app
 from server.models import Contract, db, Developer, DeveloperLanguages, Application, Company, BlockedCompany
 from server.views.checkemail import email_checkr
+from argon2 import PasswordHasher
 
 @app.route('/api/developer', methods=['POST'])
 def signup_developer():
@@ -12,8 +13,10 @@ def signup_developer():
     checker=email_checkr(email)
     if checker['success']==True:
         if developer==None:
+            ph = PasswordHasher()
+            hashed = ph.hash(request_data['password'])
             new_dev=Developer(
-            password=request_data['password'],
+            password=hashed,
             username=username,
             name=request_data['name'],
             surname=request_data['surname'],
@@ -71,18 +74,23 @@ def signup_developer():
         return jsonify(checker)
     return jsonify(success=True,message="Developer has been registered")
 
-@app.route('/api/developer/<username>', methods=['GET'])
+@app.route('/api/developer/<username>', methods=['GET','DELETE'])
 def check_username(username):
     result=db.session.query(Developer).filter(Developer.username==username).one_or_none()
     if result:
-        instance = dict(result.__dict__); 
-        instance.pop('_sa_instance_state', None)
-        instance.pop('password', None)
-        dev_lang=dict(result.developer_languages.__dict__)
-        dev_lang.pop('_sa_instance_state', None)
-        filtered={k: v for k, v in dev_lang.items() if v is not None}
-        instance['developer_languages']=filtered
-        return jsonify(success=True,developer=instance)
+        if request.method=='GET':
+            instance = dict(result.__dict__); 
+            instance.pop('_sa_instance_state', None)
+            instance.pop('password', None)
+            dev_lang=dict(result.developer_languages.__dict__)
+            dev_lang.pop('_sa_instance_state', None)
+            filtered={k: v for k, v in dev_lang.items() if v is not None}
+            instance['developer_languages']=filtered
+            return jsonify(success=True,developer=instance)
+        elif request.method=='DELETE':
+            db.session.delete(result)
+            db.session.commit()
+            return jsonify(success=True, message="Developer Deleted")
     else:
         return jsonify(success=False,message="Developer with this username does not exist")
 

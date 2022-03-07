@@ -1,12 +1,14 @@
 from flask import jsonify, request
 from server import app
 from server.views.checkemail import email_checkr
+from argon2 import PasswordHasher
 
 @app.route('/api/login', methods=['POST'])
 def login():
     request_data = request.get_json()
     email = request_data['email']
-    hash_received = request_data['password']
+    ph = PasswordHasher()
+    hash_received = ph.hash(request_data['password'])
     type,result=email_checkr(email,True)
     if result:
         if type=="Developer":
