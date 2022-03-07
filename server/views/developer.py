@@ -5,7 +5,7 @@ from server.models import Contract, db, Developer, DeveloperLanguages, Applicati
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
 
-@app.route('/api/developer', methods=['POST,DELETE'])
+@app.route('/api/developer', methods=['POST','DELETE'])
 def signup_developer():
     if request.method=='POST':
         request_data = request.get_json()
