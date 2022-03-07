@@ -16,6 +16,12 @@ import About from "./pages/About/About";
 import { useAuth } from "./AuthProvider";
 import AddContract from "./pages/AddContract/AddContract";
 
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+	palette: {},
+});
+
 // source: https://dev.to/iamandrewluca/private-route-in-react-router-v6-lg5
 function PrivateRoute({ children }) {
 	const auth = useAuth();
@@ -27,37 +33,39 @@ function App() {
 		<>
 			<Router>
 				<AuthProvider>
-					<AppBar />
-					<Routes>
-						<Route
-							path="/profile"
-							element={
-								<PrivateRoute>
-									<Profile />
-								</PrivateRoute>
-							}
-						/>
-						<Route
-							path="/contracts"
-							element={
-								<PrivateRoute>
-									<Contracts />
-								</PrivateRoute>
-							}
-						/>
-						<Route
-							path="/addcontract"
-							element={
-								<PrivateRoute>
-									<AddContract />
-								</PrivateRoute>
-							}
-						/>
-						<Route path="/signup" element={<SignUp />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/about" element={<About />} />
-						<Route path="/" element={<Home />} />
-					</Routes>
+					<ThemeProvider theme={theme}>
+						<AppBar />
+						<Routes>
+							<Route
+								path="/profile"
+								element={
+									<PrivateRoute>
+										<Profile />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/contracts"
+								element={
+									<PrivateRoute>
+										<Contracts />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/addcontract"
+								element={
+									<PrivateRoute>
+										<AddContract />
+									</PrivateRoute>
+								}
+							/>
+							<Route path="/signup" element={<SignUp />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/" element={<Home />} />
+						</Routes>
+					</ThemeProvider>
 				</AuthProvider>
 			</Router>
 		</>
