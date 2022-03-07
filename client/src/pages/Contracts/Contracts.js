@@ -1,101 +1,57 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-// import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
+
 import Container from "@mui/material/Container";
 
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-// import FavoriteIcon from "@mui/icons-material/Favorite";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import axios from "axios";
 
-import { sampleData } from "./generateSampleData";
-import { Divider } from "@mui/material";
+// import { sampleData } from "./generateSampleData";
+import ContractCard from "../../components/ContractCard/ContractCard";
 
 function AvailableContracts() {
-	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [contractsData, setContractsData] = useState([]);
 
-	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleMenuClose = () => {
-		setAnchorEl(null);
-	};
+	useEffect(() => {
+		axios
+			.get("https://cs334proj1group8.herokuapp.com/api/contract")
+			.then((res) => {
+				const { success } = res.data;
+				if (success) {
+					setContractsData(res.data.contracts);
+				} else {
+					console.log(res);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
 
 	return (
 		<>
 			<Stack spacing={2}>
-				{sampleData.map((dataItem) => (
-					<Card key={dataItem.contract_id} elevation={2}>
-						<CardHeader
-							avatar={<Avatar aria-label={dataItem.company_name} />}
-							action={
-								<IconButton aria-label="settings" onClick={handleMenu}>
-									<MoreVertIcon />
-								</IconButton>
-							}
-							title={dataItem.company_name}
-							subheader={dataItem.date_posted.toUTCString()}
-						/>
-						<Divider />
-						<CardContent>
-							<Typography component="span" variant="body2" color="text.primary">
-								{`Duration: ${dataItem.length} Months`}
-							</Typography>
-							<br />
-							<Typography component="span" variant="body2" color="text.primary">
-								{`Value: $${dataItem.value}`}
-							</Typography>
-							<br />
-							<Typography variant="body2" color="text.secondary">
-								{dataItem.description}
-							</Typography>
-						</CardContent>
-						<CardActions disableSpacing>
-							{/* <Tooltip title="Add to Favorites">
-								<IconButton>
-									<FavoriteIcon color="#ffffff" />
-								</IconButton>
-							</Tooltip> */}
-							<Button variant="grey">Apply Now</Button>
-						</CardActions>
-					</Card>
+				{contractsData.map((contract) => (
+					<ContractCard
+						key={contract.contract_id}
+						company_name={contract.company_name}
+						avatarUrl={contract.company_avatar}
+						title={contract.title}
+						description={contract.description}
+						date_posted={contract.date_posted}
+						open={contract.open}
+						remote={contract.remote}
+						length={contract.length}
+						value={contract.value}
+					/>
 				))}
 			</Stack>
-
-			<Menu
-				id="menu-appbar"
-				anchorEl={anchorEl}
-				anchorOrigin={{
-					vertical: "top",
-					horizontal: "right",
-				}}
-				keepMounted
-				transformOrigin={{
-					vertical: "top",
-					horizontal: "right",
-				}}
-				open={Boolean(anchorEl)}
-				onClose={handleMenuClose}
-			>
-				<MenuItem to="/login" onClick={handleMenuClose}>
-					Block this company
-				</MenuItem>
-			</Menu>
 		</>
 	);
 }
