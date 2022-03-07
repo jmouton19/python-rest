@@ -35,8 +35,6 @@ function Profile() {
 		});
 	}, [params]);
 
-	console.log(viewUser);
-
 	if (!viewUser) {
 		// shows user is loading
 		return <LoadingPage />;

@@ -19,6 +19,7 @@ import { useAuth, useUser, useLogout } from "../../AuthProvider";
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
+	const logout = useLogout();
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -123,9 +124,9 @@ export default function PrimarySearchAppBar() {
 									</MenuItem>
 								) : null}
 								<MenuItem
+									onClick={(handleMenuClose, logout)}
 									component={Link}
 									to="/"
-									onClick={(handleMenuClose, useLogout)}
 								>
 									Logout
 								</MenuItem>

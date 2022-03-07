@@ -50,11 +50,7 @@ function AuthProvider({ children }) {
 	const [auth, setAuth] = useState(false);
 	const [user, setUser] = useState(null);
 
-	console.log(auth);
-	console.log(user);
-
 	useEffect(() => {
-		console.log("KONTRAAAA");
 		setAuth(window.sessionStorage.getItem("kontra-auth"));
 		setUser(JSON.parse(window.sessionStorage.getItem("kontra-user")));
 	}, []);
@@ -119,6 +115,7 @@ function AuthProvider({ children }) {
 	}
 
 	function logout() {
+		window.sessionStorage.clear();
 		setUser(null);
 		setAuth(false);
 	}
