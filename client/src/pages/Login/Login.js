@@ -14,11 +14,17 @@ import {
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { useLogin } from "../../AuthProvider";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+
+	// where to redirect to after login if someone came from a restricted private route
+	const [searchParams] = useSearchParams();
+	const redirect = searchParams.get("redirect");
+	const navigate = useNavigate();
 
 	const login = useLogin();
 
@@ -78,7 +84,15 @@ function Login() {
 							<FormControl fullWidth>
 								<Button
 									variant="contained"
-									onClick={() => login(email, password)}
+									onClick={() => {
+										login(email, password).then(() => {
+											if (redirect) {
+												navigate(redirect);
+											} else {
+												navigate("/");
+											}
+										});
+									}}
 								>
 									Login
 								</Button>

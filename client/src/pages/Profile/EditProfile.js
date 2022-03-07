@@ -54,7 +54,6 @@ function EditProfile() {
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [programmingLanguages, setProgrammingLanguages] = useState({});
 	const [showPassword, setShowPassword] = useState(false);
-	console.log(deepEqual(user["programmingLanguages"], programmingLanguages));
 
 	useEffect(() => {
 		setUsername(user["username"]);
@@ -112,6 +111,12 @@ function EditProfile() {
 				return true;
 			}
 		}
+	}
+
+	function saveDeleteDisableChecks() {
+		return(
+			password == "" 
+		);
 	}
 	
 	function saveChangePasswordChecks() {
@@ -207,7 +212,7 @@ function EditProfile() {
 							</Grid>
 							<Grid item xs={12}>
 								{user.userType === "developer" ? (
-									<Stack spacing={1}>
+									<Stack spacing={2}>
 										<TextField
 											variant="outlined"
 											defaultValue={username}
@@ -317,7 +322,7 @@ function EditProfile() {
 								onBlur={(event) => {
 									setPassword(event.target.value);
 								}}
-								label="Password"
+								label="New Password"
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
@@ -343,7 +348,7 @@ function EditProfile() {
 								onChange={(event) => {
 									setPasswordRepeated(event.target.value);
 								}}
-								label="Repeat Password"
+								label="Repeat New Password"
 								error={password !== passwordRepeated}
 							/>
 							{password !== passwordRepeated ? (
@@ -383,7 +388,7 @@ function EditProfile() {
 							<Button
 								onClick={() => saveChangedDetails(true)}
 								variant="contained"
-								sx={{ borderRadius: "50%", height: 60 }}
+								sx={{ borderRadius: "50%", height: 60, width: 60 }}
 								disabled= {saveChangePasswordChecks()}
 								//TODO:Add server communication and updating
 							>
@@ -437,7 +442,8 @@ function EditProfile() {
 							<Button
 								//TODO: add delete post
 								variant="contained"
-								sx={{ borderRadius: "50%", height: 60 }}
+								disabled={saveDeleteDisableChecks()}
+								sx={{ borderRadius: "50%", height: 60, width: 60 }}
 								color="error"
 							>
 								<DeleteIcon />

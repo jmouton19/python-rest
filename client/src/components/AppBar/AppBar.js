@@ -19,6 +19,7 @@ import { useAuth, useUser, useLogout } from "../../AuthProvider";
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
+	const logout = useLogout();
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -68,7 +69,7 @@ export default function PrimarySearchAppBar() {
 					</IconButton>
 					<Box sx={{ flexGrow: 1 }} />
 					<Typography variant="h6" component="div">
-						<b>WOWZERS</b>
+						<b>KONTRA</b>
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
 					<IconButton
@@ -107,7 +108,7 @@ export default function PrimarySearchAppBar() {
 							<div>
 								<MenuItem
 									component={Link}
-									to="/profile"
+									to={`/profile/${user.userType}/${user.username}`}
 									onClick={handleMenuClose}
 								>
 									My Profile
@@ -123,9 +124,9 @@ export default function PrimarySearchAppBar() {
 									</MenuItem>
 								) : null}
 								<MenuItem
+									onClick={(handleMenuClose, logout)}
 									component={Link}
 									to="/"
-									onClick={(handleMenuClose, useLogout)}
 								>
 									Logout
 								</MenuItem>

@@ -1,6 +1,5 @@
-import React from "react";
-import { useUser, useAuth } from "../../AuthProvider";
-import Grid from "@mui/material/Grid";
+import React, { useEffect, useState } from "react";
+import { useUser } from "../../AuthProvider";
 import {
 	Avatar,
 	Container,
@@ -13,23 +12,42 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
+	Grid,
 } from "@mui/material";
 
 import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import EditProfile from "./EditProfile";
+import { useParams } from "react-router-dom";
+
+import { fetchUserProfile } from "../../utils/utils";
+import LoadingPage from "../../components/LoadingPage/LoadingPage";
 
 function Profile() {
-	const auth = useAuth();
-	const user = useUser();
+	const authUser = useUser();
+	const [viewUser, setViewUser] = useState(null);
+
+	const params = useParams();
+
+	useEffect(() => {
+		// TODO: only fetches developer profiles
+		fetchUserProfile(params.userType, params.username).then((data) => {
+			setViewUser(data);
+		});
+	}, [params]);
+
+	if (!viewUser) {
+		// shows user is loading
+		return <LoadingPage />;
+	}
 
 	return (
 		<React.Fragment>
-			{auth ? (
+			{authUser.username == viewUser.username ? (
 				<>
-					<EditProfile/>
+					<EditProfile />
 				</>
 			) : null}
-			
+
 			<Container>
 				<Grid container alignItems="flex-start" spacing={2} padding={3}>
 					<Grid item xs={4}>
@@ -43,22 +61,22 @@ function Profile() {
 								<Grid item>
 									<Avatar
 										sx={{ width: 100, height: 100 }}
-										src={user.avatarUrl}
+										src={viewUser.avatarUrl}
 									></Avatar>
 								</Grid>
 								<Grid item>
-									{user.userType === "developer" ? (
+									{viewUser.userType === "developer" ? (
 										<Stack>
 											<Typography variant="h3">
-												{user.firstName} {user.lastName}
+												{viewUser.firstName} {viewUser.lastName}
 											</Typography>
-											<Typography variant="h5">{user.username}</Typography>
-											<Typography variant="h6">{user.email}</Typography>
+											<Typography variant="h5">{viewUser.username}</Typography>
+											<Typography variant="h6">{viewUser.email}</Typography>
 										</Stack>
 									) : (
 										<Stack>
-											<Typography variant="h3">{user.username}</Typography>
-											<Typography variant="h6">{user.email}</Typography>
+											<Typography variant="h3">{viewUser.username}</Typography>
+											<Typography variant="h6">{viewUser.email}</Typography>
 										</Stack>
 									)}
 								</Grid>
@@ -67,7 +85,7 @@ function Profile() {
 					</Grid>
 					<Grid item xs={8}>
 						<Paper elevation={4}>
-							{user.userType === "developer" ? ( //Table for developer experience
+							{viewUser.userType === "developer" ? ( //Table for developer experience
 								<TableContainer>
 									<Table>
 										<TableHead>
@@ -81,10 +99,10 @@ function Profile() {
 													<Typography variant="h5">Experience</Typography>
 												</TableCell>
 											</TableRow>
-											{Object.keys(user.programmingLanguages).map(
+											{Object.keys(viewUser.programmingLanguages).map(
 												(language) => {
 													const experience =
-														user.programmingLanguages[language];
+														viewUser.programmingLanguages[language];
 
 													return (
 														<TableRow key={language}>

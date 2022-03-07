@@ -4,6 +4,7 @@ import {
 	Routes,
 	Route,
 	Navigate,
+	useLocation,
 } from "react-router-dom";
 import AppBar from "./components/AppBar/AppBar";
 import Home from "./pages/Home";
@@ -13,13 +14,24 @@ import AuthProvider from "./AuthProvider";
 import Profile from "./pages/Profile/Profile";
 import Contracts from "./pages/Contracts/Contracts";
 import About from "./pages/About/About";
-import { useAuth } from "./AuthProvider";
 import AddContract from "./pages/AddContract/AddContract";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+	palette: {},
+});
 
 // source: https://dev.to/iamandrewluca/private-route-in-react-router-v6-lg5
 function PrivateRoute({ children }) {
-	const auth = useAuth();
-	return auth ? children : <Navigate to="/login" />;
+	const auth = window.sessionStorage.getItem("kontra-auth");
+	const location = useLocation();
+
+	return auth ? (
+		children
+	) : (
+		<Navigate to={`/login?redirect=${location.pathname}`} />
+	);
 }
 
 function App() {
@@ -27,37 +39,39 @@ function App() {
 		<>
 			<Router>
 				<AuthProvider>
-					<AppBar />
-					<Routes>
-						<Route
-							path="/profile"
-							element={
-								<PrivateRoute>
-									<Profile />
-								</PrivateRoute>
-							}
-						/>
-						<Route
-							path="/contracts"
-							element={
-								<PrivateRoute>
-									<Contracts />
-								</PrivateRoute>
-							}
-						/>
-						<Route
-							path="/addcontract"
-							element={
-								<PrivateRoute>
-									<AddContract />
-								</PrivateRoute>
-							}
-						/>
-						<Route path="/signup" element={<SignUp />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/about" element={<About />} />
-						<Route path="/" element={<Home />} />
-					</Routes>
+					<ThemeProvider theme={theme}>
+						<AppBar />
+						<Routes>
+							<Route
+								path="/profile/:userType/:username"
+								element={
+									<PrivateRoute>
+										<Profile />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/contracts"
+								element={
+									<PrivateRoute>
+										<Contracts />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/addcontract"
+								element={
+									<PrivateRoute>
+										<AddContract />
+									</PrivateRoute>
+								}
+							/>
+							<Route path="/signup" element={<SignUp />} />
+							<Route path="/" element={<Home />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/about" element={<About />} />
+						</Routes>
+					</ThemeProvider>
 				</AuthProvider>
 			</Router>
 		</>
