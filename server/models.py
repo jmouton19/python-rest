@@ -25,7 +25,7 @@ class Company(db.Model):
     email = db.Column(db.String(254),unique=True)
     company_name = db.Column(db.String(254),unique=True)
     blockings = db.relationship('BlockedCompany', backref='company', cascade = "all, delete, delete-orphan")#1tomany
-    contracts = db.relationship('Contract', backref='company')#1tomany
+    contracts = db.relationship('Contract', backref='company', cascade = "all, delete, delete-orphan")#1tomany
 
 class Contract(db.Model):
     contract_id = db.Column(db.Integer,primary_key=True)
