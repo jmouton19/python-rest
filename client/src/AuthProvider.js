@@ -11,6 +11,7 @@ const LogoutContext = createContext();
 const CheckUsernameContext = createContext();
 const CheckEmailContext = createContext();
 const LoginContext = createContext();
+const LoadUserProfileContext= createContext();
 
 export function useAuth() {
 	return useContext(AuthContext);
@@ -34,6 +35,10 @@ export function useCheckEmail() {
 
 export function useLogin() {
 	return useContext(LoginContext);
+}
+
+export function useLoadUserProfile() {
+	return useContext(LoadUserProfileContext);
 }
 
 function AuthProvider({ children }) {
@@ -149,7 +154,9 @@ function AuthProvider({ children }) {
 					<CheckUsernameContext.Provider value={checkUsername}>
 						<CheckEmailContext.Provider value={checkEmail}>
 							<LoginContext.Provider value={login}>
-								{children}
+								<LoadUserProfileContext.Provider value={loadUserProfile}>
+									{children}
+								</LoadUserProfileContext.Provider>
 							</LoginContext.Provider>
 						</CheckEmailContext.Provider>
 					</CheckUsernameContext.Provider>
