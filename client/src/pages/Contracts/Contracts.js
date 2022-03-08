@@ -1,49 +1,21 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import ContractCard from "../../components/ContractCard/ContractCard";
+import React from "react";
 import { Typography, Stack, Box, Tab, Container } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import LoadingPage from "../../components/LoadingPage/LoadingPage";
-
-function ContractsList() {
-	const [contractsData, setContractsData] = useState(null);
-
-	useEffect(() => {
-		axios
-			.get("https://cs334proj1group8.herokuapp.com/api/contract")
-			.then((res) => {
-				const { success } = res.data;
-				if (success) {
-					setContractsData(res.data.contracts);
-				} else {
-					console.log(res);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}, []);
-
-	if (contractsData === null) {
-		return <LoadingPage />;
-	}
-
-	return (
-		<>
-			<Stack spacing={2}>
-				{contractsData.map((contract) => (
-					<ContractCard key={contract.contract_id} contract={contract} />
-				))}
-			</Stack>
-		</>
-	);
-}
+import SortPicker from "./SortPicker";
+import ContractList from "../../components/ContractList/ContractList";
 
 function Contracts() {
-	const [value, setValue] = React.useState("1");
+	const [activeTabNumber, setActiveTabNumber] = React.useState("1");
+	const [sortMethod, setSortMethod] = React.useState("date");
+	const [descending, setDescending] = React.useState(true);
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
+	const handleTabChange = (event, newValue) => {
+		setActiveTabNumber(newValue);
+	};
+
+	const handleSortChange = (method, descending) => {
+		setSortMethod(method);
+		setDescending(descending);
 	};
 
 	return (
@@ -53,22 +25,31 @@ function Contracts() {
 			</Typography>
 
 			<Box sx={{ width: "100%", typography: "body1" }}>
-				<TabContext value={value}>
+				<TabContext value={activeTabNumber}>
 					<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-						<TabList onChange={handleChange} aria-label="lab API tabs example">
-							<Tab label="Available" value="1" />
-							<Tab label="Applied" value="2" />
-							<Tab label="Blocked" value="3" />
-						</TabList>
+						<Stack direction="row">
+							<TabList
+								onChange={handleTabChange}
+								aria-label="lab API tabs example"
+							>
+								<Tab label="Available" value="1" />
+								<Tab label="Applied" value="2" />
+								<Tab label="Accepted" value="3" />
+							</TabList>
+							<SortPicker
+								sx={{ marginLeft: "auto" }}
+								onChange={handleSortChange}
+							/>
+						</Stack>
 					</Box>
 					<TabPanel value="1">
-						<ContractsList />
+						<ContractList method={sortMethod} descending={descending} />
 					</TabPanel>
 					<TabPanel value="2">
-						<ContractsList />
+						<ContractList method={sortMethod} descending={descending} />
 					</TabPanel>
 					<TabPanel value="3">
-						<ContractsList />
+						<ContractList method={sortMethod} descending={descending} />
 					</TabPanel>
 				</TabContext>
 			</Box>
