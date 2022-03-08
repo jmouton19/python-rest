@@ -10,7 +10,7 @@ import AppBar from "./components/AppBar/AppBar";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
-import AuthProvider from "./AuthProvider";
+import AuthProvider, { useUser } from "./AuthProvider";
 import Profile from "./pages/Profile/Profile";
 import Contracts from "./pages/Contracts/Contracts";
 import About from "./pages/About/About";
@@ -19,19 +19,23 @@ import AddContract from "./pages/AddContract/AddContract";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
-	palette: {},
+	palette: {
+		primary: {
+			main: "#EF5B25",
+		},
+	},
 });
 
 // source: https://dev.to/iamandrewluca/private-route-in-react-router-v6-lg5
 function PrivateRoute({ children }) {
-	const auth = window.sessionStorage.getItem("kontra-auth");
+	const user = useUser();
 	const location = useLocation();
 
-	return auth ? (
-		children
-	) : (
-		<Navigate to={`/login?redirect=${location.pathname}`} />
-	);
+	if (user) {
+		return children;
+	} else {
+		return <Navigate to={`/login?redirect=${location.pathname}`} />;
+	}
 }
 
 function App() {

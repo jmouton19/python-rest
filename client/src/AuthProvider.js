@@ -3,7 +3,6 @@ import axios from "axios";
 
 const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
-const AuthContext = createContext();
 const UserContext = createContext();
 const LogoutContext = createContext();
 const CheckUsernameContext = createContext();
@@ -13,10 +12,6 @@ const LoadUserProfileContext = createContext();
 const CheckPasswordContext = createContext();
 
 import { fetchUserProfile, checkPassword } from "./utils/utils";
-
-export function useAuth() {
-	return useContext(AuthContext);
-}
 
 export function useUser() {
 	return useContext(UserContext);
@@ -47,18 +42,17 @@ export function useCheckPassword() {
 }
 
 function AuthProvider({ children }) {
-	const [auth, setAuth] = useState(false);
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState(
+		JSON.parse(window.sessionStorage.getItem("kontra-user"))
+	);
 
 	useEffect(() => {
-		setAuth(window.sessionStorage.getItem("kontra-auth"));
 		setUser(JSON.parse(window.sessionStorage.getItem("kontra-user")));
 	}, []);
 
 	useEffect(() => {
-		window.sessionStorage.setItem("kontra-auth", auth);
 		window.sessionStorage.setItem("kontra-user", JSON.stringify(user));
-	}, [auth, user]);
+	}, [user]);
 
 	async function checkUsername(username) {
 		const url = `${baseUrl}/api/developer?username=${username}`;
@@ -108,7 +102,6 @@ function AuthProvider({ children }) {
 				.then((data) => {
 					resolve(data);
 					setUser(data);
-					setAuth(true);
 				})
 				.catch((err) => console.error(err));
 		});
@@ -117,27 +110,24 @@ function AuthProvider({ children }) {
 	function logout() {
 		window.sessionStorage.clear();
 		setUser(null);
-		setAuth(false);
 	}
 
 	return (
-		<AuthContext.Provider value={auth}>
-			<UserContext.Provider value={user}>
-				<LogoutContext.Provider value={logout}>
-					<CheckUsernameContext.Provider value={checkUsername}>
-						<CheckEmailContext.Provider value={checkEmail}>
-							<LoginContext.Provider value={login}>
-								<LoadUserProfileContext.Provider value={loadUserProfile}>
-									<CheckPasswordContext.Provider value={checkPassword}>
-										{children}
-									</CheckPasswordContext.Provider>
-								</LoadUserProfileContext.Provider>
-							</LoginContext.Provider>
-						</CheckEmailContext.Provider>
-					</CheckUsernameContext.Provider>
-				</LogoutContext.Provider>
-			</UserContext.Provider>
-		</AuthContext.Provider>
+		<UserContext.Provider value={user}>
+			<LogoutContext.Provider value={logout}>
+				<CheckUsernameContext.Provider value={checkUsername}>
+					<CheckEmailContext.Provider value={checkEmail}>
+						<LoginContext.Provider value={login}>
+							<LoadUserProfileContext.Provider value={loadUserProfile}>
+								<CheckPasswordContext.Provider value={checkPassword}>
+									{children}
+								</CheckPasswordContext.Provider>
+							</LoadUserProfileContext.Provider>
+						</LoginContext.Provider>
+					</CheckEmailContext.Provider>
+				</CheckUsernameContext.Provider>
+			</LogoutContext.Provider>
+		</UserContext.Provider>
 	);
 }
 

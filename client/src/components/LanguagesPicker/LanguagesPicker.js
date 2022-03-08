@@ -101,7 +101,9 @@ function LanguagesPicker(props) {
 						"Swift",
 						"PHP",
 					]);
-					console.log("Unable to retrieve languages, falling back on default 10.");
+					console.log(
+						"Unable to retrieve languages, falling back on default 10."
+					);
 				}
 			})
 			.catch((err) => {
@@ -191,6 +193,7 @@ function LanguagesPicker(props) {
 								clickable
 								onClick={() => {
 									addNewLanguage(language);
+									setSearchValue("");
 									searchBarRef.current.focus();
 								}}
 							/>
