@@ -160,9 +160,9 @@ export default function PrimarySearchAppBar() {
 						boxSizing: "border-box",
 					},
 				}}
-				variant="persistent"
 				anchor="left"
 				open={open}
+				onClose={handleDrawerClose}
 			>
 				<DrawerHeader>
 					<IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
@@ -175,6 +175,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>Home</b>
@@ -183,6 +184,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/contracts"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>Contracts</b>
@@ -191,6 +193,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/about"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>About</b>
