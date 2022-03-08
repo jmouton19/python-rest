@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-
-import Container from "@mui/material/Container";
-
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-
 import axios from "axios";
-
-// import { sampleData } from "./generateSampleData";
 import ContractCard from "../../components/ContractCard/ContractCard";
+import { Typography, Stack, Box, Tab, Container } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import LoadingPage from "../../components/LoadingPage/LoadingPage";
 
-function AvailableContracts() {
-	const [contractsData, setContractsData] = useState([]);
+function ContractsList() {
+	const [contractsData, setContractsData] = useState(null);
 
 	useEffect(() => {
 		axios
@@ -34,22 +24,15 @@ function AvailableContracts() {
 			});
 	}, []);
 
+	if (contractsData === null) {
+		return <LoadingPage />;
+	}
+
 	return (
 		<>
 			<Stack spacing={2}>
 				{contractsData.map((contract) => (
-					<ContractCard
-						key={contract.contract_id}
-						company_name={contract.company_name}
-						avatarUrl={contract.company_avatar}
-						title={contract.title}
-						description={contract.description}
-						date_posted={contract.date_posted}
-						open={contract.open}
-						remote={contract.remote}
-						length={contract.length}
-						value={contract.value}
-					/>
+					<ContractCard key={contract.contract_id} contract={contract} />
 				))}
 			</Stack>
 		</>
@@ -74,16 +57,19 @@ function Contracts() {
 					<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 						<TabList onChange={handleChange} aria-label="lab API tabs example">
 							<Tab label="Available" value="1" />
-							{/* <Tab label="Favorited" value="2" /> */}
 							<Tab label="Applied" value="2" />
 							<Tab label="Blocked" value="3" />
 						</TabList>
 					</Box>
 					<TabPanel value="1">
-						<AvailableContracts />
+						<ContractsList />
 					</TabPanel>
-					<TabPanel value="2">Applied</TabPanel>
-					<TabPanel value="3">Blocked</TabPanel>
+					<TabPanel value="2">
+						<ContractsList />
+					</TabPanel>
+					<TabPanel value="3">
+						<ContractsList />
+					</TabPanel>
 				</TabContext>
 			</Box>
 		</Container>
