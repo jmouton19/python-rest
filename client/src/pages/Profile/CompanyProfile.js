@@ -49,7 +49,7 @@ function CompanyProfile(props) {
 						<ContractList 
 							method="value"
 							descending={true}
-							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							axiosUrl={`https://cs334proj1group8.herokuapp.com/api/company/${viewUser["username"]}/contract`}
 							condensed={true}
 						>
 							<Button size="small">Apply</Button>

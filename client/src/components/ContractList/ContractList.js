@@ -60,7 +60,7 @@ function ContractList({ method, descending, axiosUrl, condensed, children }) {
 						<TableBody>
 							{contractsData.map((contract) => (
 								<TableRow key={contract.contract_id}>
-									{axiosUrl.indexOf("contract") > -1 ? (
+									{axiosUrl.indexOf("developer") > -1 ? (
 										<TableCell>
 											<Stack direction="row" spacing={1} alignItems="center" >
 												<Avatar src={contract["company_avatar"] } sx={{ width: 24, height: 24 }}/>
