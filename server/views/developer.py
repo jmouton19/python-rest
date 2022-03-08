@@ -109,8 +109,8 @@ def apply_contract(username):
         for applied in applied_contracts:
             instance = dict(applied.contract.__dict__)
             instance.pop('_sa_instance_state', None)
-            instance['company_name']=applied.company.company_name
-            instance['company_avatar']=applied.company.avatar
+            instance['company_name']=applied.contract.company.company_name
+            instance['company_avatar']=applied.contract.company.avatar
             applied_contract_list.append(instance)
         response= {"success":True, "applied contracts": applied_contract_list }
         return jsonify(response)
