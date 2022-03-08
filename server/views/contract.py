@@ -23,9 +23,9 @@ def contract():
         contract_languages=request_data['contract_languages']
         new_contract_languages=ContractLanguages()
         for key, value in contract_languages.items():
-            exec("new_dev_languages.%s=%d"%(languages_dict[key],value))
+            exec("new_contract_languages.%s=%d"%(languages_dict[key],value))
         new_contract.contract_languages=new_contract_languages
-
+        db.session.add(new_contract)
     elif request.method=='GET':
         contract_list=[]
         contracts=db.session.query(Contract).filter(Contract.open==True)

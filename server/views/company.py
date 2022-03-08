@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Company
+from server.models import db, Company, Contract
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
 
@@ -52,4 +52,18 @@ def check_company_name(company):
             return jsonify(success=True, message="Company Deleted")
     else:
         return jsonify(success=False)
+
+@app.route('/api/company/<company_name>/contract', methods=['GET'])
+def comp_contracts(company_name):
+    company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
+    if company:
+        contract_list=[]
+        contracts=db.session.query(Contract).filter(Contract.company_id==company.company_id)
+        for contract in contracts:
+            instance = dict(contract.__dict__)
+            instance.pop('_sa_instance_state', None)
+            contract_list.append(instance)
+        return jsonify({"success":True, "contracts": contract_list })
+    else:
+        return jsonify(success=False,message="Company doesnt exist")
    
