@@ -8,7 +8,6 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Chip, Container, Divider, Stack } from "@mui/material";
 
@@ -22,7 +21,7 @@ const Label = ({ children }) => (
 	<Typography variant="caption">{children}</Typography>
 );
 
-function ContractCard({ contract }) {
+function ContractCard({ contract, children }) {
 	const company_name = contract.company_name;
 	const avatarUrl = contract.company_avatar;
 	const title = contract.title;
@@ -105,9 +104,7 @@ function ContractCard({ contract }) {
 					</Stack>
 				</CardContent>
 				<Divider />
-				<CardActions disableSpacing>
-					<Button variant="grey">Apply Now</Button>
-				</CardActions>
+				<CardActions disableSpacing>{children}</CardActions>
 			</Card>
 			<Menu
 				id="menu-appbar"

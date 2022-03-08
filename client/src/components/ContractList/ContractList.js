@@ -9,7 +9,7 @@ import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 
-function ContractList({ method, descending, axiosUrl }) {
+function ContractList({ method, descending, axiosUrl, children }) {
 	const [contractsData, setContractsData] = useState(null);
 
 	useEffect(() => {
@@ -53,7 +53,9 @@ function ContractList({ method, descending, axiosUrl }) {
 		<>
 			<Stack spacing={2}>
 				{contractsData.map((contract) => (
-					<ContractCard key={contract.contract_id} contract={contract} />
+					<ContractCard key={contract.contract_id} contract={contract}>
+						{children}
+					</ContractCard>
 				))}
 			</Stack>
 		</>

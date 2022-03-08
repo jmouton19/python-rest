@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Stack, Box, Tab, Container } from "@mui/material";
+import { Typography, Stack, Box, Tab, Container, Button } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import SortPicker from "./SortPicker";
 import ContractList from "../../components/ContractList/ContractList";
@@ -47,21 +47,27 @@ function Contracts() {
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
-						/>
+						>
+							<Button variant="grey">Apply Now</Button>
+						</ContractList>
 					</TabPanel>
 					<TabPanel value="2">
 						<ContractList
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
-						/>
+						>
+							<Button variant="grey">Apply Now</Button>
+						</ContractList>
 					</TabPanel>
 					<TabPanel value="3">
 						<ContractList
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
-						/>
+						>
+							<Button variant="grey">Apply Now</Button>
+						</ContractList>
 					</TabPanel>
 				</TabContext>
 			</Box>
