@@ -107,9 +107,12 @@ function AuthProvider({ children }) {
 		});
 	}
 
-	function logout() {
-		window.sessionStorage.clear();
-		setUser(null);
+	async function logout() {
+		return new Promise((resolve) => {
+			window.sessionStorage.clear();
+			setUser(null);
+			resolve(true);
+		});
 	}
 
 	return (
