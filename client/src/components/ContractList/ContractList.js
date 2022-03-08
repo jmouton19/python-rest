@@ -4,12 +4,12 @@ import {
 	sortByDuration,
 	sortByDate,
 } from "../../utils/contractSorting";
-import { Stack } from "@mui/material";
+import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 
-function ContractList({ method, descending, axiosUrl, children }) {
+function ContractList({ method, descending, axiosUrl, condensed, children }) {
 	const [contractsData, setContractsData] = useState(null);
 
 	useEffect(() => {
@@ -48,18 +48,61 @@ function ContractList({ method, descending, axiosUrl, children }) {
 	if (contractsData === null) {
 		return <LoadingPage />;
 	}
+	if(contractsData == undefined) {
+		return <></>;
+	}
 
-	return (
-		<>
-			<Stack spacing={2}>
-				{contractsData.map((contract) => (
-					<ContractCard key={contract.contract_id} contract={contract}>
-						{children}
-					</ContractCard>
-				))}
-			</Stack>
-		</>
-	);
+	if (condensed == true) {
+		return (
+			<>
+				<Paper elevation={4}>
+					<Table>
+						<TableBody>
+							{contractsData.map((contract) => (
+								<TableRow key={contract.contract_id}>
+									{axiosUrl.indexOf("contract") > -1 ? (
+										<TableCell>
+											<Stack direction="row" spacing={1} alignItems="center" >
+												<Avatar src={contract["company_avatar"] } sx={{ width: 24, height: 24 }}/>
+												<Typography>{contract.company_name}</Typography>
+											</Stack>
+										</TableCell>
+									) : (<></>)}
+									<TableCell>
+										{contract.title}
+									</TableCell>
+									<TableCell>
+										{contract.value}
+									</TableCell>
+									<TableCell>
+										{contract.length}
+									</TableCell>
+									{children != null ? (
+										<TableCell align="right">
+											{children}
+										</TableCell>
+									) : null}
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</Paper>
+			</>
+		);
+	} else {
+		return (
+			<>
+				<Stack spacing={2}>
+					{contractsData.map((contract) => (
+						<ContractCard key={contract.contract_id} contract={contract}>
+							{children}
+						</ContractCard>
+					))}
+				</Stack>
+			</>
+		);
+	}
+
 }
 
 export default ContractList;
