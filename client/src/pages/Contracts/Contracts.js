@@ -43,13 +43,25 @@ function Contracts() {
 						</Stack>
 					</Box>
 					<TabPanel value="1">
-						<ContractList method={sortMethod} descending={descending} />
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
 					</TabPanel>
 					<TabPanel value="2">
-						<ContractList method={sortMethod} descending={descending} />
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
 					</TabPanel>
 					<TabPanel value="3">
-						<ContractList method={sortMethod} descending={descending} />
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
 					</TabPanel>
 				</TabContext>
 			</Box>

@@ -9,12 +9,12 @@ import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 
-function ContractList({ method, descending }) {
+function ContractList({ method, descending, axiosUrl }) {
 	const [contractsData, setContractsData] = useState(null);
 
 	useEffect(() => {
 		axios
-			.get("https://cs334proj1group8.herokuapp.com/api/contract")
+			.get(axiosUrl)
 			.then((res) => {
 				const { success } = res.data;
 				if (success) {
