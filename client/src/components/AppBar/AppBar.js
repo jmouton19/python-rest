@@ -129,6 +129,13 @@ export default function PrimarySearchAppBar() {
 								>
 									Logout
 								</MenuItem>
+								<MenuItem
+									component={Link}
+									to="/contract"
+									onClick={handleMenuClose}
+								>
+									Contract Page
+								</MenuItem>
 							</div>
 						) : (
 							<div>

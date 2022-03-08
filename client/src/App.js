@@ -15,6 +15,7 @@ import Profile from "./pages/Profile/Profile";
 import Contracts from "./pages/Contracts/Contracts";
 import About from "./pages/About/About";
 import AddContract from "./pages/AddContract/AddContract";
+import Contract from "./pages/Contract/Contract";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -67,6 +68,14 @@ function App() {
 								element={
 									<PrivateRoute>
 										<AddContract />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/contract"
+								element={
+									<PrivateRoute>
+										<Contract />
 									</PrivateRoute>
 								}
 							/>
