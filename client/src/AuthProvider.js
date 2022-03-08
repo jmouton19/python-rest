@@ -42,7 +42,9 @@ export function useCheckPassword() {
 }
 
 function AuthProvider({ children }) {
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState(
+		JSON.parse(window.sessionStorage.getItem("kontra-user"))
+	);
 
 	useEffect(() => {
 		setUser(JSON.parse(window.sessionStorage.getItem("kontra-user")));
