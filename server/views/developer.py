@@ -107,7 +107,7 @@ def apply_contract(username):
         applied_contract_list=[]
         applied_contracts=db.session.query(Application).filter(Application.developer_id==developer.developer_id)
         for applied in applied_contracts:
-            instance = dict(applied.contract.__dict_)
+            instance = dict(applied.contract.__dict__)
             instance.pop('_sa_instance_state', None)
             instance['company_name']=contract.company.company_name
             instance['company_avatar']=contract.company.avatar
