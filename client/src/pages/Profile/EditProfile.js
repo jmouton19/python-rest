@@ -7,7 +7,6 @@ import {
 } from "../../AuthProvider";
 import axios from "axios";
 import { deepEqual } from "../../utils/utils";
-import { useNavigate } from "react-router-dom";
 
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -33,6 +32,7 @@ import {
 	Stack,
 	Grid,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const fabStyle = {
 	margin: 0,
@@ -77,7 +77,7 @@ function EditProfile() {
 		} else {
 			setIndustry(user["industry"]);
 		}
-	}, [edit]);
+	}, [edit, user]);
 
 	function saveEditDisableChecks() {
 		if (user["userType"] == "developer") {
@@ -179,23 +179,17 @@ function EditProfile() {
 	async function deleteUser() {
 		const baseUrl = "https://cs334proj1group8.herokuapp.com";
 		const url = `${baseUrl}/api/${user["userType"]}/${user["username"]}`;
-
-		const correctDetails = login(email, password);
-		if (correctDetails) {
-			return new Promise((resolve, reject) => {
-				axios.delete(url).then((res) => {
-					if (res.data.success) {
-						console.log("User successfully deleted.");
-						navigate("/");
-						logout();
-						resolve(true);
-					} else {
-						console.log("Error! Unable to delete user.");
-						reject(res);
-					}
-				});
-			});
-		}
+		try {
+			await login(email, password);
+			axios.delete(url).then((res) => {
+				if(res.data.success) {
+					logout().then(() => navigate("/"));
+				}
+			})
+				.catch((err) => console.log(err));
+		} catch {
+			console.log("Wrong email or password");
+		}	
 	}
 
 	return (

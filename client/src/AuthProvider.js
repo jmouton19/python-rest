@@ -114,10 +114,13 @@ function AuthProvider({ children }) {
 		});
 	}
 
-	function logout() {
-		window.sessionStorage.clear();
-		setUser(null);
-		setAuth(false);
+	async function logout() {
+		return new Promise((resolve) => {
+			window.sessionStorage.clear();
+			setUser(null);
+			setAuth(false);
+			resolve(true);
+		});
 	}
 
 	return (
