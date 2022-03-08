@@ -14,7 +14,7 @@ import { Avatar, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useAuth, useUser, useLogout } from "../../AuthProvider";
+import { useUser, useLogout } from "../../AuthProvider";
 
 const drawerWidth = 240;
 
@@ -23,7 +23,6 @@ export default function PrimarySearchAppBar() {
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
-	const auth = useAuth();
 	const user = useUser();
 
 	const handleMenu = (event) => {
@@ -104,7 +103,7 @@ export default function PrimarySearchAppBar() {
 						open={Boolean(anchorEl)}
 						onClose={handleMenuClose}
 					>
-						{auth ? (
+						{user ? (
 							<div>
 								<MenuItem
 									component={Link}
@@ -161,9 +160,9 @@ export default function PrimarySearchAppBar() {
 						boxSizing: "border-box",
 					},
 				}}
-				variant="persistent"
 				anchor="left"
 				open={open}
+				onClose={handleDrawerClose}
 			>
 				<DrawerHeader>
 					<IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
@@ -176,6 +175,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>Home</b>
@@ -184,6 +184,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/contracts"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>Contracts</b>
@@ -192,6 +193,7 @@ export default function PrimarySearchAppBar() {
 						component={Link}
 						to="/about"
 						color="inherit"
+						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
 						<b>About</b>

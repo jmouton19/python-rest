@@ -23,12 +23,20 @@ import axios from "axios";
 function AddContract() {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	const [value, setValue] = useState("");
-	const [length, setLength] = useState("");
-	const [location, setLocation] = useState("");
+	const [value, setValue] = useState("0");
+	const [length, setLength] = useState("0");
+	const [location, setLocation] = useState("remote");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
 
 	const user = useUser();
+
+	function ButtonDisabledChecks() {
+	
+		return (
+			description === "" ||
+			title === ""
+		);
+	}
 
 	function postContract() {
 		const data = {
@@ -102,6 +110,7 @@ function AddContract() {
 										setDescription(event.target.value);
 									}}
 									label="Contract Description"
+								
 								/>
 							</FormControl>
 						</Grid>
@@ -149,7 +158,9 @@ function AddContract() {
 										label="Contract Length"
 										endAdornment={
 											<InputAdornment position="end">months</InputAdornment>
+											
 										}
+										
 									/>
 								</FormControl>
 							</Grid>
@@ -160,7 +171,6 @@ function AddContract() {
 										Set work location:
 									</FormLabel>
 									<RadioGroup
-										defaultValue="remote"
 										name="location"
 										row
 										onChange={(event) => {
@@ -184,7 +194,7 @@ function AddContract() {
 
 							<Grid item xs={12}>
 								<FormControl fullWidth>
-									<Button variant="contained" onClick={postContract}>
+									<Button disabled={ButtonDisabledChecks()} variant="contained" onClick={postContract}>
 										Add Contract
 									</Button>
 								</FormControl>
