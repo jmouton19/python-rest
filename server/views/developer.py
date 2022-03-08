@@ -84,14 +84,14 @@ def check_username(username):
     else:
         return jsonify(success=False,message="Developer with this username does not exist")
 
-@app.route('/api/developer/<username>/contract', methods=['POST','DELETE'])
+@app.route('/api/developer/<username>/application', methods=['POST','GET'])
 def apply_contract(username):
-    request_data = request.get_json()
-    contract_id=request_data['contract_id']
-    contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
     developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
-    application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
     if request.method == 'POST':
+        request_data = request.get_json()
+        contract_id=request_data['contract_id']
+        contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
+        application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
         if application==None:        
             new_application=Application(
                 contract_id=contract_id,
@@ -99,24 +99,42 @@ def apply_contract(username):
             )
             developer.applications.append(new_application)
             contract.applications.append(new_application)
+            db.session.commit()
+            return jsonify(success=True)
         else:
             return jsonify(success=False,message="Developer has already applied for this contract")
-    elif request.method == 'DELETE':
-        if application:
-            db.session.delete(application)
-        else:
-            return jsonify(success=False,message="Developer has not applied for this contract")
-    db.session.commit()
-    return jsonify(success=True)
+    elif request.method == 'GET':
+        applied_contract_list=[]
+        applied_contracts=db.session.query(Application).filter(Application.developer_id==developer.developer_id)
+        for applied in applied_contracts:
+            instance = dict(applied.contract.__dict_)
+            instance.pop('_sa_instance_state', None)
+            instance['company_name']=contract.company.company_name
+            instance['company_avatar']=contract.company.avatar
+            applied_contract_list.append(instance)
+        response= {"success":True, "applied contracts": applied_contract_list }
+        return jsonify(response)
 
-@app.route('/api/developer/<username>/company', methods=['POST','DELETE'])
-def block_company(username):
-    request_data = request.get_json()
-    company_name=request_data['company_name']
-    company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
+@app.route('/api/developer/<username>/application/<contract_id>', methods=['DELETE'])
+def delete_apply(username,contract_id):
+    contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
     developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
-    blocked=db.session.query(BlockedCompany).filter(BlockedCompany.company_id==company.company_id, BlockedCompany.developer_id==developer.developer_id).one_or_none()
+    application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
+    if application:
+        db.session.delete(application)
+    else:
+        return jsonify(success=False,message="Developer has not applied for this contract")
+    db.session.commit()
+    return jsonify(success=True,message="Application removed")
+
+@app.route('/api/developer/<username>/blockedCompany', methods=['POST','GET'])
+def block_company(username):
+    developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
     if request.method == 'POST':
+        request_data = request.get_json()
+        company_name=request_data['company_name']
+        company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
+        blocked=db.session.query(BlockedCompany).filter(BlockedCompany.company_id==company.company_id, BlockedCompany.developer_id==developer.developer_id).one_or_none()
         if blocked==None:
             new_blocked=BlockedCompany(
                 company_id=company.company_id,
@@ -124,12 +142,29 @@ def block_company(username):
             )
             developer.blocked_companies.append(new_blocked)
             company.blockings.append(new_blocked)
+            db.session.commit()
+            return jsonify(success=True,message="Company blocked")
         else:
             return jsonify(success=False,message="Developer has already blocked this company")
-    elif request.method == 'DELETE':
-        if blocked:
-            db.session.delete(blocked)
-        else:
-            return jsonify(success=False,message="Developer has not blocked this company")
+    elif request.method == 'GET':
+        blocked_list=[]
+        blocks=db.session.query(BlockedCompany).filter(BlockedCompany.developer_id==developer.developer_id)
+        for block in blocks:
+            instance = dict()
+            instance['company_name']=block.company.company_name
+            instance['company_avatar']=block.company.avatar
+            blocked_list.append(instance)
+        response= {"success":True, "blocked companies": blocked_list }
+        return jsonify(response)
+
+@app.route('/api/developer/<username>/blockedCompany/<company_name>', methods=['DELETE'])
+def unblock_company(username,company_name):
+    developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
+    company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
+    blocked=db.session.query(BlockedCompany).filter(BlockedCompany.company_id==company.company_id, BlockedCompany.developer_id==developer.developer_id).one_or_none()
+    if blocked:
+        db.session.delete(blocked)
+    else:
+        return jsonify(success=False,message="Developer has not blocked this company")
     db.session.commit()
-    return jsonify(success=True)
+    return jsonify(success=True,message="Company unblocked")

@@ -1,4 +1,3 @@
-from ast import Try
 from flask import jsonify, request
 from server import app
 from server.views.checkemail import email_checkr

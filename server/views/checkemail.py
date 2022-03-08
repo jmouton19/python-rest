@@ -22,9 +22,7 @@ def email_checkr(email,login=None):
             else:
                 return dict(success=True,message="This email has not been registered")
 
-@app.route('/api/email', methods=['GET'])
-def check_email():
-    request_data = request.get_json()
-    email = request_data['email'],
+@app.route('/api/email/<email>', methods=['GET'])
+def check_email(email):
     return jsonify(email_checkr(email))
 
