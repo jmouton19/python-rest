@@ -99,11 +99,12 @@ function Profile() {
 													<Typography variant="h5">Experience</Typography>
 												</TableCell>
 											</TableRow>
+										</TableHead>
+										<TableBody>
 											{Object.keys(viewUser.programmingLanguages).map(
 												(language) => {
 													const experience =
 														viewUser.programmingLanguages[language];
-
 													return (
 														<TableRow key={language}>
 															<TableCell>
@@ -119,8 +120,8 @@ function Profile() {
 													);
 												}
 											)}
-										</TableHead>
-										<TableBody></TableBody>
+										
+										</TableBody>
 									</Table>
 								</TableContainer>
 							) : (
