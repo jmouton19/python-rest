@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useUser, useLoadUserProfile } from "../../AuthProvider";
+import {
+	useUser,
+	useLoadUserProfile,
+	useLogin,
+	useLogout,
+} from "../../AuthProvider";
 import axios from "axios";
+import { deepEqual } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -39,6 +46,9 @@ const fabStyle = {
 function EditProfile() {
 	const user = useUser();
 	const loadUserProfile = useLoadUserProfile();
+	const login = useLogin();
+	const logout = useLogout();
+	const navigate = useNavigate();
 	const [edit, setEdit] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [changePassword, setChangePassword] = useState(false);
@@ -46,6 +56,7 @@ function EditProfile() {
 	const [password, setPassword] = useState("");
 	const [passwordRepeated, setPasswordRepeated] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
+	const [email, setEmail] = useState("");
 
 	const [username, setUsername] = useState("");
 	const [firstName, setFirstName] = useState("");
@@ -67,29 +78,6 @@ function EditProfile() {
 			setIndustry(user["industry"]);
 		}
 	}, [edit]);
-
-	function deepEqual(object1, object2) {
-		const keys1 = Object.keys(object1);
-		const keys2 = Object.keys(object2);
-		if (keys1.length !== keys2.length) {
-			return false;
-		}
-		for (const key of keys1) {
-			const val1 = object1[key];
-			const val2 = object2[key];
-			const areObjects = isObject(val1) && isObject(val2);
-			if (
-				(areObjects && !deepEqual(val1, val2)) ||
-				(!areObjects && val1 !== val2)
-			) {
-				return false;
-			}
-		}
-		return true;
-	}
-	function isObject(object) {
-		return object != null && typeof object === "object";
-	}
 
 	function saveEditDisableChecks() {
 		if (user["userType"] == "developer") {
@@ -114,13 +102,11 @@ function EditProfile() {
 	}
 
 	function saveDeleteDisableChecks() {
-		return(
-			password == "" 
-		);
+		return password == "" || email == "";
 	}
-	
+
 	function saveChangePasswordChecks() {
-		return(
+		return (
 			password == "" ||
 			oldPassword == "" ||
 			passwordRepeated == "" ||
@@ -128,62 +114,88 @@ function EditProfile() {
 		);
 	}
 
-	function saveChangedDetails(changePasswordRoute) {
+	async function saveChangedDetails(changePasswordRoute) {
 		const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 		const url = `${baseUrl}/api/${user["userType"]}`;
 		let data = {};
 		if (changePasswordRoute) {
-			data =
-				user["userType"] == "developer"
-					? {
-						developerID: user["developerID"],
-						oldPassword: oldPassword,
-						newPassword: password,
-					}
-					: {
-						companyID: user["companyID"],
-						oldPassword: oldPassword,
-						newPassword: password,
-					};
+			if (user["userType"] == "developer") {
+				data = {
+					developerID: user["developerID"],
+					oldPassword: oldPassword,
+					newPassword: password,
+				};
+			} else {
+				data = {
+					companyID: user["companyID"],
+					oldPassword: oldPassword,
+					newPassword: password,
+				};
+			}
 		} else {
-			data =
-				user["userType"] == "developer"
-					? {
-						developerID: user["developerID"],
-						...(user["username"] != username && { username: username }),
-						...(user["firstName"] != firstName && { firstName: firstName }),
-						...(user["lastName"] != lastName && { lastName: lastName }),
-						...(user["avatarUrl"] != avatarUrl && { avatarUrl: avatarUrl }),
-						...(!deepEqual(
-							user["programmingLanguages"],
-							programmingLanguages
-						) && {
-							programmingLanguages: programmingLanguages,
-						}),
-					}
-					: {
-						companyID: user["companyID"],
-						...(user["industry"] != industry && { industry: industry }),
-					};
+			if (user["userType"] == "developer") {
+				data = {
+					developerID: user["developerID"],
+					...(user["username"] != username && { username: username }),
+					...(user["firstName"] != firstName && { firstName: firstName }),
+					...(user["lastName"] != lastName && { lastName: lastName }),
+					...(user["avatarUrl"] != avatarUrl && { avatarUrl: avatarUrl }),
+					...(!deepEqual(
+						user["programmingLanguages"],
+						programmingLanguages
+					) && {
+						programmingLanguages: programmingLanguages,
+					}),
+				};
+			} else {
+				data = {
+					companyID: user["companyID"],
+					...(user["industry"] != industry && { industry: industry }),
+				};
+			}
 		}
-		axios
-			.put(url, data)
-			.then((res) => {
-				if (res.data.success) {
+
+		return new Promise((resolve, reject) => {
+			axios.put(url, data).then((res) => {
+				const { success } = res.data;
+
+				if (success) {
 					console.log("Details have been updated.");
-					loadUserProfile(user["userType"], user["username"]);
-					if (!changePasswordRoute) {
-						setEdit(false);
-					}
-					setChangePassword(false);
-					return true;
+					loadUserProfile(user["userType"], user["username"]).then(() => {
+						if (!changePasswordRoute) {
+							setEdit(false);
+						}
+						setChangePassword(false);
+						resolve(true);
+					});
+				} else {
+					reject(res);
 				}
-			})
-			.catch((err) => {
-				console.log(err);
 			});
-		return false;
+		});
+	}
+
+	async function deleteUser() {
+		const baseUrl = "https://cs334proj1group8.herokuapp.com";
+		const url = `${baseUrl}/api/${user["userType"]}/${user["username"]}`;
+
+		const correctDetails = login(email, password);
+		if (correctDetails) {
+			return new Promise((resolve, reject) => {
+				axios.delete(url).then((res) => {
+					if (res.data.success) {
+						console.log("User successfully deleted.");
+						navigate("/");
+						logout();
+						resolve(true);
+					} else {
+						console.log("Error! Unable to delete user.");
+						reject(res);
+					}
+				});
+			});
+		}
 	}
 
 	return (
@@ -389,7 +401,7 @@ function EditProfile() {
 								onClick={() => saveChangedDetails(true)}
 								variant="contained"
 								sx={{ borderRadius: "50%", height: 60, width: 60 }}
-								disabled= {saveChangePasswordChecks()}
+								disabled={saveChangePasswordChecks()}
 								//TODO:Add server communication and updating
 							>
 								<SaveIcon />
@@ -403,8 +415,21 @@ function EditProfile() {
 				onClose={() => setConfirmDelete(false)}
 				fullWidth
 			>
-				<DialogTitle>Enter your password to confirm deletion</DialogTitle>
-				<Stack padding={1}>
+				<DialogTitle>
+					Enter your email and password to confirm deletion
+				</DialogTitle>
+				<Stack padding={1} spacing={1}>
+					<FormControl fullWidth>
+						<InputLabel htmlFor="email-input">Email</InputLabel>
+						<OutlinedInput
+							id="email-input"
+							name="email"
+							onChange={(event) => {
+								setEmail(event.target.value);
+							}}
+							label="Email"
+						/>
+					</FormControl>
 					<FormControl fullWidth>
 						<InputLabel htmlFor="password-input">Password</InputLabel>
 						<OutlinedInput
@@ -441,6 +466,7 @@ function EditProfile() {
 							</Button>
 							<Button
 								//TODO: add delete post
+								onClick={deleteUser}
 								variant="contained"
 								disabled={saveDeleteDisableChecks()}
 								sx={{ borderRadius: "50%", height: 60, width: 60 }}
