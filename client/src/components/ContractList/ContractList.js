@@ -9,7 +9,7 @@ import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 
-function ContractList({ method, descending, axiosUrl, condensed, children }) {
+function ContractList({ method, descending, axiosUrl, children }) {
 	const [contractsData, setContractsData] = useState(null);
 
 	useEffect(() => {
@@ -52,7 +52,7 @@ function ContractList({ method, descending, axiosUrl, condensed, children }) {
 		return <></>;
 	}
 
-	if (condensed == true) {
+	if (axiosUrl.indexOf("developer") > -1 || axiosUrl.indexOf("company") > -1) {
 		return (
 			<>
 				<Paper elevation={4}>

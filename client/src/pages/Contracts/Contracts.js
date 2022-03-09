@@ -46,7 +46,6 @@ function Contracts() {
 						<ContractList
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
-							condensed={false}
 							descending={descending}
 						>
 							<Button variant="grey">Apply Now</Button>
@@ -56,7 +55,6 @@ function Contracts() {
 						<ContractList
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
-							condensed={false}
 							descending={descending}
 						>
 							<Button variant="grey">Apply Now</Button>
@@ -66,7 +64,6 @@ function Contracts() {
 						<ContractList
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
-							condensed={false}
 							descending={descending}
 						>
 							<Button variant="grey">Apply Now</Button>
