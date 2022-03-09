@@ -79,6 +79,62 @@ function Contract() {
 			surname: "Visser",
 			username: "nicolvisser",
 		},
+		{
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
+			developer_id: 27,
+			developer_languages: {
+				Java: 3,
+				"Objective-C": 7,
+			},
+			email: "nicolvisser@yahoo.com",
+			github_url: null,
+			linkedin_url: null,
+			name: "Nicol ",
+			surname: "Visser",
+			username: "nicolvisser",
+		},
+		{
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
+			developer_id: 27,
+			developer_languages: {
+				Java: 3,
+				"Objective-C": 7,
+			},
+			email: "nicolvisser@yahoo.com",
+			github_url: null,
+			linkedin_url: null,
+			name: "Nicol ",
+			surname: "Visser",
+			username: "nicolvisser",
+		},
+		{
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
+			developer_id: 27,
+			developer_languages: {
+				Java: 3,
+				"Objective-C": 7,
+			},
+			email: "nicolvisser@yahoo.com",
+			github_url: null,
+			linkedin_url: null,
+			name: "Nicol ",
+			surname: "Visser",
+			username: "nicolvisser",
+		},
+		{
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
+			developer_id: 27,
+			developer_languages: {
+				Java: 3,
+				"Objective-C": 7,
+			},
+			email: "nicolvisser@yahoo.com",
+			github_url: null,
+			linkedin_url: null,
+			name: "Nicol ",
+			surname: "Visser",
+			username: "nicolvisser",
+		},
 	];
 
 	return (
@@ -101,7 +157,7 @@ function Contract() {
 												Value: R{contract.value}
 											</Typography>
 											<Typography variant="h6"  align="flex-start">
-												Descrtion: {contract.description}
+												Description: {contract.description}
 											</Typography>
 										</Grid>	
 
@@ -109,25 +165,33 @@ function Contract() {
 								</Paper>	
 							</Grid>	
 							<Grid item xs={8}>
-								<Paper elevation={4}>
-									<TableContainer>
-										<Table>
+								<Paper elevation={4} overflow = 'hidden'>
+									<TableContainer sx={{ maxHeight: 440 }}>
+										<Table stickyHeader aria-label="sticky table">
 											<TableHead>
 												<TableRow>
-													<TableCell align = 'center'>
-														<Typography variant="h6">
-																Applicants:
+													<TableCell align = 'center' colSpan={4}>
+														<Typography
+															fullwidth
+															align = 'center'
+															variant="h5"
+															id="tableTitle"
+															component="div"
+															xs={12}
+														>
+															Applicants
 														</Typography>
 													</TableCell>
-												
-
-												</TableRow>											
+												</TableRow>
+											</TableHead>
+											<TableBody>
+																							
 												{developers.map(
 													(developer)=>(
-														<TableRow key = {developer.name}>
+														<TableRow key = {developer.name} >
 															<TableCell>
 																<Avatar
-																	sx={{ width: 90, height: 90 }}
+																	sx={{ width: 50, height: 50 }}
 																	src={developer.avatar}
 																></Avatar>
 															</TableCell>
@@ -151,8 +215,8 @@ function Contract() {
 														</TableRow>
 													)
 												)}
-											</TableHead>
-											<TableBody></TableBody>
+											
+											</TableBody>
 										</Table>	
 									</TableContainer>
 								</Paper>	
