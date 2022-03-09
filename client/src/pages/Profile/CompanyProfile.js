@@ -6,17 +6,13 @@ import {
 	Typography,
 	Grid,
 	Container,
-	Button,
 } from "@mui/material";
 import ContractList from "../../components/ContractList/ContractList";
-import { useUser } from "../../AuthProvider";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@mui/material";
 
 
 function CompanyProfile(props) {
 	const theme = useTheme();
-	const authUser = useUser();
 	const { viewUser } = props;
 
 	return(
@@ -56,17 +52,7 @@ function CompanyProfile(props) {
 							descending={true}
 							axiosUrl={`https://cs334proj1group8.herokuapp.com/api/company/${viewUser["username"]}/contract`}
 							condensed={true}
-						>
-							{authUser["username"] == viewUser["username"] ? (
-								<>
-									<Button size="small" variant="contained">View Application</Button>
-									<Button size="small" color="error"><DeleteIcon/></Button>
-								</>
-							) : null}
-							{authUser["userType"] == "developer" ? (
-								<Button size="small" variant="contained">Apply</Button>
-							) : null}
-						</ContractList>
+						/>
 					</Grid>
 				</Grid>
 			</Container>
