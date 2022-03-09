@@ -17,8 +17,10 @@ import {
 import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import ContractList from "../../components/ContractList/ContractList";
 import { useUser } from "../../AuthProvider";
+import { useTheme } from "@mui/material";
 
 function DeveloperProfile(props) {
+	const theme = useTheme();
 	const authUser = useUser();
 	const { viewUser } = props;
 
@@ -28,7 +30,7 @@ function DeveloperProfile(props) {
 			<Container>
 				<Grid container alignItems="flex-start" spacing={2} padding={3}>
 					<Grid item xs={12} md={4}>
-						<Paper elevation={5}>
+						<Paper elevation={5} sx={{backgroundColor: theme.palette.primary.g1}}>
 							<Grid
 								container
 								alignItems="center"
@@ -37,35 +39,35 @@ function DeveloperProfile(props) {
 							>
 								<Grid item>
 									<Avatar
-										sx={{ width: 100, height: 100 }}
+										sx={{ width: 100, height: 100, borderRadius:"16px",border:4,borderColor: theme.palette.text.light}}
 										src={viewUser.avatarUrl}
 									></Avatar>
 								</Grid>
 								<Grid item>
 									<Stack>
-										<Typography variant="h3">
+										<Typography variant="h3" color={theme.palette.text.light}>
 											{viewUser.firstName} {viewUser.lastName}
 										</Typography>
-										<Typography variant="h5">{viewUser.username}</Typography>
-										<Typography variant="h6">{viewUser.email}</Typography>
+										<Typography variant="h5" color={theme.palette.text.light}>{viewUser.username}</Typography>
+										<Typography variant="h6" color={theme.palette.text.light}>{viewUser.email}</Typography>
 									</Stack>
 								</Grid>
 							</Grid>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={8}>
-						<Paper elevation={4}>
+						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g2}}>
 							<TableContainer>
 								<Table>
 									<TableHead>
 										<TableRow>
 											<TableCell>
-												<Typography variant="h5">
+												<Typography variant="h5" color={theme.palette.text.light}>
 													Programming Languages
 												</Typography>
 											</TableCell>
 											<TableCell>
-												<Typography variant="h5">Experience</Typography>
+												<Typography variant="h5" color={theme.palette.text.light}>Experience</Typography>
 											</TableCell>
 										</TableRow>
 									</TableHead>
@@ -77,11 +79,11 @@ function DeveloperProfile(props) {
 												return (
 													<TableRow key={language}>
 														<TableCell>
-															<Typography>{language}</Typography>
+															<Typography color={theme.palette.text.light}>{language}</Typography>
 														</TableCell>
 														<TableCell>
 															<ExperiencePicker
-																disabled={true}
+																readOnly={true}
 																presetValue={experience}
 															/>
 														</TableCell>

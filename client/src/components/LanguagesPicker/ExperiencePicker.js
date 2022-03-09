@@ -34,7 +34,7 @@ function ExperiencePicker({
 	language,
 	updateLanguage,
 	presetValue,
-	disabled,
+	readOnly,
 	width,
 }) {
 	const [value, setValue] = React.useState(0);
@@ -49,7 +49,7 @@ function ExperiencePicker({
 	return (
 		<Stack direction="row" width={width}>
 			<StyledRating
-				disabled={disabled}
+				readOnly={readOnly}
 				value={value}
 				precision={0.5}
 				onChange={(event, newValue) => {

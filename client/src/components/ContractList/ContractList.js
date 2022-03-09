@@ -25,6 +25,7 @@ import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 import { useUser } from "../../AuthProvider";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material";
 
 function ContractList({ method, descending, axiosUrl }) {
 	const [contractsData, setContractsData] = useState(null);
@@ -32,6 +33,7 @@ function ContractList({ method, descending, axiosUrl }) {
 	const [alertType, setAlertType] = useState("error");
 	const [alertMessage, setAlertMessage] = useState("ERROR!");
 	const authUser = useUser();
+	const theme = useTheme();
 	const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 	useEffect(() => {
@@ -150,7 +152,7 @@ function ContractList({ method, descending, axiosUrl }) {
 						{alertMessage}
 					</Alert>
 				</Snackbar>	
-				<Paper elevation={4}>
+				<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g5}}>
 					<Table>
 						<TableHead>
 							<TableRow>
