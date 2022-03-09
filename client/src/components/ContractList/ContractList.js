@@ -8,9 +8,11 @@ import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow
 import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
+import { useUser } from "../../AuthProvider";
 
 function ContractList({ method, descending, axiosUrl, children }) {
 	const [contractsData, setContractsData] = useState(null);
+	const authUser = useUser();
 
 	useEffect(() => {
 		axios
@@ -27,6 +29,40 @@ function ContractList({ method, descending, axiosUrl, children }) {
 				console.log(err);
 			});
 	}, []);
+
+	async function contractAction(contract){
+		const baseUrl = "https://cs334proj1group8.herokuapp.com";
+		if(authUser.userType == "developer") {
+			//Apply to contract call if authUser developer
+			const url = `${baseUrl}/api/developer/${authUser["username"]}/application/`;
+			const data = {};
+			data["contract_id"] = contract.contract_id;
+
+			axios
+				.post(url, data)
+				.then((res)=> {
+					if(res.data.success){
+						console.log("Successfully applied");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else if (authUser.userType == "company"){
+			//Delete or go to Applications if authUser company. Still need to figure out how to differentiate between clicks
+			const url = `${baseUrl}/api/contract/${contract["contract_id"]}/`;
+			axios
+				.delete(url)
+				.then((res) => {
+					if(res.data.success) {
+						console.log("Contract deleted");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	}
 
 	if (contractsData) {
 		switch (method) {
@@ -53,7 +89,7 @@ function ContractList({ method, descending, axiosUrl, children }) {
 	}
 
 	if (axiosUrl.indexOf("developer") > -1 || axiosUrl.indexOf("company") > -1) {
-		return (
+		return ( //Return small table version of contracts
 			<>
 				<Paper elevation={4}>
 					<Table>
@@ -100,7 +136,7 @@ function ContractList({ method, descending, axiosUrl, children }) {
 										{contract.length}
 									</TableCell>
 									{children != null ? (
-										<TableCell align="right">
+										<TableCell align="right" onClick={() => contractAction(contract)}>
 											{children}
 										</TableCell>
 									) : null}
@@ -112,12 +148,14 @@ function ContractList({ method, descending, axiosUrl, children }) {
 			</>
 		);
 	} else {
-		return (
+		return ( //Return large card version of contracts
 			<>
 				<Stack spacing={2}>
 					{contractsData.map((contract) => (
 						<ContractCard key={contract.contract_id} contract={contract}>
-							{children}
+							<div onClick={() => contractAction(contract)}>
+								{children}
+							</div>
 						</ContractCard>
 					))}
 				</Stack>
