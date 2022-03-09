@@ -37,11 +37,11 @@ function Profile() {
 		
 			{viewUser.userType == "developer" ? (
 				<>
-					<DeveloperProfile auth={authUser.username == viewUser.username} viewUser={viewUser}/>
+					<DeveloperProfile viewUser={viewUser}/>
 				</>
 			) : (
 				<>
-					<CompanyProfile auth={authUser.username == viewUser.username} viewUser={viewUser}/>
+					<CompanyProfile viewUser={viewUser}/>
 				</>
 			)}
 		</>

@@ -4,7 +4,7 @@ import {
 	sortByDuration,
 	sortByDate,
 } from "../../utils/contractSorting";
-import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
+import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
@@ -57,6 +57,28 @@ function ContractList({ method, descending, axiosUrl, children }) {
 			<>
 				<Paper elevation={4}>
 					<Table>
+						<TableHead>
+							<TableRow>
+								{axiosUrl.indexOf("developer") > -1 ? (
+									<TableCell>
+										<b>Company</b>
+									</TableCell>
+								) : (<></>)}
+								<TableCell>
+									<b>Title</b>
+								</TableCell>
+								<TableCell>
+									<b>Value</b>
+								</TableCell>
+								<TableCell>
+									<b>Duration</b>
+								</TableCell>
+								{children != null ? (
+									<TableCell align="right">
+									</TableCell>
+								) : null}
+							</TableRow>
+						</TableHead>
 						<TableBody>
 							{contractsData.map((contract) => (
 								<TableRow key={contract.contract_id}>

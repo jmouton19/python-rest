@@ -9,10 +9,12 @@ import {
 	Button,
 } from "@mui/material";
 import ContractList from "../../components/ContractList/ContractList";
+import { useUser } from "../../AuthProvider";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function CompanyProfile(props) {
-	const { auth , viewUser } = props;
-	console.log(auth);
+	const authUser = useUser();
+	const { viewUser } = props;
 
 	return(
 		<>
@@ -52,7 +54,15 @@ function CompanyProfile(props) {
 							axiosUrl={`https://cs334proj1group8.herokuapp.com/api/company/${viewUser["username"]}/contract`}
 							condensed={true}
 						>
-							<Button size="small">Apply</Button>
+							{authUser["username"] == viewUser["username"] ? (
+								<>
+									<Button size="small" variant="contained">View Application</Button>
+									<Button size="small" color="error"><DeleteIcon/></Button>
+								</>
+							) : null}
+							{authUser["userType"] == "developer" ? (
+								<Button size="small" variant="contained">Apply</Button>
+							) : null}
 						</ContractList>
 					</Grid>
 				</Grid>

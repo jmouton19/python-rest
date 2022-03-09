@@ -16,10 +16,11 @@ import {
 
 import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import ContractList from "../../components/ContractList/ContractList";
+import { useUser } from "../../AuthProvider";
 
 function DeveloperProfile(props) {
-	const { auth , viewUser } = props;
-	console.log(auth);
+	const authUser = useUser();
+	const { viewUser } = props;
 
 
 	return(
@@ -93,14 +94,16 @@ function DeveloperProfile(props) {
 							</TableContainer>
 						</Paper>
 					</Grid>
-					<Grid item xs={12} md={9}>				
-						<ContractList 
-							method="value"
-							descending={true}
-							axiosUrl={`https://cs334proj1group8.herokuapp.com/api/developer/${viewUser["username"]}/application`}
-						>
-						</ContractList>
-					</Grid>
+					{authUser["username"] == viewUser["username"] ? (
+						<Grid item xs={12} md={9}>				
+							<ContractList 
+								method="value"
+								descending={true}
+								axiosUrl={`https://cs334proj1group8.herokuapp.com/api/developer/${viewUser["username"]}/application`}
+							>
+							</ContractList>
+						</Grid>
+					) : null}
 					<Grid item xs={12} md={3}>
 
 					</Grid>
