@@ -11,8 +11,11 @@ import {
 import ContractList from "../../components/ContractList/ContractList";
 import { useUser } from "../../AuthProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from "@mui/material";
+
 
 function CompanyProfile(props) {
+	const theme = useTheme();
 	const authUser = useUser();
 	const { viewUser } = props;
 
@@ -21,7 +24,7 @@ function CompanyProfile(props) {
 			<Container>
 				<Grid container alignItems="flex-start" spacing={2} padding={3}>
 					<Grid item xs={12} md={9}>
-						<Paper elevation={4}>
+						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.c2}}>
 							<Grid
 								container
 								alignItems="center"
