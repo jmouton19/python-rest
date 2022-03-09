@@ -1,7 +1,8 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import {
-	//Avatar,
+	Avatar,
+	Button,
 	Container,
 	Paper,
 	//Stack,
@@ -15,8 +16,11 @@ import {
 	Grid,
 	TableRow,
 } from "@mui/material";
+import { Link } from "react-router-dom";
+//import { useNavigate} from "react-router-dom";
 
 function Contract() {
+	//const navigate = useNavigate();
 
 	const contract = {
 		company_avatar: "https://i.ibb.co/BVJnV77/9ef54bf91300.webp",
@@ -34,7 +38,7 @@ function Contract() {
 
 	const developers = [
 		{
-			avatar: "https://i.ibb.co/56tLt0w/eede0eb822e6.jpg",
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
 			developer_id: 27,
 			developer_languages: {
 				Java: 3,
@@ -43,7 +47,7 @@ function Contract() {
 			email: "nicolvisser@yahoo.com",
 			github_url: null,
 			linkedin_url: null,
-			name: "Nicol ",
+			name: "bobby ",
 			surname: "Visser",
 			username: "nicolvisser",
 		},
@@ -62,7 +66,7 @@ function Contract() {
 			username: "nicolvisser",
 		},
 		{
-			avatar: "https://i.ibb.co/56tLt0w/eede0eb822e6.jpg",
+			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
 			developer_id: 27,
 			developer_languages: {
 				Java: 3,
@@ -110,24 +114,38 @@ function Contract() {
 										<Table>
 											<TableHead>
 												<TableRow>
-													<TableCell>
-														<Typography variant="h5">
-																Devvname
+													<TableCell align = 'center'>
+														<Typography variant="h6">
+																Applicants:
 														</Typography>
 													</TableCell>
-													<TableCell>
-														<Typography variant="h5">view profile</Typography>
-													</TableCell>
-													<TableCell>
-														<Typography variant="h5">accept</Typography>
-													</TableCell>
+												
 
 												</TableRow>											
 												{developers.map(
 													(developer)=>(
 														<TableRow key = {developer.name}>
 															<TableCell>
-																<Typography>{developer.name}</Typography>
+																<Avatar
+																	sx={{ width: 90, height: 90 }}
+																	src={developer.avatar}
+																></Avatar>
+															</TableCell>
+															<TableCell>
+																<Typography>{developer.name} {developer.surname}</Typography>
+															</TableCell>
+															<TableCell>
+																<Button 
+																	component={Link}
+																	to={`/profile/developer/${developer.username}`}
+																>
+																	View profile
+																</Button>
+															</TableCell>
+															<TableCell>
+																<Button>	
+																	accept
+																</Button>
 															</TableCell>
 															
 														</TableRow>
