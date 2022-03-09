@@ -94,7 +94,7 @@ function DeveloperProfile(props) {
 							</TableContainer>
 						</Paper>
 					</Grid>
-					{authUser["username"] == viewUser["username"] ? (
+					{authUser["username"] == viewUser["username"] && (
 						<Grid item xs={12} md={9}>				
 							<ContractList 
 								method="value"
@@ -103,7 +103,7 @@ function DeveloperProfile(props) {
 							>
 							</ContractList>
 						</Grid>
-					) : null}
+					)}
 					<Grid item xs={12} md={3}>
 
 					</Grid>

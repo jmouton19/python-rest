@@ -4,18 +4,36 @@ import {
 	sortByDuration,
 	sortByDate,
 } from "../../utils/contractSorting";
-import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography, Button } from "@mui/material";
+import {
+	Avatar,
+	Paper,
+	Stack,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	Typography,
+	Button,
+	Alert,
+	IconButton,
+	Snackbar,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 import { useUser } from "../../AuthProvider";
+import CloseIcon from "@mui/icons-material/Close";
 
-function ContractList({ method, descending, axiosUrl}) {
+function ContractList({ method, descending, axiosUrl }) {
 	const [contractsData, setContractsData] = useState(null);
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertType, setAlertType] = useState("error");
+	const [alertMessage, setAlertMessage] = useState("ERROR!");
 	const authUser = useUser();
 	const baseUrl = "https://cs334proj1group8.herokuapp.com";
-	
+
 	useEffect(() => {
 		fetchContracts();
 	}, []);
@@ -41,13 +59,17 @@ function ContractList({ method, descending, axiosUrl}) {
 		axios
 			.delete(url)
 			.then((res) => {
-				if(res.data.success) {
-					console.log("Contract deleted");
+				if (res.data.success) {
+					setAlertMessage("Successfully deleted contract!");
+					setAlertType("success");
+					setShowAlert(true);
 					fetchContracts();
 				}
 			})
 			.catch((err) => {
-				console.log(err);
+				setAlertMessage(err);
+				setAlertType("error");
+				setShowAlert(true);
 			});
 	}
 
@@ -55,17 +77,25 @@ function ContractList({ method, descending, axiosUrl}) {
 		const url = `${baseUrl}/api/developer/${authUser["username"]}/application`;
 		const data = {};
 		data["contract_id"] = contract.contract_id;
-	
+
 		axios
 			.post(url, data)
-			.then((res)=> {
-				if(res.data.success){
-					console.log("Successfully applied");
+			.then((res) => {
+				if (res.data.success) {
+					setAlertMessage(res.data.message);
+					setAlertType("success");
+					setShowAlert(true);
 					fetchContracts();
+				} else {
+					setAlertMessage(res.data.message);
+					setAlertType("warning");
+					setShowAlert(true);
 				}
 			})
 			.catch((err) => {
-				console.log(err);
+				setAlertMessage(err);
+				setAlertType("error");
+				setShowAlert(true);
 			});
 	}
 
@@ -80,7 +110,6 @@ function ContractList({ method, descending, axiosUrl}) {
 		case "duration":
 			sortByDuration(contractsData, descending);
 			break;
-
 		default:
 			break;
 		}
@@ -89,13 +118,38 @@ function ContractList({ method, descending, axiosUrl}) {
 	if (contractsData === null) {
 		return <LoadingPage />;
 	}
-	if(contractsData == undefined) {
+	if (contractsData == undefined) {
 		return <></>;
 	}
 
 	if (axiosUrl.indexOf("developer") > -1 || axiosUrl.indexOf("company") > -1) {
-		return ( //Return small table version of contracts
+		return (
+			//Return small table version of contracts
 			<>
+				<Snackbar 
+					open={showAlert}
+					autoHideDuration={6000}
+					onClose={() => setShowAlert(false)}
+				>
+					<Alert
+						severity={alertType}
+						action={
+							<IconButton
+								aria-label="close"
+								color="inherit"
+								size="small"
+								onClick={() => {
+									setShowAlert(false);
+								}}
+							>
+								<CloseIcon fontSize="inherit" />
+							</IconButton>
+						}
+						sx={{ mb: 2 }}
+					>
+						{alertMessage}
+					</Alert>
+				</Snackbar>	
 				<Paper elevation={4}>
 					<Table>
 						<TableHead>
@@ -114,9 +168,7 @@ function ContractList({ method, descending, axiosUrl}) {
 								<TableCell>
 									<b>Duration</b>
 								</TableCell>
-								{axiosUrl.indexOf("company") > -1 && (
-									<TableCell/>
-								) }
+								{axiosUrl.indexOf("company") > -1 && <TableCell />}
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -124,34 +176,39 @@ function ContractList({ method, descending, axiosUrl}) {
 								<TableRow key={contract.contract_id}>
 									{axiosUrl.indexOf("developer") > -1 && (
 										<TableCell>
-											<Stack direction="row" spacing={1} alignItems="center" >
-												<Avatar src={contract["company_avatar"] } sx={{ width: 24, height: 24 }}/>
+											<Stack direction="row" spacing={1} alignItems="center">
+												<Avatar
+													src={contract["company_avatar"]}
+													sx={{ width: 24, height: 24 }}
+												/>
 												<Typography>{contract.company_name}</Typography>
 											</Stack>
 										</TableCell>
 									)}
-									<TableCell>
-										{contract.title}
-									</TableCell>
-									<TableCell>
-										{contract.value}
-									</TableCell>
-									<TableCell>
-										{contract.length}
-									</TableCell>
+									<TableCell>{contract.title}</TableCell>
+									<TableCell>{contract.value}</TableCell>
+									<TableCell>{contract.length}</TableCell>
 									{axiosUrl.indexOf(authUser["username"]) > -1 && axiosUrl.indexOf("company") > -1 && ( //If a company is viewing their own page
-										<TableCell align="right"style={{ width: 128 }}>
+										<TableCell align="right" style={{ width: 128 }}>
 											<Button size="small" variant="contained">
 												View
 											</Button>
-											<Button color="error" size="small" onClick={() => deleteContract(contract)}>
-												<DeleteIcon/>
+											<Button
+												color="error"
+												size="small"
+												onClick={() => deleteContract(contract)}
+											>
+												<DeleteIcon />
 											</Button>
 										</TableCell>
 									)}
 									{authUser["userType"] == "developer" && axiosUrl.indexOf("company") > -1 && ( //If dev is viewing a company page
 										<TableCell align="right">
-											<Button size="small" variant="contained" onClick={() => applyToContract(contract)}>
+											<Button
+												size="small"
+												variant="contained"
+												onClick={() => applyToContract(contract)}
+											>
 												Apply
 											</Button>
 										</TableCell>
@@ -164,18 +221,20 @@ function ContractList({ method, descending, axiosUrl}) {
 			</>
 		);
 	} else {
-		return ( //Return large card version of contracts
+		return (
+			//Return large card version of contracts
 			<>
 				<Stack spacing={2}>
 					{contractsData.map((contract) => (
-						<ContractCard key={contract.contract_id} contract={contract}>
-						</ContractCard>
+						<ContractCard
+							key={contract.contract_id}
+							contract={contract}
+						></ContractCard>
 					))}
 				</Stack>
 			</>
 		);
 	}
-
 }
 
 export default ContractList;
