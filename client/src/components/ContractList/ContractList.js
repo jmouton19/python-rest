@@ -15,6 +15,10 @@ function ContractList({ method, descending, axiosUrl, children }) {
 	const authUser = useUser();
 
 	useEffect(() => {
+		fetchContracts();
+	}, []);
+
+	function fetchContracts() {
 		axios
 			.get(axiosUrl)
 			.then((res) => {
@@ -28,13 +32,13 @@ function ContractList({ method, descending, axiosUrl, children }) {
 			.catch((err) => {
 				console.log(err);
 			});
-	}, []);
+	}
 
 	async function contractAction(contract){
 		const baseUrl = "https://cs334proj1group8.herokuapp.com";
 		if(authUser.userType == "developer") {
 			//Apply to contract call if authUser developer
-			const url = `${baseUrl}/api/developer/${authUser["username"]}/application/`;
+			const url = `${baseUrl}/api/developer/${authUser["username"]}/application`;
 			const data = {};
 			data["contract_id"] = contract.contract_id;
 
@@ -43,6 +47,7 @@ function ContractList({ method, descending, axiosUrl, children }) {
 				.then((res)=> {
 					if(res.data.success){
 						console.log("Successfully applied");
+						fetchContracts();
 					}
 				})
 				.catch((err) => {
@@ -50,12 +55,13 @@ function ContractList({ method, descending, axiosUrl, children }) {
 				});
 		} else if (authUser.userType == "company"){
 			//Delete or go to Applications if authUser company. Still need to figure out how to differentiate between clicks
-			const url = `${baseUrl}/api/contract/${contract["contract_id"]}/`;
+			const url = `${baseUrl}/api/contract/${contract["contract_id"]}`;
 			axios
 				.delete(url)
 				.then((res) => {
 					if(res.data.success) {
 						console.log("Contract deleted");
+						fetchContracts();
 					}
 				})
 				.catch((err) => {
