@@ -113,7 +113,7 @@ def apply_contract(username):
             instance['company_name']=applied.contract.company.company_name
             instance['company_avatar']=applied.contract.company.avatar
             applied_contract_list.append(instance)
-        response= {"success":True, "applied contracts": applied_contract_list }
+        response= {"success":True, "contracts": applied_contract_list }
         return jsonify(response)
 
 @app.route('/api/developer/<username>/application/<contract_id>', methods=['DELETE'])
