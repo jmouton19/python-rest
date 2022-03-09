@@ -4,16 +4,18 @@ import {
 	sortByDuration,
 	sortByDate,
 } from "../../utils/contractSorting";
-import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import {  Avatar, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography, Button } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 import { useUser } from "../../AuthProvider";
 
-function ContractList({ method, descending, axiosUrl, children }) {
+function ContractList({ method, descending, axiosUrl}) {
 	const [contractsData, setContractsData] = useState(null);
 	const authUser = useUser();
-
+	const baseUrl = "https://cs334proj1group8.herokuapp.com";
+	
 	useEffect(() => {
 		fetchContracts();
 	}, []);
@@ -34,40 +36,37 @@ function ContractList({ method, descending, axiosUrl, children }) {
 			});
 	}
 
-	async function contractAction(contract){
-		const baseUrl = "https://cs334proj1group8.herokuapp.com";
-		if(authUser.userType == "developer") {
-			//Apply to contract call if authUser developer
-			const url = `${baseUrl}/api/developer/${authUser["username"]}/application`;
-			const data = {};
-			data["contract_id"] = contract.contract_id;
+	async function deleteContract(contract) {
+		const url = `${baseUrl}/api/contract/${contract["contract_id"]}`;
+		axios
+			.delete(url)
+			.then((res) => {
+				if(res.data.success) {
+					console.log("Contract deleted");
+					fetchContracts();
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
 
-			axios
-				.post(url, data)
-				.then((res)=> {
-					if(res.data.success){
-						console.log("Successfully applied");
-						fetchContracts();
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		} else if (authUser.userType == "company"){
-			//Delete or go to Applications if authUser company. Still need to figure out how to differentiate between clicks
-			const url = `${baseUrl}/api/contract/${contract["contract_id"]}`;
-			axios
-				.delete(url)
-				.then((res) => {
-					if(res.data.success) {
-						console.log("Contract deleted");
-						fetchContracts();
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
+	async function applyToContract(contract) {
+		const url = `${baseUrl}/api/developer/${authUser["username"]}/application`;
+		const data = {};
+		data["contract_id"] = contract.contract_id;
+	
+		axios
+			.post(url, data)
+			.then((res)=> {
+				if(res.data.success){
+					console.log("Successfully applied");
+					fetchContracts();
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	}
 
 	if (contractsData) {
@@ -101,11 +100,11 @@ function ContractList({ method, descending, axiosUrl, children }) {
 					<Table>
 						<TableHead>
 							<TableRow>
-								{axiosUrl.indexOf("developer") > -1 ? (
+								{axiosUrl.indexOf("developer") > -1 && (
 									<TableCell>
 										<b>Company</b>
 									</TableCell>
-								) : (<></>)}
+								)}
 								<TableCell>
 									<b>Title</b>
 								</TableCell>
@@ -115,23 +114,22 @@ function ContractList({ method, descending, axiosUrl, children }) {
 								<TableCell>
 									<b>Duration</b>
 								</TableCell>
-								{children != null ? (
-									<TableCell align="right">
-									</TableCell>
-								) : null}
+								{axiosUrl.indexOf("company") > -1 && (
+									<TableCell/>
+								) }
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{contractsData.map((contract) => (
 								<TableRow key={contract.contract_id}>
-									{axiosUrl.indexOf("developer") > -1 ? (
+									{axiosUrl.indexOf("developer") > -1 && (
 										<TableCell>
 											<Stack direction="row" spacing={1} alignItems="center" >
 												<Avatar src={contract["company_avatar"] } sx={{ width: 24, height: 24 }}/>
 												<Typography>{contract.company_name}</Typography>
 											</Stack>
 										</TableCell>
-									) : (<></>)}
+									)}
 									<TableCell>
 										{contract.title}
 									</TableCell>
@@ -141,11 +139,23 @@ function ContractList({ method, descending, axiosUrl, children }) {
 									<TableCell>
 										{contract.length}
 									</TableCell>
-									{children != null ? (
-										<TableCell align="right" onClick={() => contractAction(contract)}>
-											{children}
+									{axiosUrl.indexOf(authUser["username"]) > -1 && axiosUrl.indexOf("company") > -1 && ( //If a company is viewing their own page
+										<TableCell align="right"style={{ width: 128 }}>
+											<Button size="small" variant="contained">
+												View
+											</Button>
+											<Button color="error" size="small" onClick={() => deleteContract(contract)}>
+												<DeleteIcon/>
+											</Button>
 										</TableCell>
-									) : null}
+									)}
+									{authUser["userType"] == "developer" && axiosUrl.indexOf("company") > -1 && ( //If dev is viewing a company page
+										<TableCell align="right">
+											<Button size="small" variant="contained" onClick={() => applyToContract(contract)}>
+												Apply
+											</Button>
+										</TableCell>
+									)}
 								</TableRow>
 							))}
 						</TableBody>
@@ -159,9 +169,6 @@ function ContractList({ method, descending, axiosUrl, children }) {
 				<Stack spacing={2}>
 					{contractsData.map((contract) => (
 						<ContractCard key={contract.contract_id} contract={contract}>
-							<div onClick={() => contractAction(contract)}>
-								{children}
-							</div>
 						</ContractCard>
 					))}
 				</Stack>
