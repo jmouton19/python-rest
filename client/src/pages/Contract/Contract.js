@@ -4,6 +4,7 @@ import {
 	Avatar,
 	Button,
 	Container,
+	Chip,
 	Paper,
 	//Stack,
 	Table,
@@ -15,12 +16,26 @@ import {
 	//Typography,
 	Grid,
 	TableRow,
+	Stack,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import styled from "@emotion/styled";
 //import { useNavigate} from "react-router-dom";
 
 function Contract() {
 	//const navigate = useNavigate();
+
+	const StyledLink = styled(Link)`
+		text-decoration: none;
+
+		&:focus,
+		&:hover,
+		&:visited,
+		&:link,
+		&:active {
+			color: black;
+		}
+	`;
 
 	const contract = {
 		company_avatar: "https://i.ibb.co/BVJnV77/9ef54bf91300.webp",
@@ -32,7 +47,7 @@ function Contract() {
 		length: 4,
 		open: true,
 		remote: true,
-		title: "frontend design",
+		title: "Disney Website Redesign",
 		value: 10000,
 	};
 
@@ -139,41 +154,72 @@ function Contract() {
 
 	return (
 		<React.Fragment>
-			<Container maxWidth="lg">
-				<Grid container direction="column" alignItems="stretch" spacing={2} padding={4}>
-					<Typography variant="h3" color="primary" align="center">
-						{contract.title}
-					</Typography>
-					<Grid item xs={4}>
-						<Grid container direction="row" alignItems="stretch" spacing={2} padding={1}>
-							<Grid item xs={4}>
-								<Paper elevation={4} padding={1}>
-									<Grid container direction="column" alignItems="stretch" padding={1}>
+			<Container>
+				<Paper elevation={4} sx={{ mt: 5 }}>
+					<Grid
+						container
+						direction="column"
+						alignItems="stretch"
+						spacing={2}
+						padding={4}
+					>
+						<Grid item xs={4}>
+							<Grid
+								container
+								direction="row"
+								alignItems="stretch"
+								spacing={2}
+								padding={1}
+							>
+								<Grid item xs={4}>
+									<Grid
+										container
+										direction="column"
+										alignItems="stretch"
+										spacing={1}
+										padding={1}
+									>
 										<Grid item xs={4}>
-											<Typography variant="h6"  align="flex-start">
-												Duration: {contract.length} months
-											</Typography>
-											<Typography variant="h6"  align="flex-start">
-												Value: R{contract.value}
-											</Typography>
-											<Typography variant="h6"  align="flex-start">
-												Description: {contract.description}
-											</Typography>
-										</Grid>	
-
+											<Paper>
+												<Stack spacing={3} padding={2}>
+													<Typography variant="h5" color="primary" align="left">
+														{contract.title}
+													</Typography>
+													<Stack>
+														<Typography variant="caption">Duration:</Typography>
+														<Typography variant="body" align="flex-start">
+															{contract.length} months
+														</Typography>
+													</Stack>
+													<Stack>
+														<Typography variant="caption">Value:</Typography>
+														<Typography variant="body" align="flex-start">
+															R {contract.value}
+														</Typography>
+													</Stack>
+													<Stack>
+														<Typography variant="caption">
+															Description:
+														</Typography>
+														<Typography variant="body" align="flex-start">
+															{contract.description}
+														</Typography>
+													</Stack>
+												</Stack>
+											</Paper>
+										</Grid>
 									</Grid>
-								</Paper>	
-							</Grid>	
-							<Grid item xs={8}>
-								<Paper elevation={4} overflow = 'hidden'>
-									<TableContainer sx={{ maxHeight: 440 }}>
-										<Table stickyHeader aria-label="sticky table">
+								</Grid>
+
+								<Grid item xs={8}>
+									<TableContainer>
+										<Table stickyHeader size="small">
 											<TableHead>
 												<TableRow>
-													<TableCell align = 'center' colSpan={4}>
+													<TableCell align="center" colSpan={4}>
 														<Typography
 															fullwidth
-															align = 'center'
+															align="center"
 															variant="h5"
 															id="tableTitle"
 															component="div"
@@ -185,51 +231,48 @@ function Contract() {
 												</TableRow>
 											</TableHead>
 											<TableBody>
-																							
-												{developers.map(
-													(developer)=>(
-														<TableRow key = {developer.name} >
-															<TableCell>
+												{developers.map((developer) => (
+													<TableRow key={developer.name}>
+														<TableCell>
+															<Link
+																to={`/profile/developer/${developer.username}`}
+															>
 																<Avatar
-																	sx={{ width: 50, height: 50 }}
+																	sx={{ width: 40, height: 40 }}
 																	src={developer.avatar}
 																></Avatar>
-															</TableCell>
-															<TableCell>
-																<Typography>{developer.name} {developer.surname}</Typography>
-															</TableCell>
-															<TableCell>
-																<Button 
-																	component={Link}
-																	to={`/profile/developer/${developer.username}`}
-																>
-																	View profile
-																</Button>
-															</TableCell>
-															<TableCell>
-																<Button>	
-																	accept
-																</Button>
-															</TableCell>
-															
-														</TableRow>
-													)
-												)}
-											
+															</Link>
+														</TableCell>
+														<TableCell>
+															<StyledLink
+																to={`/profile/developer/${developer.username}`}
+																style={{
+																	textDecoration: "none",
+																}}
+															>
+																<Typography sx={{ color: "primary" }}>
+																	{developer.name} {developer.surname}
+																</Typography>
+															</StyledLink>
+														</TableCell>
+														<TableCell>
+															<Chip size="small" label="JavaScript" />
+														</TableCell>
+														<TableCell>
+															<Button>Accept</Button>
+														</TableCell>
+													</TableRow>
+												))}
 											</TableBody>
-										</Table>	
+										</Table>
 									</TableContainer>
-								</Paper>	
-							</Grid>	
-						</Grid>	
+								</Grid>
+							</Grid>
+						</Grid>
 					</Grid>
-
-					
-				</Grid>	
+				</Paper>
 			</Container>
-
 		</React.Fragment>
-		
 	);
 }
 
