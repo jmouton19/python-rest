@@ -5,22 +5,21 @@ import {
 	Button,
 	Container,
 	Paper,
-	Chip,
-	//Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
-	//TableRow,
-	//Typography,
 	Grid,
 	TableRow,
 	Stack,
+	AvatarGroup,
+	Tooltip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import DevIcon from "devicon-react-svg";
+
+import { devicons } from "../../utils/mapLanguageToIcon";
 //import { useNavigate} from "react-router-dom";
 
 function Contract() {
@@ -191,13 +190,13 @@ function Contract() {
 													</Typography>
 													<Stack>
 														<Typography variant="caption">Duration:</Typography>
-														<Typography variant="body" align="flex-start">
+														<Typography variant="body">
 															{contract.length} months
 														</Typography>
 													</Stack>
 													<Stack>
 														<Typography variant="caption">Value:</Typography>
-														<Typography variant="body" align="flex-start">
+														<Typography variant="body">
 															R {contract.value}
 														</Typography>
 													</Stack>
@@ -205,7 +204,7 @@ function Contract() {
 														<Typography variant="caption">
 															Description:
 														</Typography>
-														<Typography variant="body" align="flex-start">
+														<Typography variant="body">
 															{contract.description}
 														</Typography>
 													</Stack>
@@ -222,7 +221,6 @@ function Contract() {
 												<TableRow>
 													<TableCell align="center" colSpan={4}>
 														<Typography
-															fullwidth
 															align="center"
 															variant="h5"
 															id="tableTitle"
@@ -260,18 +258,30 @@ function Contract() {
 															</StyledLink>
 														</TableCell>
 														<TableCell>
-															<DevIcon icon="react"/>
-														</TableCell>
-											
-														<TableCell>
-															{Object.keys(developer.developer_languages).map(
-																(language) => (
-																	<Chip key={language} size="small" label={language}/>
-																)
-															)}
+															<AvatarGroup variant="round" spacing={0}>
+																{Object.keys(developer.developer_languages).map(
+																	(language, experience) => (
+																		<Tooltip
+																			key={language}
+																			title={`${language}: ${experience} \n ${
+																				experience == 1 ? "Year" : "Years"
+																			} Experience`}
+																		>
+																			<Avatar
+																				sx={{
+																					width: 25,
+																					height: 25,
+																					backgroundColor: "white",
+																				}}
+																				src={devicons[language]}
+																			/>
+																		</Tooltip>
+																	)
+																)}
+															</AvatarGroup>
 														</TableCell>
 														<TableCell align="right">
-															<Button >Accept</Button>
+															<Button>Accept</Button>
 														</TableCell>
 													</TableRow>
 												))}
