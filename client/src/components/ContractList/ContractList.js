@@ -5,7 +5,6 @@ import {
 	sortByDate,
 } from "../../utils/contractSorting";
 import {
-	Avatar,
 	Paper,
 	Stack,
 	Table,
@@ -13,7 +12,6 @@ import {
 	TableCell,
 	TableHead,
 	TableRow,
-	Typography,
 	Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -26,22 +24,50 @@ import {
 	cancelApplication,
 	deleteContract,
 	fetchAllContracts,
+	fetchCompanysContracts,
+	fetchDevelopersContracts,
 } from "../../utils/apiCalls";
 import { Link } from "react-router-dom";
+import ContractTable from "../ContractTable/ContractTable";
 
-function ContractList({ method, descending, viewUser, condensed }) {
+function ContractList({ method, descending, viewUser, condensed, status }) {
 	const [contractsData, setContractsData] = useState(null);
 	const authUser = useUser();
 	const theme = useTheme();
+	console.log(viewUser.userType);
 
 	useEffect(() => {
 		getContracts();
 	}, []);
 
 	function getContracts() {
-		fetchAllContracts().then((data) => {
-			setContractsData(data);
-		});
+		switch(status) {
+		case "available":
+			fetchAllContracts().then((data) => {
+				setContractsData(data);
+			});
+			break;
+		case "applied":
+			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of available
+				setContractsData(data);
+			});
+			break;
+		case "accepted":
+			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of accepted
+				setContractsData(data);
+			});
+			break;
+		case "open":
+			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of open
+				setContractsData(data);
+			});
+			break;
+		case "closed":
+			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of closed
+				setContractsData(data);
+			});
+			break;
+		}
 	}
 
 	if (contractsData !== null) {
@@ -90,30 +116,16 @@ function ContractList({ method, descending, viewUser, condensed }) {
 								<TableCell>
 									<b>Duration</b>
 								</TableCell>
-								{viewUser.userType == "company" || (viewUser.userType == "developer" && viewUser.username == authUser.username) && <TableCell />}
+								<TableCell/>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{contractsData.map((contract) => (
-								<TableRow key={contract.contract_id}>
-									{viewUser.userType == "developer" && (
-										<TableCell>
-											<Stack direction="row" spacing={1} alignItems="center">
-												<Avatar
-													src={contract["company_avatar"]}
-													sx={{ width: 24, height: 24 }}
-												/>
-												<Typography>{contract.company_name}</Typography>
-											</Stack>
-										</TableCell>
-									)}
-									<TableCell>{contract.title}</TableCell>
-									<TableCell>{contract.value}</TableCell>
-									<TableCell>{contract.length}</TableCell>
-									{authUser.username === viewUser.username && (
+								<ContractTable key={contract.contract_id} contract={contract} viewUser={viewUser}>
+									{authUser.userType === "company" ? ( //If a company is viewing 
 										<>
-											{viewUser.userType === "company" ? ( //If a company is viewing their own page
-												<TableCell align="right" style={{ width: 128 }}>
+											{authUser.username == viewUser.username && ( //If a company is viewing their own
+												<>
 													<Button size="small" variant="contained" component={Link} to={`/contract/${contract.contract_id}`}>
 															View
 													</Button>
@@ -128,42 +140,48 @@ function ContractList({ method, descending, viewUser, condensed }) {
 													>
 														<DeleteIcon />
 													</Button>
-												</TableCell>
-											):(
-												<TableCell align="right">
-													<Button
-														color="error"
-														size="small"
-														onClick={() =>
-															cancelApplication(authUser.username, contract.contract_id).then(() => {
-																getContracts();
-															})
-														}
-													>
-														<DeleteIcon />
-													</Button>
-												</TableCell>
+												</>
 											)}
 										</>
+									):( //If a dev is viewing
+										<>
+											<>
+												{authUser.username == viewUser.username && ( //If a dev is viewing their own
+													<>
+														<Button
+															color="error"
+															size="small"
+															onClick={() =>
+																cancelApplication(authUser.username, contract.contract_id).then(() => {
+																	getContracts();
+																})
+															}
+														>
+															<DeleteIcon />
+														</Button>
+													</>
+												)}
+											</>
+											<>
+												{viewUser.userType == "company" && ( //If a dev is viewing a company
+													<>
+														<Button
+															variant="contained"
+															size="small"
+															onClick={() =>
+																applyToContract(authUser.username, contract.contract_id).then(() => {
+																	getContracts();
+																})
+															}
+														>
+															Apply
+														</Button>
+													</>
+												)}
+											</>
+										</>
 									)}
-									{authUser["userType"] == "developer" &&
-										viewUser.userType == "company" && ( //If dev is viewing a company page
-										<TableCell align="right">
-											<Button
-												size="small"
-												variant="contained"
-												onClick={() =>
-													applyToContract(
-														authUser.username,
-														contract.contract_id
-													).then(() => getContracts())
-												}
-											>
-													Apply
-											</Button>
-										</TableCell>
-									)}
-								</TableRow>
+								</ContractTable>
 							))}
 						</TableBody>
 					</Table>
@@ -179,7 +197,24 @@ function ContractList({ method, descending, viewUser, condensed }) {
 						<ContractCard
 							key={contract.contract_id}
 							contract={contract}
-						></ContractCard>
+						>
+							{status == "available" && (
+								<>
+									<Button
+										variant="contained"
+										size="small"
+										onClick={() =>
+											applyToContract(authUser.username, contract.contract_id).then(() => {
+												getContracts();
+											})
+										}
+									>
+										Apply
+									</Button>
+								</>
+							)}
+
+						</ContractCard>
 					))}
 				</Stack>
 			</>

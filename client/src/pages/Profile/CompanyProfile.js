@@ -51,6 +51,7 @@ function CompanyProfile(props) {
 							method="value"
 							descending={true}
 							viewUser={viewUser}
+							status="open"
 						/>
 					</Grid>
 				</Grid>

@@ -122,3 +122,31 @@ export async function cancelApplication(developerUsername, contract_id) {
 		});
 	});
 }
+
+export async function fetchDevelopersContracts(developerUsername) {
+	const url = `${baseUrl}/api/developer/${developerUsername}/application`;
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			const { success } = res.data;
+			if (success) {
+				resolve(res.data.contracts);
+			} else {
+				reject(res);
+			}
+		});
+	});
+}
+
+export async function fetchCompanysContracts(companyUsername) {
+	const url = `${baseUrl}/api/company/${companyUsername}/contract`;
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			const { success } = res.data;
+			if (success) {
+				resolve(res.data.contracts);
+			} else {
+				reject(res);
+			}
+		});
+	});
+}

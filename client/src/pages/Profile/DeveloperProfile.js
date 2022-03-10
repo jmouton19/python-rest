@@ -103,6 +103,7 @@ function DeveloperProfile(props) {
 								descending={true}
 								condensed
 								viewUser={viewUser}
+								status="applied"
 							>
 							</ContractList>
 						</Grid>

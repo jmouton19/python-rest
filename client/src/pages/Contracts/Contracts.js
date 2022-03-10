@@ -3,11 +3,13 @@ import { Typography, Stack, Box, Tab, Container } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import SortPicker from "./SortPicker";
 import ContractList from "../../components/ContractList/ContractList";
+import { useUser } from "../../AuthProvider";
 
 function Contracts() {
 	const [activeTabNumber, setActiveTabNumber] = React.useState("1");
 	const [sortMethod, setSortMethod] = React.useState("date");
 	const [descending, setDescending] = React.useState(true);
+	const authUser = useUser();
 
 	const handleTabChange = (event, newValue) => {
 		setActiveTabNumber(newValue);
@@ -47,6 +49,8 @@ function Contracts() {
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
+							status="available"
+							viewUser={authUser}
 						/>
 					</TabPanel>
 					<TabPanel value="2">
@@ -54,6 +58,8 @@ function Contracts() {
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
+							status="applied"
+							viewUser={authUser}
 						/>
 					</TabPanel>
 					<TabPanel value="3">
@@ -61,6 +67,8 @@ function Contracts() {
 							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
 							method={sortMethod}
 							descending={descending}
+							status="accepted"
+							viewUser={authUser}
 						/>
 					</TabPanel>
 				</TabContext>
