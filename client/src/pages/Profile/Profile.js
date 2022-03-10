@@ -3,7 +3,7 @@ import { useUser } from "../../AuthProvider";
 import EditProfile from "./EditProfile";
 import { useParams } from "react-router-dom";
 
-import { fetchUserProfile } from "../../utils/utils";
+import { fetchUserProfile } from "../../utils/apiCalls";
 
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import DeveloperProfile from "./DeveloperProfile";

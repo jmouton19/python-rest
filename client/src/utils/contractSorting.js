@@ -1,4 +1,5 @@
 export const sortByValue = (contracts, descending) => {
+	console.log(contracts);
 	if (descending)
 		contracts.sort((contract1, contract2) => contract2.value - contract1.value);
 	else

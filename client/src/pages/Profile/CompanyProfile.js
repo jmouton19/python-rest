@@ -47,10 +47,10 @@ function CompanyProfile(props) {
 					</Grid>
 					<Grid item xs={12}>
 						<ContractList 
+							condensed
 							method="value"
 							descending={true}
-							axiosUrl={`https://cs334proj1group8.herokuapp.com/api/company/${viewUser["username"]}/contract`}
-							condensed={true}
+							viewUser={viewUser}
 						/>
 					</Grid>
 				</Grid>

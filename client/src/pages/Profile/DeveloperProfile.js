@@ -101,7 +101,8 @@ function DeveloperProfile(props) {
 							<ContractList 
 								method="value"
 								descending={true}
-								axiosUrl={`https://cs334proj1group8.herokuapp.com/api/developer/${viewUser["username"]}/application`}
+								condensed
+								viewUser={viewUser}
 							>
 							</ContractList>
 						</Grid>

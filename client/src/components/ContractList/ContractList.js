@@ -15,93 +15,35 @@ import {
 	TableRow,
 	Typography,
 	Button,
-	Alert,
-	IconButton,
-	Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingPage from "../LoadingPage/LoadingPage";
-import axios from "axios";
 import ContractCard from "../ContractCard/ContractCard";
 import { useUser } from "../../AuthProvider";
-import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
+import {
+	applyToContract,
+	deleteContract,
+	fetchAllContracts,
+} from "../../utils/apiCalls";
 
-function ContractList({ method, descending, axiosUrl }) {
+function ContractList({ method, descending, viewUser, condensed }) {
 	const [contractsData, setContractsData] = useState(null);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertType, setAlertType] = useState("error");
-	const [alertMessage, setAlertMessage] = useState("ERROR!");
 	const authUser = useUser();
 	const theme = useTheme();
-	const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 	useEffect(() => {
-		fetchContracts();
+		getContracts();
 	}, []);
 
-	function fetchContracts() {
-		axios
-			.get(axiosUrl)
-			.then((res) => {
-				const { success } = res.data;
-				if (success) {
-					setContractsData(res.data.contracts);
-				} else {
-					console.log(res);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+	function getContracts() {
+		fetchAllContracts().then((data) => {
+			setContractsData(data);
+		});
 	}
 
-	async function deleteContract(contract) {
-		const url = `${baseUrl}/api/contract/${contract["contract_id"]}`;
-		axios
-			.delete(url)
-			.then((res) => {
-				if (res.data.success) {
-					setAlertMessage("Successfully deleted contract!");
-					setAlertType("success");
-					setShowAlert(true);
-					fetchContracts();
-				}
-			})
-			.catch((err) => {
-				setAlertMessage(err);
-				setAlertType("error");
-				setShowAlert(true);
-			});
-	}
 
-	async function applyToContract(contract) {
-		const url = `${baseUrl}/api/developer/${authUser["username"]}/application`;
-		const data = {};
-		data["contract_id"] = contract.contract_id;
-
-		axios
-			.post(url, data)
-			.then((res) => {
-				if (res.data.success) {
-					setAlertMessage(res.data.message);
-					setAlertType("success");
-					setShowAlert(true);
-					fetchContracts();
-				} else {
-					setAlertMessage(res.data.message);
-					setAlertType("warning");
-					setShowAlert(true);
-				}
-			})
-			.catch((err) => {
-				setAlertMessage(err);
-				setAlertType("error");
-				setShowAlert(true);
-			});
-	}
-
-	if (contractsData) {
+	if (contractsData !== null) {
 		switch (method) {
 		case "date":
 			sortByDate(contractsData, descending);
@@ -124,39 +66,15 @@ function ContractList({ method, descending, axiosUrl }) {
 		return <></>;
 	}
 
-	if (axiosUrl.indexOf("developer") > -1 || axiosUrl.indexOf("company") > -1) {
+	if (condensed) {
 		return (
 			//Return small table version of contracts
 			<>
-				<Snackbar 
-					open={showAlert}
-					autoHideDuration={6000}
-					onClose={() => setShowAlert(false)}
-				>
-					<Alert
-						severity={alertType}
-						action={
-							<IconButton
-								aria-label="close"
-								color="inherit"
-								size="small"
-								onClick={() => {
-									setShowAlert(false);
-								}}
-							>
-								<CloseIcon fontSize="inherit" />
-							</IconButton>
-						}
-						sx={{ mb: 2 }}
-					>
-						{alertMessage}
-					</Alert>
-				</Snackbar>	
-				<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g5}}>
+				<Paper elevation={4} sx={{ backgroundColor: theme.palette.primary.g5 }}>
 					<Table>
 						<TableHead>
 							<TableRow>
-								{axiosUrl.indexOf("developer") > -1 && (
+								{viewUser.userType == "developer" && (
 									<TableCell>
 										<b>Company</b>
 									</TableCell>
@@ -170,13 +88,13 @@ function ContractList({ method, descending, axiosUrl }) {
 								<TableCell>
 									<b>Duration</b>
 								</TableCell>
-								{axiosUrl.indexOf("company") > -1 && <TableCell />}
+								{viewUser.userType == "company" && <TableCell />}
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{contractsData.map((contract) => (
 								<TableRow key={contract.contract_id}>
-									{axiosUrl.indexOf("developer") > -1 && (
+									{viewUser.userType == "developer" && (
 										<TableCell>
 											<Stack direction="row" spacing={1} alignItems="center">
 												<Avatar
@@ -190,28 +108,39 @@ function ContractList({ method, descending, axiosUrl }) {
 									<TableCell>{contract.title}</TableCell>
 									<TableCell>{contract.value}</TableCell>
 									<TableCell>{contract.length}</TableCell>
-									{axiosUrl.indexOf(authUser["username"]) > -1 && axiosUrl.indexOf("company") > -1 && ( //If a company is viewing their own page
+									{authUser.username === viewUser.username &&
+										viewUser.userType === "company" && ( //If a company is viewing their own page
 										<TableCell align="right" style={{ width: 128 }}>
 											<Button size="small" variant="contained">
-												View
+													View
 											</Button>
 											<Button
 												color="error"
 												size="small"
-												onClick={() => deleteContract(contract)}
+												onClick={() =>
+													deleteContract(contract.contract_id).then(() => {
+														getContracts();
+													})
+												}
 											>
 												<DeleteIcon />
 											</Button>
 										</TableCell>
 									)}
-									{authUser["userType"] == "developer" && axiosUrl.indexOf("company") > -1 && ( //If dev is viewing a company page
+									{authUser["userType"] == "developer" &&
+										viewUser.userType == "company" && ( //If dev is viewing a company page
 										<TableCell align="right">
 											<Button
 												size="small"
 												variant="contained"
-												onClick={() => applyToContract(contract)}
+												onClick={() =>
+													applyToContract(
+														authUser.username,
+														contract.contract_id
+													).then(() => getContracts())
+												}
 											>
-												Apply
+													Apply
 											</Button>
 										</TableCell>
 									)}
