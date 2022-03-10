@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import {
 	Avatar,
@@ -16,14 +16,26 @@ import {
 	AvatarGroup,
 	Tooltip,
 } from "@mui/material";
+import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-
 import { devicons } from "../../utils/mapLanguageToIcon";
-//import { useNavigate} from "react-router-dom";
+import { fetchSingleContract, fetchAppliedDevelopers } from "../../utils/apiCalls";
 
 function Contract() {
-	//const navigate = useNavigate();
+	const contract_id = window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
+	const [contract, setContract] = useState({});
+	const [developers, setDevelopers] = useState([]);
+
+	useEffect(() => {
+		fetchSingleContract(contract_id).then((data) => {
+			setContract(data);
+			fetchAppliedDevelopers(contract_id).then((data) => {
+				setDevelopers(data);
+			});
+		})
+			.catch((err) => console.log(err));
+	}, []);
 
 	const StyledLink = styled(Link)`
 		text-decoration: none;
@@ -37,123 +49,9 @@ function Contract() {
 		}
 	`;
 
-	const contract = {
-		company_avatar: "https://i.ibb.co/BVJnV77/9ef54bf91300.webp",
-		company_id: 5,
-		company_name: "Goggle",
-		contract_id: 5,
-		date_posted: "Tue, 08 Mar 2022 14:29:42 GMT",
-		description: "Do my frontend",
-		length: 4,
-		open: true,
-		remote: true,
-		title: "Disney Website Redesign",
-		value: 10000,
-	};
-
-	const developers = [
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "bobby ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/56tLt0w/eede0eb822e6.jpg",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-		{
-			avatar: "https://i.ibb.co/bdHVmcY/0062842c93dc.png",
-			developer_id: 27,
-			developer_languages: {
-				Java: 3,
-				"Objective-C": 7,
-				JavaScript: 9,
-				Lua: 12,
-				Go: 9,
-			},
-			email: "nicolvisser@yahoo.com",
-			github_url: null,
-			linkedin_url: null,
-			name: "Nicol ",
-			surname: "Visser",
-			username: "nicolvisser",
-		},
-	];
+	if (contract === null || developers == null) {
+		return <LoadingPage />;
+	}
 
 	return (
 		<React.Fragment>

@@ -26,6 +26,7 @@ import {
 	deleteContract,
 	fetchAllContracts,
 } from "../../utils/apiCalls";
+import { Link } from "react-router-dom";
 
 function ContractList({ method, descending, viewUser, condensed }) {
 	const [contractsData, setContractsData] = useState(null);
@@ -41,7 +42,6 @@ function ContractList({ method, descending, viewUser, condensed }) {
 			setContractsData(data);
 		});
 	}
-
 
 	if (contractsData !== null) {
 		switch (method) {
@@ -62,6 +62,7 @@ function ContractList({ method, descending, viewUser, condensed }) {
 	if (contractsData === null) {
 		return <LoadingPage />;
 	}
+	
 	if (contractsData == undefined) {
 		return <></>;
 	}
@@ -111,7 +112,7 @@ function ContractList({ method, descending, viewUser, condensed }) {
 									{authUser.username === viewUser.username &&
 										viewUser.userType === "company" && ( //If a company is viewing their own page
 										<TableCell align="right" style={{ width: 128 }}>
-											<Button size="small" variant="contained">
+											<Button size="small" variant="contained" component={Link} to={`/contract/${contract.contract_id}`}>
 													View
 											</Button>
 											<Button

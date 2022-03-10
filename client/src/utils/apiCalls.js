@@ -80,3 +80,31 @@ export async function applyToContract(developerUsername, contract_id) {
 		});
 	});
 }
+
+export async function fetchSingleContract(contract_id) {
+	const url = `${baseUrl}/api/contract/${contract_id}`;
+	
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			if(res.data.success) {
+				resolve(res.data.contract);
+			} else {
+				reject();
+			}
+		});
+	});
+}
+
+export async function fetchAppliedDevelopers(contract_id) {
+	const url = `${baseUrl}/api/contract/${contract_id}/developer`;
+	
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			if(res.data.success) {
+				resolve(res.data.developers);
+			} else {
+				reject();
+			}
+		});
+	});
+}

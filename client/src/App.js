@@ -83,7 +83,7 @@ function App() {
 								}
 							/>
 							<Route
-								path="/contract"
+								path="/contract/:contract_id"
 								element={
 									<PrivateRoute>
 										<Contract />
