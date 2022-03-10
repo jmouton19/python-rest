@@ -131,8 +131,6 @@ function AddContract() {
 										id="contract-value"
 										value={value}
 										type="number"
-										currencySymbol="R"
-										decimalCharacter="."
 										onChange={(event) => {
 											setValue(event.target.value);
 										}}

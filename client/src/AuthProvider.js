@@ -11,7 +11,7 @@ const LoginContext = createContext();
 const LoadUserProfileContext = createContext();
 const CheckPasswordContext = createContext();
 
-import { fetchUserProfile, checkPassword } from "./utils/utils";
+import { fetchUserProfile, checkPassword } from "./utils/apiCalls";
 
 export function useUser() {
 	return useContext(UserContext);

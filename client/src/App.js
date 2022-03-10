@@ -22,8 +22,19 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme({
 	palette: {
 		primary: {
-			main: "#EF5B25",
+			main: "#fe5800",
+			g1: "#676767",
+			g2: "#808080",
+			g3: "#939393",
+			g4: "#616366",
+			g5: "#c1c3c7",
 		},
+		text: {
+			dark: "#0d0d0d",
+			light: "#ffffff",
+		},
+		//TRY: #c3e1e5 | #beced0 | #d9d3d1 | #b6a7a3 |  #e95e10 |  #a33301
+		//OLD orange: #EF5B25
 	},
 });
 

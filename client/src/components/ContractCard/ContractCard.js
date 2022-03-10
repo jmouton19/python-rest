@@ -8,26 +8,30 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Chip, Divider, Stack, TextField } from "@mui/material";
+import { Chip, Container, Divider, Stack } from "@mui/material";
 
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import BusinessIcon from "@mui/icons-material/Business";
 import RouterIcon from "@mui/icons-material/Router";
+import { Link } from "react-router-dom";
 
-function ContractCard({
-	company_name,
-	avatarUrl,
-	title,
-	description,
-	date_posted,
-	open,
-	remote,
-	length,
-	value,
-}) {
+const Label = ({ children }) => (
+	<Typography variant="caption">{children}</Typography>
+);
+
+function ContractCard({ contract, children }) {
+	const company_name = contract.company_name;
+	const avatarUrl = contract.company_avatar;
+	const title = contract.title;
+	const description = contract.description;
+	const date_posted = contract.date_posted;
+	const open = contract.open;
+	const remote = contract.remote;
+	const length = contract.length;
+	const value = contract.value;
+
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const handleMenu = (event) => {
@@ -42,68 +46,65 @@ function ContractCard({
 		<>
 			<Card elevation={2}>
 				<CardHeader
-					avatar={<Avatar aria-label={company_name} src={avatarUrl} />}
+					avatar={
+						<Link to={`/profile/company/${company_name}`}>
+							<Avatar src={avatarUrl} />
+						</Link>
+					}
 					action={
-						<IconButton aria-label="settings" onClick={handleMenu}>
+						<IconButton onClick={handleMenu}>
 							<MoreVertIcon />
 						</IconButton>
 					}
 					title={title}
-					subheader={company_name}
+					subheader={
+						<Link to={`/profile/company/${company_name}`}>{company_name}</Link>
+					}
 				/>
 				<Divider />
 				<CardContent>
-					<Stack spacing={2}>
+					<Stack spacing={0.5}>
+						<Typography component="span" variant="caption" color="gray">
+							{`Posted: ${date_posted}`}
+						</Typography>
 						<Stack direction="row" spacing={1}>
-							<TextField
-								label="Duration"
-								value={`${length} ${length == 1 ? "month" : "months"}`}
-								variant="outlined"
-								size="small"
-								fullWidth
-							/>
-							<TextField
-								label="Value"
-								value={`$ ${value}`}
-								variant="outlined"
-								size="small"
-								fullWidth
-							/>
+							<Container>
+								<Label>Duration</Label>
+								<Typography>{`${length} ${
+									length == 1 ? "month" : "months"
+								}`}</Typography>
+							</Container>
+							<Container>
+								<Label>Value</Label>
+								<Typography>{`$ ${value}`}</Typography>
+							</Container>
 						</Stack>
-						<TextField
-							fullWidth
-							label="Description"
-							value={description}
-							variant="outlined"
-							size="small"
-							minRows={2}
-							multiline={true}
-						/>
-
-						<Stack spacing={1} direction="row">
-							<Chip
-								label={open ? "Looking For Applicants" : "Closed"}
-								color={open ? "success" : "info"}
-								icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
-								size="small"
-							/>
-							<Chip
-								label={remote ? "Remote" : "In-Office"}
-								color="info"
-								icon={remote ? <RouterIcon /> : <BusinessIcon />}
-								size="small"
-							/>
-						</Stack>
+						<Container>
+							<Label>Description</Label>
+							<Typography>
+								{description ? description : "No Description"}
+							</Typography>
+						</Container>
+						<Container>
+							<Stack spacing={1} direction="row">
+								<Chip
+									label={open ? "Looking For Applicants" : "Closed"}
+									color={open ? "success" : "info"}
+									icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
+									size="small"
+								/>
+								<Chip
+									label={remote ? "Remote" : "In-Office"}
+									color="info"
+									icon={remote ? <RouterIcon /> : <BusinessIcon />}
+									size="small"
+								/>
+							</Stack>
+						</Container>
 					</Stack>
-
-					<Typography component="span" variant="caption" color="gray">
-						{`Posted: ${date_posted}`}
-					</Typography>
 				</CardContent>
 				<Divider />
-				<CardActions disableSpacing>
-					<Button variant="grey">Apply Now</Button>
-				</CardActions>
+				<CardActions disableSpacing>{children}</CardActions>
 			</Card>
 			<Menu
 				id="menu-appbar"

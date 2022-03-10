@@ -1,66 +1,21 @@
-import React, { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-
-import Container from "@mui/material/Container";
-
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-
-import axios from "axios";
-
-// import { sampleData } from "./generateSampleData";
-import ContractCard from "../../components/ContractCard/ContractCard";
-
-function AvailableContracts() {
-	const [contractsData, setContractsData] = useState([]);
-
-	useEffect(() => {
-		axios
-			.get("https://cs334proj1group8.herokuapp.com/api/contract")
-			.then((res) => {
-				const { success } = res.data;
-				if (success) {
-					setContractsData(res.data.contracts);
-				} else {
-					console.log(res);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}, []);
-
-	return (
-		<>
-			<Stack spacing={2}>
-				{contractsData.map((contract) => (
-					<ContractCard
-						key={contract.contract_id}
-						company_name={contract.company_name}
-						avatarUrl={contract.company_avatar}
-						title={contract.title}
-						description={contract.description}
-						date_posted={contract.date_posted}
-						open={contract.open}
-						remote={contract.remote}
-						length={contract.length}
-						value={contract.value}
-					/>
-				))}
-			</Stack>
-		</>
-	);
-}
+import React from "react";
+import { Typography, Stack, Box, Tab, Container } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import SortPicker from "./SortPicker";
+import ContractList from "../../components/ContractList/ContractList";
 
 function Contracts() {
-	const [value, setValue] = React.useState("1");
+	const [activeTabNumber, setActiveTabNumber] = React.useState("1");
+	const [sortMethod, setSortMethod] = React.useState("date");
+	const [descending, setDescending] = React.useState(true);
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
+	const handleTabChange = (event, newValue) => {
+		setActiveTabNumber(newValue);
+	};
+
+	const handleSortChange = (method, descending) => {
+		setSortMethod(method);
+		setDescending(descending);
 	};
 
 	return (
@@ -70,20 +25,44 @@ function Contracts() {
 			</Typography>
 
 			<Box sx={{ width: "100%", typography: "body1" }}>
-				<TabContext value={value}>
+				<TabContext value={activeTabNumber}>
 					<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-						<TabList onChange={handleChange} aria-label="lab API tabs example">
-							<Tab label="Available" value="1" />
-							{/* <Tab label="Favorited" value="2" /> */}
-							<Tab label="Applied" value="2" />
-							<Tab label="Blocked" value="3" />
-						</TabList>
+						<Stack direction="row">
+							<TabList
+								onChange={handleTabChange}
+								aria-label="lab API tabs example"
+							>
+								<Tab label="Available" value="1" />
+								<Tab label="Applied" value="2" />
+								<Tab label="Accepted" value="3" />
+							</TabList>
+							<SortPicker
+								sx={{ marginLeft: "auto" }}
+								onChange={handleSortChange}
+							/>
+						</Stack>
 					</Box>
 					<TabPanel value="1">
-						<AvailableContracts />
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
 					</TabPanel>
-					<TabPanel value="2">Applied</TabPanel>
-					<TabPanel value="3">Blocked</TabPanel>
+					<TabPanel value="2">
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
+					</TabPanel>
+					<TabPanel value="3">
+						<ContractList
+							axiosUrl={"https://cs334proj1group8.herokuapp.com/api/contract"}
+							method={sortMethod}
+							descending={descending}
+						/>
+					</TabPanel>
 				</TabContext>
 			</Box>
 		</Container>
