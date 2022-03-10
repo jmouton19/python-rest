@@ -185,7 +185,7 @@ function Contract() {
 										<Grid item xs={4}>
 											<Paper>
 												<Stack spacing={3} padding={2}>
-													<Typography variant="h5" color="primary" align="left">
+													<Typography variant="h4" color="primary" align="left">
 														{contract.title}
 													</Typography>
 													<Stack>
