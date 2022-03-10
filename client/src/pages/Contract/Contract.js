@@ -139,7 +139,7 @@ function Contract() {
 
 	return (
 		<React.Fragment>
-			<Container>
+			<Container maxWidth="lg">
 				<Grid container direction="column" alignItems="stretch" spacing={2} padding={4}>
 					<Typography variant="h3" color="primary" align="center">
 						{contract.title}
@@ -148,7 +148,7 @@ function Contract() {
 						<Grid container direction="row" alignItems="stretch" spacing={2} padding={1}>
 							<Grid item xs={4}>
 								<Paper elevation={4} padding={1}>
-									<Grid container direction="column" alignItems="stretch" spacing={1} padding={1}>
+									<Grid container direction="column" alignItems="stretch" padding={1}>
 										<Grid item xs={4}>
 											<Typography variant="h6"  align="flex-start">
 												Duration: {contract.length} months
