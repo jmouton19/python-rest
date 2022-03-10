@@ -75,7 +75,6 @@ function SignUp() {
 	function step2ButtonDisabledChecks() {
 		if (userType == "developer") {
 			return (
-				avatarUrl === null ||
 				firstName === "" ||
 				lastName === "" ||
 				Object.entries(programmingLanguages).length === 0
