@@ -4,8 +4,8 @@ import {
 	Avatar,
 	Button,
 	Container,
-	Chip,
 	Paper,
+	Chip,
 	//Stack,
 	Table,
 	TableBody,
@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import DevIcon from "devicon-react-svg";
 //import { useNavigate} from "react-router-dom";
 
 function Contract() {
@@ -142,6 +143,9 @@ function Contract() {
 			developer_languages: {
 				Java: 3,
 				"Objective-C": 7,
+				JavaScript: 9,
+				Lua: 12,
+				Go: 9,
 			},
 			email: "nicolvisser@yahoo.com",
 			github_url: null,
@@ -171,7 +175,7 @@ function Contract() {
 								spacing={2}
 								padding={1}
 							>
-								<Grid item xs={4}>
+								<Grid item xs={12} md={4}>
 									<Grid
 										container
 										direction="column"
@@ -211,7 +215,7 @@ function Contract() {
 									</Grid>
 								</Grid>
 
-								<Grid item xs={8}>
+								<Grid item xs={12} md={8}>
 									<TableContainer>
 										<Table stickyHeader size="small">
 											<TableHead>
@@ -256,10 +260,18 @@ function Contract() {
 															</StyledLink>
 														</TableCell>
 														<TableCell>
-															<Chip size="small" label="JavaScript" />
+															<DevIcon icon="react"/>
 														</TableCell>
+											
 														<TableCell>
-															<Button>Accept</Button>
+															{Object.keys(developer.developer_languages).map(
+																(language) => (
+																	<Chip key={language} size="small" label={language}/>
+																)
+															)}
+														</TableCell>
+														<TableCell align="right">
+															<Button >Accept</Button>
 														</TableCell>
 													</TableRow>
 												))}
