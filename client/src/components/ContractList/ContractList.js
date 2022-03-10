@@ -23,6 +23,7 @@ import { useUser } from "../../AuthProvider";
 import { useTheme } from "@mui/material";
 import {
 	applyToContract,
+	cancelApplication,
 	deleteContract,
 	fetchAllContracts,
 } from "../../utils/apiCalls";
@@ -89,7 +90,7 @@ function ContractList({ method, descending, viewUser, condensed }) {
 								<TableCell>
 									<b>Duration</b>
 								</TableCell>
-								{viewUser.userType == "company" && <TableCell />}
+								{viewUser.userType == "company" || (viewUser.userType == "developer" && viewUser.username == authUser.username) && <TableCell />}
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -109,24 +110,41 @@ function ContractList({ method, descending, viewUser, condensed }) {
 									<TableCell>{contract.title}</TableCell>
 									<TableCell>{contract.value}</TableCell>
 									<TableCell>{contract.length}</TableCell>
-									{authUser.username === viewUser.username &&
-										viewUser.userType === "company" && ( //If a company is viewing their own page
-										<TableCell align="right" style={{ width: 128 }}>
-											<Button size="small" variant="contained" component={Link} to={`/contract/${contract.contract_id}`}>
-													View
-											</Button>
-											<Button
-												color="error"
-												size="small"
-												onClick={() =>
-													deleteContract(contract.contract_id).then(() => {
-														getContracts();
-													})
-												}
-											>
-												<DeleteIcon />
-											</Button>
-										</TableCell>
+									{authUser.username === viewUser.username && (
+										<>
+											{viewUser.userType === "company" ? ( //If a company is viewing their own page
+												<TableCell align="right" style={{ width: 128 }}>
+													<Button size="small" variant="contained" component={Link} to={`/contract/${contract.contract_id}`}>
+															View
+													</Button>
+													<Button
+														color="error"
+														size="small"
+														onClick={() =>
+															deleteContract(contract.contract_id).then(() => {
+																getContracts();
+															})
+														}
+													>
+														<DeleteIcon />
+													</Button>
+												</TableCell>
+											):(
+												<TableCell align="right">
+													<Button
+														color="error"
+														size="small"
+														onClick={() =>
+															cancelApplication(authUser.username, contract.contract_id).then(() => {
+																getContracts();
+															})
+														}
+													>
+														<DeleteIcon />
+													</Button>
+												</TableCell>
+											)}
+										</>
 									)}
 									{authUser["userType"] == "developer" &&
 										viewUser.userType == "company" && ( //If dev is viewing a company page

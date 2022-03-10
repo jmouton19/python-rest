@@ -108,3 +108,17 @@ export async function fetchAppliedDevelopers(contract_id) {
 		});
 	});
 }
+
+export async function cancelApplication(developerUsername, contract_id) {
+	const url = `${baseUrl}/api/developer/${developerUsername}/application/${contract_id}`;
+	
+	return new Promise((resolve, reject) => {
+		axios.delete(url).then((res) => {
+			if(res.data.success) {
+				resolve(true);
+			} else {
+				reject();
+			}
+		});
+	});
+}
