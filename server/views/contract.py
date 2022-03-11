@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Contract, Company, ContractLanguages,Application
+from server.models import Developer, db, Contract, Company, ContractLanguages,Application
 import datetime
 from server.views.developer import languages_dict
 
@@ -10,23 +10,26 @@ def contract():
         request_data = request.get_json()
         company_name=request_data['company_name']
         company=db.session.query(Company).filter(Company.company_name==company_name).one_or_none()
-        new_contract=Contract(
-        length=request_data['length'],
-        value=request_data['value'],
-        title = request_data['title'],
-        description=request_data['description'],
-        remote=request_data['remote'],
-        open=request_data['open'],
-        developer_id=None,
-        date_posted=datetime.datetime.now()
-        )
-        company.contracts.append(new_contract)
-        contract_languages=request_data['contract_languages']
-        new_contract_languages=ContractLanguages()
-        for key, value in contract_languages.items():
-            exec("new_contract_languages.%s=%d"%(languages_dict[key],value))
-        new_contract.contract_languages=new_contract_languages
-        db.session.add(new_contract)
+        if company:
+            new_contract=Contract(
+            length=request_data['length'],
+            value=request_data['value'],
+            title = request_data['title'],
+            description=request_data['description'],
+            remote=request_data['remote'],
+            open=request_data['open'],
+            developer_id=None,
+            date_posted=datetime.datetime.now()
+            )
+            company.contracts.append(new_contract)
+            contract_languages=request_data['contract_languages']
+            new_contract_languages=ContractLanguages()
+            for key, value in contract_languages.items():
+                exec("new_contract_languages.%s=%d"%(languages_dict[key],value))
+            new_contract.contract_languages=new_contract_languages
+            db.session.add(new_contract)
+        else:
+            return jsonify(success=False,message="Company does not exist")
     elif request.method=='GET':
         contract_list=[]
         contracts=db.session.query(Contract).filter(Contract.open==True)
@@ -41,7 +44,7 @@ def contract():
     db.session.commit()
     return jsonify(success=True)
 
-@app.route('/api/contract/<contract_id>', methods=['GET','DELETE'])
+@app.route('/api/contract/<contract_id>', methods=['GET','DELETE','PUT'])
 def delete_contract(contract_id):
     contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
     if contract:
@@ -55,6 +58,17 @@ def delete_contract(contract_id):
             instance['company_name']=contract.company.company_name
             instance['company_avatar']=contract.company.avatar
             return jsonify(success=True,contract=instance)
+        elif request.method=='PUT':
+            request_data = request.get_json()
+            username= request_data['username']
+            dev=db.session.query(Developer).filter(Developer.username==username).one_or_none()
+            if dev:
+                setattr(contract,"developer_id",dev.developer_id)
+                setattr(contract,"open",False)
+                db.session.commit()
+                return jsonify(success=True,message="Contract updated")
+            else:
+                return jsonify(success=False,message="Developer does not exist")
     else:
         return jsonify(success=False,message="Contract does not exist")
 
