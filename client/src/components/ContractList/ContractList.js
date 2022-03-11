@@ -3,6 +3,9 @@ import {
 	sortByValue,
 	sortByDuration,
 	sortByDate,
+	groupByOpen,
+	groupByClosed,
+	groupByAccepted,
 } from "../../utils/contractSorting";
 import {
 	Paper,
@@ -23,7 +26,7 @@ import {
 	applyToContract,
 	cancelApplication,
 	deleteContract,
-	fetchAllContracts,
+	fetchAllOpenContracts,
 	fetchCompanysContracts,
 	fetchDevelopersContracts,
 } from "../../utils/apiCalls";
@@ -43,28 +46,28 @@ function ContractList({ method, descending, viewUser, condensed, status }) {
 	function getContracts() {
 		switch(status) {
 		case "available":
-			fetchAllContracts().then((data) => {
+			fetchAllOpenContracts().then((data) => {
 				setContractsData(data);
 			});
 			break;
 		case "applied":
 			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of available
-				setContractsData(data);
+				setContractsData(groupByOpen(data));
 			});
 			break;
 		case "accepted":
 			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of accepted
-				setContractsData(data);
+				setContractsData(groupByAccepted(data));
 			});
 			break;
 		case "open":
 			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of open
-				setContractsData(data);
+				setContractsData(groupByOpen(data));
 			});
 			break;
 		case "closed":
 			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of closed
-				setContractsData(data);
+				setContractsData(groupByClosed(data));
 			});
 			break;
 		}

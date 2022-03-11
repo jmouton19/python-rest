@@ -39,7 +39,7 @@ export async function checkPassword(email, password) {
 	});
 }
 
-export async function fetchAllContracts() {
+export async function fetchAllOpenContracts() {
 	const url = `${baseUrl}/api/contract`;
 	return new Promise((resolve, reject) => {
 		axios.get(url).then((res) => {

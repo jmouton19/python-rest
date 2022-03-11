@@ -29,3 +29,19 @@ export const sortByDate = (contracts, descending) => {
 			return new Date(contract1.date_posted) - new Date(contract2.date_posted);
 		});
 };
+
+export const groupByOpen = (contracts) => {
+	return contracts.filter((contract) => (contract.open));
+};
+
+export const groupByClosed = (contracts) => {
+	return contracts.filter((contract) => (!contract.open));
+};
+
+export const groupByAccepted = (contracts, developer_id) => {
+	return contracts.filter((contract) => (contract.developer_id == developer_id));
+};
+
+export const groupByApplied = (contracts) => {
+	return contracts.filter((contract) => (contract.developer_id == null));
+};
