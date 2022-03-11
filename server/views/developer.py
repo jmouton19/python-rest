@@ -79,6 +79,9 @@ def check_username(username):
             instance['developer_languages']=dict((list(languages_dict.keys())[list(languages_dict.values()).index(key)], value) for (key, value) in filtered.items())
             return jsonify(success=True,developer=instance)
         elif request.method=='DELETE':
+            for job in result.jobs:
+                job.developer_id=None
+                job.open=True
             db.session.delete(result)
             db.session.commit()
             return jsonify(success=True, message="Developer Deleted")
