@@ -36,7 +36,7 @@ export const groupByClosed = (contracts) => {
 };
 
 export const groupByAccepted = (contracts, developer_id) => {
-	return contracts.filter((contract) => (contract.developer_id == developer_id));
+	return contracts.filter((contract) => (contract.developer == developer_id));
 };
 
 export const groupByApplied = (contracts) => {

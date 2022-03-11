@@ -54,7 +54,7 @@ function ContractList({ method, descending, viewUser, authUser, condensed, statu
 			break;
 		case "accepted":
 			fetchDevelopersContracts(viewUser.username).then((data) => { 
-				setContractsData(groupByAccepted(data));
+				setContractsData(groupByAccepted(data, viewUser.developer_id));
 			});
 			break;
 		case "open":

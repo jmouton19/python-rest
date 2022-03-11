@@ -20,7 +20,7 @@ import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { devicons } from "../../utils/mapLanguageToIcon";
-import { fetchSingleContract, fetchAppliedDevelopers } from "../../utils/apiCalls";
+import { fetchSingleContract, fetchAppliedDevelopers, closeContract } from "../../utils/apiCalls";
 
 function Contract() {
 	const contract_id = window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
@@ -179,7 +179,11 @@ function Contract() {
 															</AvatarGroup>
 														</TableCell>
 														<TableCell align="right">
-															<Button>Accept</Button>
+															<Button onClick={() => {
+																closeContract(developer["username"], contract_id).then(() => console.log("test"));
+															}}>
+																Accept
+															</Button>
 														</TableCell>
 													</TableRow>
 												))}

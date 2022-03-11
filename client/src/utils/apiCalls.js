@@ -216,3 +216,17 @@ export async function deleteUser(userType, username) {
 		});
 	});
 }
+
+export async function closeContract(developerUsername, contract_id) {
+	const data = {username: developerUsername};
+	const url = `${baseUrl}/api/contract/${contract_id}`;
+	return new Promise((resolve, reject) => {
+		axios.put(url, data).then((res) => {
+			if(res.data.success) {
+				resolve(true);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}
