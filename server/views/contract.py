@@ -17,7 +17,7 @@ def contract():
         description=request_data['description'],
         remote=request_data['remote'],
         open=request_data['open'],
-        developer_id=None,
+        #developer_id=None,
         date_posted=datetime.datetime.now()
         )
         company.contracts.append(new_contract)
