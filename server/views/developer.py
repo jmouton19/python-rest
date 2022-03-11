@@ -102,6 +102,15 @@ def check_username(username):
                             setattr(result,key,value)
                         else:
                             return jsonify(success=False, message="Username taken")
+                elif key=='password':
+                    old=value[0]
+                    new=value[1]
+                    ph=PasswordHasher()
+                    try:
+                        if ph.verify(result.password,old):
+                            setattr(result,key,ph.hash(new))
+                    except:
+                        return jsonify(success=False,message="Login failed")
                 elif key!="developer_id":
                     setattr(result,key,value)
             db.session.commit()

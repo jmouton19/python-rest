@@ -66,6 +66,15 @@ def check_company_name(company):
                             setattr(result,key,value)
                         else:
                             return jsonify(success=False, message="Company name taken")
+                elif key=='password':
+                    old=value[0]
+                    new=value[1]
+                    ph=PasswordHasher()
+                    try:
+                        if ph.verify(result.password,old):
+                            setattr(result,key,ph.hash(new))
+                    except:
+                        return jsonify(success=False,message="Login failed")
                 elif key!="company_id":
                     setattr(result,key,value)
             db.session.commit()
