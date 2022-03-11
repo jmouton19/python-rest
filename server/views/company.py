@@ -37,7 +37,7 @@ def signup_company():
         db.session.commit()
         return jsonify(success=True,message="All companies deleted")
 
-@app.route('/api/company/<company>', methods=['GET','DELETE'])
+@app.route('/api/company/<company>', methods=['GET','DELETE','PUT'])
 def check_company_name(company):
     result=db.session.query(Company).filter(Company.company_name==company).one_or_none()
     if result:
@@ -50,8 +50,28 @@ def check_company_name(company):
             db.session.delete(result)
             db.session.commit()
             return jsonify(success=True, message="Company Deleted")
+        elif request.method=='PUT':
+            request_data = request.get_json()
+            for key, value in request_data.items():
+                if key=='email':
+                    if value!=result.email:
+                        checker=email_checkr(value)
+                        if checker["success"]==True:
+                            setattr(result,key,value)
+                        else:
+                            return jsonify(success=False, message="Email taken")
+                elif key=='company_name':
+                    if value !=result.company_name:
+                        if not db.session.query(Company).filter(Company.company_name==value).one_or_none():
+                            setattr(result,key,value)
+                        else:
+                            return jsonify(success=False, message="Company name taken")
+                elif key!="company_id":
+                    setattr(result,key,value)
+            db.session.commit()
+            return jsonify(success=True, message="Company updated")
     else:
-        return jsonify(success=False)
+        return jsonify(success=False,message="Company does not exist")
 
 @app.route('/api/company/<company_name>/contract', methods=['GET'])
 def comp_contracts(company_name):

@@ -16,7 +16,7 @@ languages_dict={'C': "c",
 "Objective-C":"objective_c",
 "PHP":"php",
 "MATLAB":"matlab",
-"GO":"go",
+"Go":"go",
 "Rust":"rust",
 "VBA":"vba",
 "Ruby":"ruby",
@@ -90,17 +90,19 @@ def check_username(username):
                     for key, value in dev_languages.items():
                         setattr(result.developer_languages,languages_dict[key],value)
                 elif key=='email':
-                    checker=email_checkr(value)
-                    if checker["success"]==True:
-                         setattr(result,key,value)
-                    else:
-                        return jsonify(success=False, message="Email taken")
+                    if not value==result.email:
+                        checker=email_checkr(value)
+                        if checker["success"]==True:
+                            setattr(result,key,value)
+                        else:
+                            return jsonify(success=False, message="Email taken")
                 elif key=='username':
-                    if not db.session.query(Developer).filter(Developer.username==value).one_or_none():
-                        setattr(result,key,value)
-                    else:
-                        return jsonify(success=False, message="Username taken")
-                else:
+                    if not value==result.username:
+                        if not db.session.query(Developer).filter(Developer.username==value).one_or_none() :
+                            setattr(result,key,value)
+                        else:
+                            return jsonify(success=False, message="Username taken")
+                elif key!="developer_id":
                     setattr(result,key,value)
             db.session.commit()
             return jsonify(success=True, message="Developer updated")
