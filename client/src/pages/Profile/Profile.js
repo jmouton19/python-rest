@@ -25,9 +25,11 @@ function Profile() {
 	useEffect(() => {
 		// TODO: only fetches developer profiles
 		fetchUserProfile(params.userType, params.username).then((data) => {
+			setViewUser(null);
 			setViewUser(data);
 		});
 	}, [params]);
+
 
 	if (!viewUser) {
 		// shows user is loading

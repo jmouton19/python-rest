@@ -23,7 +23,6 @@ function DeveloperProfile(props) {
 	const theme = useTheme();
 	const { viewUser, authUser } = props;
 
-
 	return(
 		<>
 			<Container>

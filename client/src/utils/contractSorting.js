@@ -1,5 +1,4 @@
 export const sortByValue = (contracts, descending) => {
-	console.log(contracts);
 	if (descending)
 		contracts.sort((contract1, contract2) => contract2.value - contract1.value);
 	else
@@ -20,12 +19,10 @@ export const sortByDuration = (contracts, descending) => {
 export const sortByDate = (contracts, descending) => {
 	if (descending)
 		contracts.sort((contract1, contract2) => {
-			console.log(contract2);
 			return new Date(contract2.date_posted) - new Date(contract1.date_posted);
 		});
 	else
 		contracts.sort((contract1, contract2) => {
-			console.log(contract2);
 			return new Date(contract1.date_posted) - new Date(contract2.date_posted);
 		});
 };

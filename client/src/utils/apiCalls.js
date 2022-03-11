@@ -190,3 +190,29 @@ export async function signUp(userType, data) {
 		});
 	});
 }
+
+export async function updateUser(userType, username, data) {
+	const url = `${baseUrl}/api/${userType}/${username}`;
+	return new Promise((resolve, reject) => {
+		axios.put(url, data).then((res) => {
+			if(res.data.success) {
+				resolve(res);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}
+
+export async function deleteUser(userType, username) {
+	const url = `${baseUrl}/api/${userType}/${username}`;
+	return new Promise((resolve, reject) => {
+		axios.delete(url).then((res) => {
+			if(res.data.success) {
+				resolve(true);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
 	useUser,
-	useLoadUserProfile,
+	//useLoadUserProfile,
 	useLogin,
 	useLogout,
+	useLoadUserProfile,
 } from "../../AuthProvider";
-import axios from "axios";
 import { deepEqual } from "../../utils/utils";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,6 +33,7 @@ import {
 	Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { deleteUser, updateUser } from "../../utils/apiCalls";
 
 const fabStyle = {
 	margin: 0,
@@ -45,10 +46,11 @@ const fabStyle = {
 
 function EditProfile() {
 	const user = useUser();
-	const loadUserProfile = useLoadUserProfile();
+	//const loadUserProfile = useLoadUserProfile();
 	const login = useLogin();
 	const logout = useLogout();
 	const navigate = useNavigate();
+	const loadUserProfile = useLoadUserProfile();
 	const [edit, setEdit] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [changePassword, setChangePassword] = useState(false);
@@ -59,8 +61,8 @@ function EditProfile() {
 	const [email, setEmail] = useState("");
 
 	const [username, setUsername] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
+	const [name, setName] = useState("");
+	const [surname, setLastName] = useState("");
 	const [industry, setIndustry] = useState("");
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [programmingLanguages, setProgrammingLanguages] = useState({});
@@ -71,7 +73,7 @@ function EditProfile() {
 		setAvatarUrl(user["avatarUrl"]);
 
 		if (user["userType"] == "developer") {
-			setFirstName(user["firstName"]);
+			setName(user["firstName"]);
 			setLastName(user["lastName"]);
 			setProgrammingLanguages(user["programmingLanguages"]);
 		} else {
@@ -83,8 +85,8 @@ function EditProfile() {
 		if (user["userType"] == "developer") {
 			if (
 				user["username"] != username ||
-				user["firstName"] != firstName ||
-				user["lastName"] != lastName ||
+				user["firstName"] != name ||
+				user["lastName"] != surname ||
 				user["avatarUrl"] != avatarUrl ||
 				!deepEqual(user["programmingLanguages"], programmingLanguages)
 			) {
@@ -93,7 +95,7 @@ function EditProfile() {
 				return true;
 			}
 		} else {
-			if (user["username"] != username || user["industry"] != industry) {
+			if (user["username"] != username || user["industry"] != industry || user["avatarUrl"] != avatarUrl) {
 				return false;
 			} else {
 				return true;
@@ -115,81 +117,71 @@ function EditProfile() {
 	}
 
 	async function saveChangedDetails(changePasswordRoute) {
-		const baseUrl = "https://cs334proj1group8.herokuapp.com";
-
-		const url = `${baseUrl}/api/${user["userType"]}`;
 		let data = {};
+		let developer_languages = {};
 		if (changePasswordRoute) {
-			if (user["userType"] == "developer") {
-				data = {
-					developerID: user["developerID"],
-					oldPassword: oldPassword,
-					newPassword: password,
-				};
-			} else {
-				data = {
-					companyID: user["companyID"],
-					oldPassword: oldPassword,
-					newPassword: password,
-				};
-			}
+			data = { password: [oldPassword, password] };
 		} else {
 			if (user["userType"] == "developer") {
 				data = {
-					developerID: user["developerID"],
 					...(user["username"] != username && { username: username }),
-					...(user["firstName"] != firstName && { firstName: firstName }),
-					...(user["lastName"] != lastName && { lastName: lastName }),
-					...(user["avatarUrl"] != avatarUrl && { avatarUrl: avatarUrl }),
-					...(!deepEqual(
-						user["programmingLanguages"],
-						programmingLanguages
-					) && {
-						programmingLanguages: programmingLanguages,
-					}),
+					...(user["firstName"] != name && { name: name }),
+					...(user["lastName"] != surname && { surname: surname }),
+					...(user["avatarUrl"] != avatarUrl && { avatar: avatarUrl }),
 				};
 			} else {
 				data = {
-					companyID: user["companyID"],
 					...(user["industry"] != industry && { industry: industry }),
+					...(user["avatarUrl"] != avatarUrl && { avatar: avatarUrl }),
 				};
 			}
 		}
-
-		return new Promise((resolve, reject) => {
-			axios.put(url, data).then((res) => {
-				const { success } = res.data;
-
-				if (success) {
-					console.log("Details have been updated.");
-					loadUserProfile(user["userType"], user["username"]).then(() => {
-						if (!changePasswordRoute) {
-							setEdit(false);
-						}
-						setChangePassword(false);
-						resolve(true);
-					});
-				} else {
-					reject(res);
-				}
-			});
-		});
-	}
-
-	async function deleteUser() {
-		const baseUrl = "https://cs334proj1group8.herokuapp.com";
-		const url = `${baseUrl}/api/${user["userType"]}/${user["username"]}`;
-		try {
-			await login(email, password);
-			axios.delete(url).then((res) => {
-				if(res.data.success) {
-					logout().then(() => navigate("/"));
-				}
-			})
-				.catch((err) => console.log(err));
-		} catch {
-			console.log("Wrong email or password");
+		if(user["userType"] == "developer") {
+			if(!deepEqual(user["programmingLanguages"], programmingLanguages)) {
+				Object.keys(user["programmingLanguages"]).forEach((language) => {
+					if(programmingLanguages[language] == undefined) { //Add null entries for removed languages
+						let deleteLanguage = {};
+						deleteLanguage[language] = null;
+						developer_languages ={
+							...developer_languages,
+							...deleteLanguage,
+						};
+					} else if(user["programmingLanguages"][language] != programmingLanguages[language]) { //Update changed entries
+						let updatedLanguage = {};
+						updatedLanguage[language] = programmingLanguages[language];
+						developer_languages ={
+							...developer_languages,
+							...updatedLanguage,
+						};
+					}
+				});
+				Object.keys(programmingLanguages).forEach((language) => { //Add new language entries
+					if(user["programmingLanguages"][language] != programmingLanguages[language]) {
+						let newLanguage = {};
+						newLanguage[language] = programmingLanguages[language];
+						developer_languages ={
+							...developer_languages,
+							...newLanguage,
+						};
+					}
+				});
+				let temp = {};
+				temp["developer_languages"] = developer_languages;
+				data ={
+					...data,
+					...temp,
+				};
+			}
 		}
+		
+		updateUser(user["userType"], user["username"], data)
+			.then(() => {
+				loadUserProfile(user["userType"], username).then((data) => {
+					setEdit(false);
+					navigate(`/profile/${data["userType"]}/${data["username"]}`);
+				});
+			})
+			.catch((err) => console.log(err));
 	}
 
 	return (
@@ -229,15 +221,15 @@ function EditProfile() {
 										/>
 										<TextField
 											variant="outlined"
-											defaultValue={firstName}
+											defaultValue={name}
 											onChange={(event) => {
-												setFirstName(event.target.value);
+												setName(event.target.value);
 											}}
 											label="First Name"
 										/>
 										<TextField
 											variant="outlined"
-											defaultValue={lastName}
+											defaultValue={surname}
 											onChange={(event) => {
 												setLastName(event.target.value);
 											}}
@@ -459,8 +451,16 @@ function EditProfile() {
 								Cancel
 							</Button>
 							<Button
-								//TODO: add delete post
-								onClick={deleteUser}
+								onClick={() => {
+									login().then(() => {
+										deleteUser()
+											.then(() => {
+												logout().then(() => navigate("/"));
+											})
+											.catch((err) => console.log(err));
+									})
+										.catch((err) => console.log(err));
+								}}
 								variant="contained"
 								disabled={saveDeleteDisableChecks()}
 								sx={{ borderRadius: "50%", height: 60, width: 60 }}
