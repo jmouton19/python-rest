@@ -176,3 +176,17 @@ export async function fetchCompanysContracts(companyUsername) {
 		});
 	});
 }
+
+export async function signUp(userType, data) {
+	const url = `${baseUrl}/api/${userType}`;
+	return new Promise((resolve, reject) => {
+		axios.post(url, data).then((res) => {
+			const { success } = res.data;
+			if (success) {
+				resolve(true);
+			} else {
+				reject(res);
+			}
+		});
+	});
+}

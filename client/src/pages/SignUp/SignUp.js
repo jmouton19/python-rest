@@ -22,8 +22,6 @@ import {
 	FormHelperText,
 } from "@mui/material";
 
-import axios from "axios";
-
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 
@@ -32,6 +30,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
 	checkIfUniqueEmail,
 	checkIfUniqueUsername,
+	signUp,
 } from "../../utils/apiCalls";
 import { useLogin } from "../../AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -164,12 +163,7 @@ function SignUp() {
 	}
 
 	function completeSignUp() {
-		const baseUrl = "https://cs334proj1group8.herokuapp.com";
-
-		const url = `${baseUrl}/api/${userType}`;
-
 		let data;
-
 		if (userType == "developer") {
 			data = {
 				username,
@@ -190,19 +184,11 @@ function SignUp() {
 			};
 		}
 
-		axios
-			.post(url, data)
-			.then((res) => {
-				if (res.data.success) {
-					login(email, password).then(() => navigate("/"));
-				}
-			})
-			.catch((err) => {
-				console.info("Sign Up was unsuccessfull.");
-				console.error(err);
-			});
-
-		axios.post();
+		signUp(userType, data).then((res) => {
+			if (res) {
+				login(email, password).then(() => navigate("/"));
+			}
+		});
 	}
 
 	function CompleteSignUpBox() {
