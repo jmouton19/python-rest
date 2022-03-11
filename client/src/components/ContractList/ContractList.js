@@ -20,7 +20,6 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import ContractCard from "../ContractCard/ContractCard";
-import { useUser } from "../../AuthProvider";
 import { useTheme } from "@mui/material";
 import {
 	applyToContract,
@@ -33,9 +32,8 @@ import {
 import { Link } from "react-router-dom";
 import ContractTable from "../ContractTable/ContractTable";
 
-function ContractList({ method, descending, viewUser, condensed, status }) {
+function ContractList({ method, descending, viewUser, authUser, condensed, status }) {
 	const [contractsData, setContractsData] = useState(null);
-	const authUser = useUser();
 	const theme = useTheme();
 
 	useEffect(() => {

@@ -16,13 +16,12 @@ import {
 
 import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import ContractList from "../../components/ContractList/ContractList";
-import { useUser } from "../../AuthProvider";
 import { useTheme } from "@mui/material";
+import { devicons } from "../../utils/mapLanguageToIcon";
 
 function DeveloperProfile(props) {
 	const theme = useTheme();
-	const authUser = useUser();
-	const { viewUser } = props;
+	const { viewUser, authUser } = props;
 
 
 	return(
@@ -79,7 +78,10 @@ function DeveloperProfile(props) {
 												return (
 													<TableRow key={language}>
 														<TableCell>
-															<Typography color={theme.palette.text.light}>{language}</Typography>
+															<Stack direction="row" spacing={1} alignItems="center">
+																<Avatar sx={{ width: 24, height: 24, backgroundColor: "white", border:3, borderColor: "white"}} src={devicons[language]}/>
+																<Typography color={theme.palette.text.light}>{language}</Typography>
+															</Stack>
 														</TableCell>
 														<TableCell>
 															<ExperiencePicker
@@ -103,6 +105,7 @@ function DeveloperProfile(props) {
 								descending={true}
 								condensed
 								viewUser={viewUser}
+								authUser={authUser}
 								status="applied"
 							>
 							</ContractList>

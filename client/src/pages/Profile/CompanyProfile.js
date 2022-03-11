@@ -5,14 +5,14 @@ import {
 	Typography,
 	Grid,
 	Container,
-	Avatar
+	Avatar,
 } from "@mui/material";
 import ContractList from "../../components/ContractList/ContractList";
 import { useTheme } from "@mui/material";
 
 function CompanyProfile(props) {
 	const theme = useTheme();
-	const { viewUser } = props;
+	const { viewUser, authUser } = props;
 
 	return(
 		<>
@@ -51,6 +51,7 @@ function CompanyProfile(props) {
 							method="value"
 							descending={true}
 							viewUser={viewUser}
+							authUser={authUser}
 							status="open"
 						/>
 					</Grid>

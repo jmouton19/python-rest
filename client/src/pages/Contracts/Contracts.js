@@ -51,6 +51,7 @@ function Contracts() {
 							descending={descending}
 							status="available"
 							viewUser={authUser}
+							authUser={authUser}
 						/>
 					</TabPanel>
 					<TabPanel value="2">
@@ -60,6 +61,7 @@ function Contracts() {
 							descending={descending}
 							status="applied"
 							viewUser={authUser}
+							authUser={authUser}
 						/>
 					</TabPanel>
 					<TabPanel value="3">
@@ -69,6 +71,7 @@ function Contracts() {
 							descending={descending}
 							status="accepted"
 							viewUser={authUser}
+							authUser={authUser}
 						/>
 					</TabPanel>
 				</TabContext>
