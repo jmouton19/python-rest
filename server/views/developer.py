@@ -63,7 +63,7 @@ def signup_developer():
         db.session.commit()
         return jsonify(success=True,message="All developers deleted")
 
-@app.route('/api/developer/<username>', methods=['GET','DELETE'])
+@app.route('/api/developer/<username>', methods=['GET','DELETE','PUT'])
 def check_username(username):
     result=db.session.query(Developer).filter(Developer.username==username).one_or_none()
     if result:
@@ -82,8 +82,30 @@ def check_username(username):
             db.session.delete(result)
             db.session.commit()
             return jsonify(success=True, message="Developer Deleted")
+        elif request.method=='PUT':
+            request_data = request.get_json()
+            for key, value in request_data.items():
+                if key=="developer_languages":
+                    dev_languages=request_data['developer_languages']
+                    for key, value in dev_languages.items():
+                        setattr(result.developer_languages,languages_dict[key],value)
+                elif key=='email':
+                    checker=email_checkr(value)
+                    if checker["success"]==True:
+                         setattr(result,key,value)
+                    else:
+                        return jsonify(success=False, message="Email taken")
+                elif key=='username':
+                    if not db.session.query(Developer).filter(Developer.username==value).one_or_none():
+                        setattr(result,key,value)
+                    else:
+                        return jsonify(success=False, message="Username taken")
+                else:
+                    setattr(result,key,value)
+            db.session.commit()
+            return jsonify(success=True, message="Developer updated")
     else:
-        return jsonify(success=False,message="Developer with this username does not exist")
+        return jsonify(success=False,message="Developer does not exist")
 
 @app.route('/api/developer/<username>/application', methods=['POST','GET'])
 def apply_contract(username):

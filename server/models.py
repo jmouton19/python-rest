@@ -5,7 +5,7 @@ db = SQLAlchemy(app)
 
 class Developer(db.Model):
     developer_id = db.Column(db.Integer,primary_key=True)
-    username = db.Column(db.String(254))
+    username = db.Column(db.String(254),unique=True)
     password = db.Column(db.String(254))
     name = db.Column(db.String(254))
     surname = db.Column(db.String(254))
@@ -33,7 +33,7 @@ class Contract(db.Model):
     length = db.Column(db.Integer)
     value = db.Column(db.Integer)
     title = db.Column(db.String(254))
-    description = db.Column(db.String(254))
+    description = db.Column(db.String(1000))
     remote = db.Column(db.Boolean)
     open = db.Column(db.Boolean)
     date_posted = db.Column(db.DateTime)
