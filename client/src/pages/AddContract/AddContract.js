@@ -15,12 +15,14 @@ import {
 } from "@mui/material";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../AuthProvider";
 
 import axios from "axios";
 
 function AddContract() {
+	const navigate = useNavigate();
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [value, setValue] = useState("0");
@@ -58,6 +60,7 @@ function AddContract() {
 			.post("https://cs334proj1group8.herokuapp.com/api/contract", data)
 			.then(function (response) {
 				console.log(response);
+				navigate("/contracts");
 
 				// TODO: take user to different page
 			})

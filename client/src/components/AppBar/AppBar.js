@@ -123,7 +123,10 @@ export default function PrimarySearchAppBar() {
 									</MenuItem>
 								) : null}
 								<MenuItem
-									onClick={(handleMenuClose, logout)}
+									onClick={() => {
+										handleMenuClose() ;
+										logout();
+									}}
 									component={Link}
 									to="/"
 								>

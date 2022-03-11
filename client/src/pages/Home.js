@@ -14,16 +14,16 @@ function Home() {
 						<FormControl fullWidth>
 							<Button
 								variant="contained"
-								onClick={() => sampleLogin("nicolvisser@yahoo.com", "1234")}
+								onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
 							>
-								Sample Login: email: nicolvisser@yahoo.com, password: 1234
+								Sample Login: email: nicolvisser@yahoo.com, password: 12341234
 							</Button>
 							<Button
 								variant="contained"
 								sx={{ mt: 2 }}
-								onClick={() => sampleLogin("admin@disney.com", "1234")}
+								onClick={() => sampleLogin("admin@disney.com", "12341234")}
 							>
-								Sample Login: email: admin@disney.com, password: 1234
+								Sample Login: email: admin@disney.com, password: 12341234
 							</Button>
 						</FormControl>
 					</Grid>

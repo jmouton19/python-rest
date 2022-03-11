@@ -37,7 +37,6 @@ function ContractList({ method, descending, viewUser, condensed, status }) {
 	const [contractsData, setContractsData] = useState(null);
 	const authUser = useUser();
 	const theme = useTheme();
-	console.log(viewUser.userType);
 
 	useEffect(() => {
 		getContracts();
@@ -51,22 +50,22 @@ function ContractList({ method, descending, viewUser, condensed, status }) {
 			});
 			break;
 		case "applied":
-			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of available
+			fetchDevelopersContracts(viewUser.username).then((data) => { 
 				setContractsData(groupByOpen(data));
 			});
 			break;
 		case "accepted":
-			fetchDevelopersContracts(viewUser.username).then((data) => { //TODO: Add sorting of accepted
+			fetchDevelopersContracts(viewUser.username).then((data) => { 
 				setContractsData(groupByAccepted(data));
 			});
 			break;
 		case "open":
-			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of open
+			fetchCompanysContracts(viewUser.username).then((data) => { 
 				setContractsData(groupByOpen(data));
 			});
 			break;
 		case "closed":
-			fetchCompanysContracts(viewUser.username).then((data) => { //TODO: Add sorting of closed
+			fetchCompanysContracts(viewUser.username).then((data) => { 
 				setContractsData(groupByClosed(data));
 			});
 			break;
@@ -216,7 +215,6 @@ function ContractList({ method, descending, viewUser, condensed, status }) {
 									</Button>
 								</>
 							)}
-
 						</ContractCard>
 					))}
 				</Stack>
