@@ -21,6 +21,32 @@ export async function fetchUserProfile(userType, username) {
 	});
 }
 
+export async function checkIfUniqueEmail(email) {
+	const url = `${baseUrl}/api/email/${email}`;
+	return new Promise((resolve) => {
+		axios.get(url).then((res) => {
+			if (res.data.success) {
+				resolve(true);
+			} else {
+				resolve(false);
+			}
+		});
+	});
+}
+
+export async function checkIfUniqueUsername(userType, username) {
+	const url = `${baseUrl}/api/${userType}/${username}`;
+	return new Promise((resolve) => {
+		axios.get(url).then((res) => {
+			if (res.data.success) {
+				resolve(false);
+			} else {
+				resolve(true);
+			}
+		});
+	});
+}
+
 export async function checkPassword(email, password) {
 	const url = `${baseUrl}/api/login`;
 	const data_POST = {
@@ -83,10 +109,10 @@ export async function applyToContract(developerUsername, contract_id) {
 
 export async function fetchSingleContract(contract_id) {
 	const url = `${baseUrl}/api/contract/${contract_id}`;
-	
+
 	return new Promise((resolve, reject) => {
 		axios.get(url).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(res.data.contract);
 			} else {
 				reject();
@@ -97,10 +123,10 @@ export async function fetchSingleContract(contract_id) {
 
 export async function fetchAppliedDevelopers(contract_id) {
 	const url = `${baseUrl}/api/contract/${contract_id}/developer`;
-	
+
 	return new Promise((resolve, reject) => {
 		axios.get(url).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(res.data.developers);
 			} else {
 				reject();
@@ -111,10 +137,10 @@ export async function fetchAppliedDevelopers(contract_id) {
 
 export async function cancelApplication(developerUsername, contract_id) {
 	const url = `${baseUrl}/api/developer/${developerUsername}/application/${contract_id}`;
-	
+
 	return new Promise((resolve, reject) => {
 		axios.delete(url).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(true);
 			} else {
 				reject();
