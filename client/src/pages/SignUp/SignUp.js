@@ -22,25 +22,36 @@ import {
 	FormHelperText,
 } from "@mui/material";
 
-import axios from "axios";
-
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { useCheckUsername, useCheckEmail, useLogin } from "../../AuthProvider";
+import {
+	checkIfUniqueEmail,
+	checkIfUniqueUsername,
+	signUp,
+} from "../../utils/apiCalls";
+import { useLogin } from "../../AuthProvider";
 import { useNavigate } from "react-router-dom";
+import validator from "validator";
 
 function SignUp() {
 	const [activeStep, setActiveStep] = React.useState(0);
 
 	const [username, setUsername] = useState("");
-	const [usernameInUseError, setUsernameInUseError] = useState(false);
+	const [usernameError, setUsernameError] = useState({
+		status: false,
+		msg: "",
+	});
 	const [email, setEmail] = useState("");
-	const [emailInUseError, setEmailInUseError] = useState(false);
+	const [emailError, setEmailError] = useState({ status: false, msg: "" });
 	const [password, setPassword] = useState("");
 	const [passwordRepeated, setPasswordRepeated] = useState("");
+	const [passwordError, setPasswordError] = useState({
+		status: false,
+		msg: "",
+	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [userType, setUserType] = useState("developer");
 	const [firstName, setFirstName] = useState("");
@@ -49,8 +60,6 @@ function SignUp() {
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [programmingLanguages, setProgrammingLanguages] = useState({});
 
-	const checkUsername = useCheckUsername();
-	const checkEmail = useCheckEmail();
 	const login = useLogin();
 
 	const navigate = useNavigate();
@@ -59,16 +68,85 @@ function SignUp() {
 		setShowPassword(!showPassword);
 	}
 
+	const validateUsername = () => {
+		if (username === "") {
+			setUsernameError({
+				status: true,
+				msg: "Please enter a username",
+			});
+			return;
+		}
+		if (!validator.isAlphanumeric(username)) {
+			setUsernameError({
+				status: true,
+				msg: "No special characters allowed.",
+			});
+			return;
+		}
+		checkIfUniqueUsername(userType, username).then((unique) => {
+			if (!unique)
+				setUsernameError({
+					status: true,
+					msg: "Username already in use.",
+				});
+			return;
+		});
+		// on no error:
+		setUsernameError({ status: false, msg: "" });
+	};
+
+	const validateEmail = () => {
+		if (email === "") {
+			setEmailError({
+				status: true,
+				msg: "Please enter an email address.",
+			});
+			return;
+		}
+		if (!validator.isEmail(email)) {
+			setEmailError({
+				status: true,
+				msg: "Incorrect email format.",
+			});
+			return;
+		}
+		checkIfUniqueEmail(email).then((unique) => {
+			if (!unique)
+				setEmailError({
+					status: true,
+					msg: "Email already in use.",
+				});
+			return;
+		});
+		// on no error:
+		setEmailError({ status: false, msg: "" });
+	};
+
+	const validatePassword = () => {
+		if (password === "") {
+			setPasswordError({
+				status: true,
+				msg: "Please enter a password.",
+			});
+			return;
+		}
+		if (password.length < 8) {
+			setPasswordError({
+				status: true,
+				msg: "Must be at least 8 characters long.",
+			});
+			return;
+		}
+		// on no error:
+		setPasswordError({ status: false, msg: "" });
+	};
+
 	function step1ButtonDisabledChecks() {
-		//Todo: Check for valid email address format
-		//Todo: Check for strong pasword
 		return (
-			username === "" ||
-			email == "" ||
-			password == "" ||
-			password != passwordRepeated ||
-			usernameInUseError ||
-			emailInUseError
+			usernameError.status ||
+			emailError.status ||
+			password.status ||
+			password != passwordRepeated
 		);
 	}
 
@@ -85,12 +163,7 @@ function SignUp() {
 	}
 
 	function completeSignUp() {
-		const baseUrl = "https://cs334proj1group8.herokuapp.com";
-
-		const url = `${baseUrl}/api/${userType}`;
-
 		let data;
-
 		if (userType == "developer") {
 			data = {
 				username,
@@ -111,19 +184,11 @@ function SignUp() {
 			};
 		}
 
-		axios
-			.post(url, data)
-			.then((res) => {
-				if (res.data.success) {
-					login(email, password).then(() => navigate("/"));
-				}
-			})
-			.catch((err) => {
-				console.info("Sign Up was unsuccessfull.");
-				console.error(err);
-			});
-
-		axios.post();
+		signUp(userType, data).then((res) => {
+			if (res) {
+				login(email, password).then(() => navigate("/"));
+			}
+		});
 	}
 
 	function CompleteSignUpBox() {
@@ -205,30 +270,23 @@ function SignUp() {
 													onChange={(event) => {
 														setUsername(event.target.value);
 													}}
-													onBlur={(event) => {
-														const { value } = event.target;
-														{
-															checkUsername(value).then((res) =>
-																setUsernameInUseError(res)
-															);
-														}
-													}}
+													onBlur={validateUsername}
 													label={
 														userType === "developer"
 															? "Username"
 															: "Company Name"
 													}
-													error={usernameInUseError}
+													error={usernameError.status}
 												/>
 											</FormControl>
-											{usernameInUseError ? (
+											{usernameError.status ? (
 												<FormHelperText
 													id="username-helper-text"
 													sx={{
 														color: "red",
 													}}
 												>
-													Username already in use
+													{usernameError.msg}
 												</FormHelperText>
 											) : null}
 										</Grid>
@@ -245,26 +303,19 @@ function SignUp() {
 													onChange={(event) => {
 														setEmail(event.target.value);
 													}}
-													onBlur={(event) => {
-														const { value } = event.target;
-														{
-															checkEmail(value).then((res) =>
-																setEmailInUseError(res)
-															);
-														}
-													}}
+													onBlur={validateEmail}
 													label="Email Address"
-													error={emailInUseError}
+													error={emailError.status}
 												/>
 											</FormControl>
-											{emailInUseError ? (
+											{emailError.status ? (
 												<FormHelperText
 													id="email-helper-text"
 													sx={{
 														color: "red",
 													}}
 												>
-													Email already in use
+													{emailError.msg}
 												</FormHelperText>
 											) : null}
 										</Grid>
@@ -282,6 +333,7 @@ function SignUp() {
 													onChange={(event) => {
 														setPassword(event.target.value);
 													}}
+													onBlur={validatePassword}
 													label="Password"
 													endAdornment={
 														<InputAdornment position="end">
@@ -299,6 +351,16 @@ function SignUp() {
 													}
 												/>
 											</FormControl>
+											{passwordError.status && (
+												<FormHelperText
+													id="password-helper-text"
+													sx={{
+														color: "red",
+													}}
+												>
+													{passwordError.msg}
+												</FormHelperText>
+											)}
 										</Grid>
 										<Grid item xs={12}>
 											<FormControl fullWidth>
