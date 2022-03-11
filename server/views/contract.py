@@ -63,10 +63,14 @@ def delete_contract(contract_id):
             username= request_data['username']
             dev=db.session.query(Developer).filter(Developer.username==username).one_or_none()
             if dev:
-                setattr(contract,"developer_id",dev.developer_id)
-                setattr(contract,"open",False)
-                db.session.commit()
-                return jsonify(success=True,message="Contract updated")
+                application=db.session.query(Application).filter(Application.contract_id==contract.contract_id,Application.developer_id==dev.developer_id).one_or_none()
+                if application:
+                    setattr(contract,"developer_id",dev.developer_id)
+                    setattr(contract,"open",False)
+                    db.session.commit()
+                    return jsonify(success=True,message="Contract updated")
+                else:
+                    return jsonify(success=False,message="Developer has not applied for this contract")   
             else:
                 return jsonify(success=False,message="Developer does not exist")
     else:
