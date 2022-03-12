@@ -63,7 +63,7 @@ function CompanyProfile(props) {
 						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g2}}>
 							<Stack >
 								{authUser.username == viewUser.username && (
-									<Stack backgroundColor={theme.palette.primary.main} padding={1} borderRadius= {1}>
+									<Stack backgroundColor="#d32f2f" padding={1} borderRadius= {1}>
 										<Typography variant="caption" color={theme.palette.text.light}>
 											Money spent:
 										</Typography>
