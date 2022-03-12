@@ -48,7 +48,23 @@ export const totalMoney = (contracts) => {
 };
 
 export const filterBySearchValue = (searchValue, companies, developers) => {
-	console.log(`Searching for ${searchValue}`);
-	companies.filter(() => true);
-	developers.filter(() => true);
+	let companyResults = companies.filter(
+		(company) =>
+			company.company_name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+	);
+	let developerResults = developers.filter(
+		(developer) =>
+			developer.username.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+	);
+
+	companyResults = companyResults.map((company) => {
+		return { userType: "company", username: company.company_name, ...company };
+	});
+
+	developerResults = developerResults.map((developer) => {
+		return { userType: "developer", ...developer };
+	});
+
+	const results = companyResults.concat(developerResults);
+	return results;
 };

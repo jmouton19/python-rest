@@ -117,8 +117,6 @@ export default function PrimarySearchAppBar() {
 		justifyContent: "flex-end",
 	}));
 
-	console.log(searchValue);
-
 	return (
 		<React.Fragment>
 			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
@@ -175,9 +173,19 @@ export default function PrimarySearchAppBar() {
 								setSearchMenuOpen(false);
 							}
 						}}
+						onFocus={(event) => {
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
+						}}
 						onBlur={() => {
 							console.log("Focus away from search");
-							setSearchMenuOpen(false);
+							setTimeout(() => {
+								// wait a little bit before closing menu to allow focus to go to search results
+								setSearchMenuOpen(false);
+							}, 200);
 						}}
 					>
 						<SearchIconWrapper>
