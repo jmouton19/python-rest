@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ExperiencePicker from "./ExperiencePicker";
+import { useTheme } from "@mui/system";
 
 // Todo: Site source material ui website?
 const Search = styled("div")(({ theme }) => ({
@@ -60,6 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function LanguagesPicker(props) {
+	const theme = useTheme();
 	const [languageList, setLanguageList] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
@@ -201,10 +203,10 @@ function LanguagesPicker(props) {
 					</Paper>
 				) : null}
 				{selectedLanguages.length !== 0 ? (
-					<Paper sx={{ padding: 1 }}>
+					<Paper sx={{ padding: 1, backgroundColor: theme.palette.primary.g2}} >
 						<Grid container rowSpacing={1}>
 							<Grid item xs={12}>
-								<Typography variant="caption">Selected Languages:</Typography>
+								<Typography variant="caption" color={theme.palette.text.light}>Selected Languages:</Typography>
 							</Grid>
 							{Object.keys(selectedLanguages).map((language) => (
 								<React.Fragment key={language}>

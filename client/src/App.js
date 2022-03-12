@@ -31,6 +31,7 @@ const theme = createTheme({
 			g5: "#e1e1e1",
 			g6: "#f1f1f1",
 			w1: "#ffffff",
+			o2: "#cc4700",
 		},
 		text: {
 			dark: "#0d0d0d",
