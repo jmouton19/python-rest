@@ -6,23 +6,20 @@ import {
 	Stack,
 	Table,
 	TableBody,
-	TableCell,
 	TableContainer,
 	TableHead,
-	TableRow,
 	Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 import { groupByAccepted, totalMoney } from "../../utils/contractSorting";
 
 import ContractList from "../../components/ContractList/ContractList";
 import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import { devicons } from "../../utils/mapLanguageToIcon";
 import { fetchDevelopersContracts } from "../../utils/apiCalls";
-import { useTheme } from "@mui/material";
 
 function DeveloperProfile(props) {
-	const theme = useTheme();
 	const [moneyMade, setMoneyMade] = useState(0);
 	const [employed, setEmployed] = useState(0);
 	const { viewUser, authUser } = props;
@@ -44,10 +41,7 @@ function DeveloperProfile(props) {
 			<Container>
 				<Grid container spacing={2} padding={3}>
 					<Grid item xs={12} md={4}>
-						<Paper
-							elevation={5}
-							sx={{ backgroundColor: theme.palette.primary.g1 }}
-						>
+						<Paper elevation={5}>
 							<Grid
 								container
 								alignItems="center"
@@ -61,53 +55,37 @@ function DeveloperProfile(props) {
 											height: 100,
 											borderRadius: "16px",
 											border: 4,
-											borderColor: theme.palette.text.light,
 										}}
 										src={viewUser.avatarUrl}
 									></Avatar>
 								</Grid>
 								<Grid item>
 									<Stack>
-										<Typography variant="h3" color={theme.palette.text.light}>
+										<Typography variant="h3">
 											{viewUser.firstName} {viewUser.lastName}
 										</Typography>
-										<Typography variant="h5" color={theme.palette.text.light}>
-											{viewUser.username}
-										</Typography>
-										<Typography variant="h6" color={theme.palette.text.light}>
-											{viewUser.email}
-										</Typography>
+										<Typography variant="h5">{viewUser.username}</Typography>
+										<Typography variant="h6">{viewUser.email}</Typography>
 									</Stack>
 								</Grid>
 							</Grid>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={8}>
-						<Paper
-							elevation={4}
-							sx={{ backgroundColor: theme.palette.primary.g2 }}
-						>
+						<Paper elevation={4}>
 							<TableContainer>
 								<Table>
 									<TableHead>
-										<TableRow>
-											<TableCell>
-												<Typography
-													variant="h5"
-													color={theme.palette.text.light}
-												>
+										<StyledTableRow>
+											<StyledTableCell>
+												<Typography variant="h5">
 													Programming Languages
 												</Typography>
-											</TableCell>
-											<TableCell>
-												<Typography
-													variant="h5"
-													color={theme.palette.text.light}
-												>
-													Experience
-												</Typography>
-											</TableCell>
-										</TableRow>
+											</StyledTableCell>
+											<StyledTableCell>
+												<Typography variant="h5">Experience</Typography>
+											</StyledTableCell>
+										</StyledTableRow>
 									</TableHead>
 									<TableBody>
 										{Object.keys(viewUser.programmingLanguages).map(
@@ -115,8 +93,8 @@ function DeveloperProfile(props) {
 												const experience =
 													viewUser.programmingLanguages[language];
 												return (
-													<TableRow key={language}>
-														<TableCell>
+													<StyledTableRow key={language}>
+														<StyledTableCell>
 															<Stack
 																direction="row"
 																spacing={1}
@@ -132,18 +110,16 @@ function DeveloperProfile(props) {
 																	}}
 																	src={devicons[language]}
 																/>
-																<Typography color={theme.palette.text.light}>
-																	{language}
-																</Typography>
+																<Typography>{language}</Typography>
 															</Stack>
-														</TableCell>
-														<TableCell>
+														</StyledTableCell>
+														<StyledTableCell>
 															<ExperiencePicker
 																readOnly={true}
 																presetValue={experience}
 															/>
-														</TableCell>
-													</TableRow>
+														</StyledTableCell>
+													</StyledTableRow>
 												);
 											}
 										)}
@@ -153,10 +129,7 @@ function DeveloperProfile(props) {
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<Paper
-							elevation={4}
-							sx={{ backgroundColor: theme.palette.primary.g2 }}
-						>
+						<Paper elevation={4}>
 							<Stack>
 								{authUser.username == viewUser.username && (
 									<Stack
@@ -165,27 +138,14 @@ function DeveloperProfile(props) {
 										borderRadius={1}
 										justifyContent="flex-start"
 									>
-										<Typography
-											variant="caption"
-											color={theme.palette.text.light}
-										>
-											Money made:
-										</Typography>
-										<Typography
-											variant="h4"
-											color={theme.palette.text.light}
-											align="center"
-										>
+										<Typography variant="caption">Money made:</Typography>
+										<Typography variant="h4" align="center">
 											$ {moneyMade}
 										</Typography>
 									</Stack>
 								)}
 								<Stack padding={1} justifyContent="flex-start">
-									<Typography
-										variant="h6"
-										color={theme.palette.text.light}
-										align="center"
-									>
+									<Typography variant="h6" align="center">
 										Number of Successful Applications: {employed}
 									</Typography>
 								</Stack>

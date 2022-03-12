@@ -252,3 +252,16 @@ export async function fetchAllCompaniesForSearching() {
 		});
 	});
 }
+
+export async function fetchDeveloperByID(developer_id) {
+	const url = `${baseUrl}/api/developer/id=${developer_id}`;
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			if (res.data.success) {
+				resolve(res.data.developer);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}

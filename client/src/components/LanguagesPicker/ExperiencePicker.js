@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import Rating from "@mui/material/Rating";
+import { alpha, styled } from "@mui/material/styles";
+
 import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { styled, alpha } from "@mui/material/styles";
 import WorkIcon from "@mui/icons-material/Work";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import { Stack } from "@mui/material";
-import { useTheme } from "@mui/material";
 
 const labels = {
 	0: "< 1 Year",
@@ -22,15 +22,15 @@ const labels = {
 	5: "10+ Years",
 };
 
-const StyledRating = styled(Rating)(({theme}) => ({
+const StyledRating = styled(Rating)(({ theme }) => ({
 	"& .MuiRating-iconFilled": {
-		color: theme.palette.primary.o2,
+		color: theme.palette.primary.main,
 	},
 	"& .MuiRating-iconHover": {
-		color: "green",
+		color: alpha(theme.palette.primary.main, 0.5),
 	},
 	"& .MuiRating-iconEmpty": {
-		color: alpha(theme.palette.text.light, 0.6),
+		color: "divider",
 	},
 }));
 
@@ -41,7 +41,6 @@ function ExperiencePicker({
 	readOnly,
 	width,
 }) {
-	const theme = useTheme();
 	const [value, setValue] = React.useState(0);
 	const [hover, setHover] = React.useState(-1);
 
@@ -68,7 +67,7 @@ function ExperiencePicker({
 				emptyIcon={<WorkOutlineIcon fontSize="inherit" />}
 				max={5}
 			/>
-			<Typography variant="caption" color={theme.palette.text.light}>
+			<Typography variant="caption">
 				{value !== null && (
 					<Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
 				)}

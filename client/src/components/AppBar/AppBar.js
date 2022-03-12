@@ -22,7 +22,6 @@ import SearchMenu from "./SearchMenu";
 import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material";
 
 // source https://mui.com/components/app-bar/
 const Search = styled("div")(({ theme }) => ({
@@ -72,7 +71,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
-	const theme = useTheme();
 	const logout = useLogout();
 	const [userMenuOpen, setUserMenuOpen] = useState(false);
 	const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
@@ -109,7 +107,7 @@ export default function PrimarySearchAppBar() {
 	const DrawerHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
-		backgroundColor: theme.palette.primary.b1,
+		backgroundColor: "primary",
 		minHeight: "63px",
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
@@ -122,7 +120,7 @@ export default function PrimarySearchAppBar() {
 			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
 			<AppBar
 				position="static"
-				sx={{ backgroundColor: theme.palette.primary.b1 }}
+				sx={{ backgroundColor: "primary" }}
 			>
 				<Toolbar>
 					<IconButton
@@ -137,20 +135,12 @@ export default function PrimarySearchAppBar() {
 					</IconButton>
 					<ToggleButtonGroup>
 						<ToggleButton
-							sx={{
-								color: theme.palette.primary.w1,
-								borderColor: alpha(theme.palette.primary.w1, 0.2),
-							}}
 							value="left"
 							onClick={() => sampleLogin("admin@disney.com", "12341234")}
 						>
 							<BusinessIcon />
 						</ToggleButton>
 						<ToggleButton
-							sx={{
-								color: theme.palette.primary.w1,
-								borderColor: alpha(theme.palette.primary.w1, 0.2),
-							}}
 							value="center"
 							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
 						>

@@ -12,32 +12,19 @@ import AddContract from "./pages/AddContract/AddContract";
 import AppBar from "./components/AppBar/AppBar";
 import Contract from "./pages/Contract/Contract";
 import Contracts from "./pages/Contracts/Contracts";
+import CssBaseline from "@mui/material/CssBaseline";
 import Home from "./pages/Home";
 import Login from "./pages/Login/Login";
 import Profile from "./pages/Profile/Profile";
 import React from "react";
 import SignUp from "./pages/SignUp/SignUp";
 
-const theme = createTheme({
+const darkTheme = createTheme({
 	palette: {
+		mode: "dark",
 		primary: {
 			main: "#fe5800",
-			b1: "#121212",
-			g1: "#676767",
-			g2: "#808080",
-			g3: "#939393",
-			g4: "#616366",
-			g5: "#e1e1e1",
-			g6: "#f1f1f1",
-			w1: "#ffffff",
-			o2: "#cc4700",
 		},
-		text: {
-			dark: "#0d0d0d",
-			light: "#ffffff",
-		},
-		//TRY: #c3e1e5 | #beced0 | #d9d3d1 | #b6a7a3 |  #e95e10 |  #a33301
-		//OLD orange: #EF5B25
 	},
 });
 
@@ -58,7 +45,8 @@ function App() {
 		<>
 			<Router>
 				<AuthProvider>
-					<ThemeProvider theme={theme}>
+					<ThemeProvider theme={darkTheme}>
+						<CssBaseline />
 						<AppBar />
 						<Routes>
 							<Route

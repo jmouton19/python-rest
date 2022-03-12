@@ -5,13 +5,11 @@ import {
 	Stack,
 	Table,
 	TableBody,
-	TableCell,
 	TableHead,
-	TableRow,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Typography, useTheme } from "@mui/material";
+import { StyledTableCell, StyledTableRow } from "../StyledTable";
 import {
 	applyToContract,
 	cancelApplication,
@@ -36,6 +34,7 @@ import ContractCardSkeleton from "../ContractCard/ContractCardSkeleton";
 import ContractTable from "../ContractTable/ContractTable";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingPage from "../LoadingPage/LoadingPage";
+import { Typography } from "@mui/material";
 
 function ContractList({
 	method,
@@ -46,7 +45,6 @@ function ContractList({
 	status,
 }) {
 	const [contractsData, setContractsData] = useState(null);
-	const theme = useTheme();
 
 	const navigate = useNavigate();
 
@@ -145,19 +143,19 @@ function ContractList({
 		return (
 			//Return small table version of contracts
 			<>
-				<Paper elevation={4} sx={{ backgroundColor: theme.palette.primary.g5 }}>
+				<Paper elevation={4}>
 					<Box padding={1}>
-						<Typography variant="caption" color="inherit">
+						<Typography variant="caption" color="primary">
 							{viewUser.userType == "developer"
 								? "My Applications:"
-								: "My Contracts:"}
+								: "Contracts:"}
 						</Typography>
 					</Box>
 					{contractsData.length == 0 ? (
 						<Box padding={1}>
 							{viewUser.userType == "developer" ? (
 								<Stack spacing={2}>
-									<Typography variant="body" color="inherit">
+									<Typography variant="body" color="primary">
 										You have not applied to a contract.
 									</Typography>
 									<Button
@@ -169,7 +167,7 @@ function ContractList({
 								</Stack>
 							) : (
 								<Stack spacing={2}>
-									<Typography variant="body" color="inherit">
+									<Typography variant="body" color="primary">
 										{"You don't have any contracts yet."}
 									</Typography>
 									<Button
@@ -184,23 +182,23 @@ function ContractList({
 					) : (
 						<Table>
 							<TableHead>
-								<TableRow>
+								<StyledTableRow>
 									{viewUser.userType == "developer" && (
-										<TableCell>
+										<StyledTableCell>
 											<b>Company</b>
-										</TableCell>
+										</StyledTableCell>
 									)}
-									<TableCell>
+									<StyledTableCell>
 										<b>Title</b>
-									</TableCell>
-									<TableCell>
+									</StyledTableCell>
+									<StyledTableCell>
 										<b>Value</b>
-									</TableCell>
-									<TableCell>
+									</StyledTableCell>
+									<StyledTableCell>
 										<b>Duration</b>
-									</TableCell>
-									<TableCell />
-								</TableRow>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
 							</TableHead>
 							<TableBody>
 								{contractsData.map((contract) => (
@@ -210,7 +208,7 @@ function ContractList({
 										viewUser={viewUser}
 									>
 										{authUser.userType === "company" ? ( //If a company is viewing
-											<>
+											<Stack direction="row" spacing={1}>
 												{authUser.username == viewUser.username && ( //If a company is viewing their own
 													<>
 														<Button
@@ -236,10 +234,10 @@ function ContractList({
 														</Button>
 													</>
 												)}
-											</>
+											</Stack>
 										) : (
 											//If a dev is viewing
-											<>
+											<Stack direction="row" spacing={1}>
 												<>
 													{authUser.username == viewUser.username && ( //If a dev is viewing their own
 														<>
@@ -264,6 +262,14 @@ function ContractList({
 													{viewUser.userType == "company" && ( //If a dev is viewing a company
 														<>
 															<Button
+																size="small"
+																variant="contained"
+																component={Link}
+																to={`/contract/${contract.contract_id}`}
+															>
+																View
+															</Button>
+															<Button
 																variant="contained"
 																size="small"
 																onClick={() =>
@@ -280,7 +286,7 @@ function ContractList({
 														</>
 													)}
 												</>
-											</>
+											</Stack>
 										)}
 									</ContractTable>
 								))}
@@ -291,6 +297,19 @@ function ContractList({
 			</>
 		);
 	} else {
+		let emptyListMessage;
+		if (status == "available")
+			emptyListMessage = "No contracts available at the moment.";
+		if (status == "applied")
+			emptyListMessage =
+				"You don't have any pending contracts. If you have already applied, check the Accepted tab to see if you were successful.";
+		if (status == "accepted")
+			emptyListMessage = "You have not been accepted to any contracts.";
+		if (status == "open")
+			emptyListMessage =
+				"You have no open contracts. Click + to create one now.";
+		if (status == "closed")
+			emptyListMessage = "You have not accepted any developer for a contract.";
 		return (
 			//Return large card version of contracts
 			<>
@@ -310,8 +329,8 @@ function ContractList({
 						<ContractCardSkeleton />
 					) : contractsData.length == 0 ? (
 						<Box mt={2}>
-							<Typography variant="caption" color="initial">
-								Nothing to display.
+							<Typography variant="caption" color="primary">
+								{emptyListMessage}
 							</Typography>
 						</Box>
 					) : (

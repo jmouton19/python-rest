@@ -1,19 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { alpha, styled } from "@mui/material/styles";
 
-import { styled, alpha } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
+import AddIcon from "@mui/icons-material/Add";
 import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import ExperiencePicker from "./ExperiencePicker";
+import Grid from "@mui/material/Grid";
+import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import ExperiencePicker from "./ExperiencePicker";
-import { useTheme } from "@mui/system";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 // Todo: Site source material ui website?
 const Search = styled("div")(({ theme }) => ({
@@ -61,7 +59,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function LanguagesPicker(props) {
-	const theme = useTheme();
 	const [languageList, setLanguageList] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [selectedLanguages, setSelectedLanguages] = useState({});
@@ -167,14 +164,13 @@ function LanguagesPicker(props) {
 					</SearchIconWrapper>
 					<StyledInputBase
 						placeholder="Search…"
-						inputProps={{ "aria-label": "search" }}
 						value={searchValue}
 						onChange={(event) => setSearchValue(event.target.value)}
 						inputRef={searchBarRef}
 					/>
 				</Search>
 				{searchValue !== "" ? (
-					<Paper sx={{ backgroundColor: "#eeeeee", borderRadius: 1 }}>
+					<Paper sx={{ borderRadius: 1 }}>
 						<Typography variant="caption" marginTop={1} marginLeft={1}>
 							{filteredLanguages.length == 0
 								? "No Search Results."
@@ -203,10 +199,10 @@ function LanguagesPicker(props) {
 					</Paper>
 				) : null}
 				{selectedLanguages.length !== 0 ? (
-					<Paper sx={{ padding: 1, backgroundColor: theme.palette.primary.g2}} >
+					<Paper sx={{ padding: 1 }}>
 						<Grid container rowSpacing={1}>
 							<Grid item xs={12}>
-								<Typography variant="caption" color={theme.palette.text.light}>Selected Languages:</Typography>
+								<Typography variant="caption">Selected Languages:</Typography>
 							</Grid>
 							{Object.keys(selectedLanguages).map((language) => (
 								<React.Fragment key={language}>

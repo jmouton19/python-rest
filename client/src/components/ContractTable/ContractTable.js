@@ -1,4 +1,5 @@
-import { Avatar, Stack, TableCell, TableRow, Typography } from "@mui/material";
+import { Avatar, Stack, Typography } from "@mui/material";
+import { StyledTableCell, StyledTableRow } from "../StyledTable";
 
 import React from "react";
 import StyledLink from "../../components/StyledLink";
@@ -6,9 +7,9 @@ import StyledLink from "../../components/StyledLink";
 function ContractTable({ contract, children, viewUser }) {
 	return (
 		<>
-			<TableRow key={contract.contract_id}>
+			<StyledTableRow key={contract.contract_id}>
 				{viewUser.userType == "developer" && (
-					<TableCell>
+					<StyledTableCell>
 						<Stack direction="row" spacing={1} alignItems="center">
 							<Avatar
 								src={contract["company_avatar"]}
@@ -25,15 +26,15 @@ function ContractTable({ contract, children, viewUser }) {
 								</StyledLink>
 							</Typography>
 						</Stack>
-					</TableCell>
+					</StyledTableCell>
 				)}
-				<TableCell>{contract.title}</TableCell>
-				<TableCell>{contract.value}</TableCell>
-				<TableCell>{contract.length}</TableCell>
-				<TableCell align="right" style={{ width: 128 }}>
+				<StyledTableCell>{contract.title}</StyledTableCell>
+				<StyledTableCell>{contract.value}</StyledTableCell>
+				<StyledTableCell>{contract.length}</StyledTableCell>
+				<StyledTableCell align="right" style={{ width: 128 }}>
 					{children}
-				</TableCell>
-			</TableRow>
+				</StyledTableCell>
+			</StyledTableRow>
 		</>
 	);
 }

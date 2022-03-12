@@ -1,5 +1,3 @@
-import "./Home.css";
-
 import { Container, Grid, Paper, Stack, Typography } from "@mui/material";
 
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
@@ -46,14 +44,14 @@ function Home() {
 				<Grid container spacing={4} mt={2}>
 					{authUser && (
 						<Grid item xs={12}>
-							<Typography variant="h5" color="initial">
+							<Typography variant="h5" color="primary">
 								{`Hi, ${
 									authUser.userType == "developer"
 										? authUser.firstName
 										: authUser.username
 								}!`}
 							</Typography>
-							<Typography variant="caption" color="initial">
+							<Typography variant="caption" color="primary">
 								What do you want to do today?
 							</Typography>
 						</Grid>
