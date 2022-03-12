@@ -63,7 +63,7 @@ def delete_contract(contract_id):
             username= request_data['username']
             dev=db.session.query(Developer).filter(Developer.username==username).one_or_none()
             if dev:
-                application=db.session.query(Application).filter(Application.contract_id==contract.contract_id,Application.developer_username==dev.username).one_or_none()
+                application=db.session.query(Application).filter(Application.contract_id==contract.contract_id,Application.developer_id==dev.developer_id).one_or_none()
                 if application:
                     setattr(contract,"developer_username",dev.username)
                     setattr(contract,"open",False)
