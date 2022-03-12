@@ -119,7 +119,7 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 								<Label>Status</Label>
 								<Chip
 									label={open ? "Open" : "Closed"}
-									color={open ? "success" : "info"}
+									color={open ? "success" : "warning"}
 									icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
 									size="small"
 								/>

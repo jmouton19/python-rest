@@ -256,7 +256,7 @@ function ContractList({
 			//Return large card version of contracts
 			<>
 				<Stack spacing={2}>
-					{authUser.userType == "company" && (
+					{authUser.userType === "company" && status === "open" && (
 						<Paper sx={{ padding: 2, display: "flex" }} elevation={4}>
 							<Box sx={{ flexGrow: 1 }} />
 							<Stack>
