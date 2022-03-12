@@ -4,7 +4,7 @@ from server.models import db, Company, Contract
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
 
-@app.route('/api/company', methods=['POST','DELETE'])
+@app.route('/api/company', methods=['POST','DELETE','GET'])
 def signup_company():
     if request.method=='POST':
         request_data = request.get_json()
@@ -36,6 +36,16 @@ def signup_company():
             db.session.delete(user)
         db.session.commit()
         return jsonify(success=True,message="All companies deleted")
+    elif request.method=='GET':
+        company_list=[]
+        companies=db.session.query(Company).all()
+        for company in companies:
+            instance = dict()
+            instance['company_name']=company.company_name
+            instance['avatar']=company.avatar
+            instance['industry']=company.industry
+            company_list.append(instance)
+        return jsonify(success=True,companies=company_list)
 
 @app.route('/api/company/<company>', methods=['GET','DELETE','PUT'])
 def check_company_name(company):
