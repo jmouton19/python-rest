@@ -56,6 +56,15 @@ def signup_developer():
         else:
             return jsonify(checker)
         return jsonify(success=True,message="Developer has been registered")
+    elif request.method=='DELETE':
+        users=db.session.query(Developer).all()
+        for user in users:
+            for job in user.jobs:
+                job.developer_id=None
+                job.open=True
+            db.session.delete(user)
+        db.session.commit()
+        return jsonify(success=True,message="All developers deleted")
     elif request.method=='GET':
         dev_list=[]
         developers=db.session.query(Developer).all()
@@ -214,3 +223,15 @@ def unblock_company(username,company_name):
         return jsonify(success=False,message="Developer has not blocked this company")
     db.session.commit()
     return jsonify(success=True,message="Company unblocked")
+
+@app.route('/api/developer/<dev_id>', methods=['GET'])
+def check_id(dev_id):
+    result=db.session.query(Developer).filter(Developer.developer_id==dev_id).one_or_none()
+    if result:
+        if request.method=='GET':
+            instance = dict(); 
+            instance['avatar']=result.avatar
+            instance['username']=result.username
+            return jsonify(success=True,developer=instance)
+    else:
+        return jsonify(success=False,message="Developer not found")
