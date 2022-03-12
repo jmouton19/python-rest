@@ -85,7 +85,7 @@ def check_username(username):
             return jsonify(success=True,developer=instance)
         elif request.method=='DELETE':
             for job in result.jobs:
-                job.developer_username=None
+                job.developer_id=None
                 job.open=True
             db.session.delete(result)
             db.session.commit()

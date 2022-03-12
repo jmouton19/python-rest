@@ -65,7 +65,7 @@ def delete_contract(contract_id):
             if dev:
                 application=db.session.query(Application).filter(Application.contract_id==contract.contract_id,Application.developer_id==dev.developer_id).one_or_none()
                 if application:
-                    setattr(contract,"developer_username",dev.username)
+                    setattr(contract,"developer_id",dev.developer_id)
                     setattr(contract,"open",False)
                     db.session.commit()
                     return jsonify(success=True,message="Contract updated")

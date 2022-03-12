@@ -31,7 +31,7 @@ class Company(db.Model):
 class Contract(db.Model):
     contract_id = db.Column(db.Integer,primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id'))
-    developer_username = db.Column(db.String(254), db.ForeignKey('developer.username'))
+    developer_id = db.Column(db.Integer, db.ForeignKey('developer.developer_id'))
     length = db.Column(db.Integer)
     value = db.Column(db.Integer)
     title = db.Column(db.String(254))
