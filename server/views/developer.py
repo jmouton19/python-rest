@@ -72,7 +72,7 @@ def signup_developer():
             instance['name']=dev.name
             instance['surname']=dev.surname
             dev_list.append(instance)
-        return jsonify(success=True,companies=dev_list)
+        return jsonify(success=True,developers=dev_list)
 
 @app.route('/api/developer/<username>', methods=['GET','DELETE','PUT'])
 def check_username(username):
