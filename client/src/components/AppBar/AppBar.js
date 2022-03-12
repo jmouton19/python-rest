@@ -21,6 +21,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
 
 // source https://mui.com/components/app-bar/
 const Search = styled("div")(({ theme }) => ({
@@ -70,6 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
+	const theme = useTheme();
 	const logout = useLogout();
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
@@ -97,7 +99,7 @@ export default function PrimarySearchAppBar() {
 	const DrawerHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
-		backgroundColor: theme.palette.primary.main,
+		backgroundColor: theme.palette.primary.b1,
 		minHeight: "63px",
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
@@ -107,7 +109,7 @@ export default function PrimarySearchAppBar() {
 
 	return (
 		<React.Fragment>
-			<AppBar position="static">
+			<AppBar position="static" sx={{backgroundColor: theme.palette.primary.b1}}>
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -119,17 +121,17 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<ToggleButtonGroup>
+					<ToggleButtonGroup >
 						<ToggleButton
+							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
 							value="left"
-							aria-label="left aligned"
 							onClick={() => sampleLogin("admin@disney.com", "12341234")}
 						>
 							<BusinessIcon />
 						</ToggleButton>
 						<ToggleButton
+							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
 							value="center"
-							aria-label="centered"
 							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
 						>
 							<PersonIcon />

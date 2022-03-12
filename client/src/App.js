@@ -23,11 +23,14 @@ const theme = createTheme({
 	palette: {
 		primary: {
 			main: "#fe5800",
+			b1: "#121212",
 			g1: "#676767",
 			g2: "#808080",
 			g3: "#939393",
 			g4: "#616366",
-			g5: "#c1c3c7",
+			g5: "#e1e1e1",
+			g6: "#f1f1f1",
+			w1: "#ffffff",
 		},
 		text: {
 			dark: "#0d0d0d",

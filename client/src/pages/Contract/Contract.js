@@ -8,12 +8,12 @@ import {
 	Stack,
 	Table,
 	TableBody,
-	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
 	Tooltip,
 } from "@mui/material";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
@@ -25,10 +25,35 @@ import {
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import Typography from "@mui/material/Typography";
 import { devicons } from "../../utils/mapLanguageToIcon";
-import styled from "@emotion/styled";
+import { alpha,styled } from "@mui/material/styles";
 import { useUser } from "../../AuthProvider";
+import { useTheme } from "@mui/material";
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	"&:nth-of-type(odd)": {
+		backgroundColor: alpha(theme.palette.primary.g6,0.7),
+	},
+	"&:nth-of-type(even)": {
+		backgroundColor: alpha(theme.palette.primary.g6,0.4),
+	},
+	// hide last border
+	"&:last-child td, &:last-child th": {
+		border: 0,
+	},
+}));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.${tableCellClasses.head}`]: {
+		backgroundColor: theme.palette.primary.g5,
+		color: theme.palette.common.white,
+	},
+	[`&.${tableCellClasses.body}`]: {
+		fontSize: 14,
+	},
+}));
 
 function Contract() {
+	const theme = useTheme();
 	const params = useParams();
 	const [contract, setContract] = useState({});
 	const [developers, setDevelopers] = useState([]);
@@ -64,7 +89,10 @@ function Contract() {
 	return (
 		<React.Fragment>
 			<Container>
-				<Paper elevation={4} sx={{ mt: 5 }}>
+				<Paper
+					elevation={4}
+					sx={{ mt: 5, backgroundColor: theme.palette.primary.g5 }}
+				>
 					<Grid
 						container
 						direction="column"
@@ -89,28 +117,54 @@ function Contract() {
 										padding={1}
 									>
 										<Grid item xs={4}>
-											<Paper>
+											<Paper sx={{ backgroundColor: theme.palette.primary.g4 }}>
 												<Stack spacing={3} padding={2}>
-													<Typography variant="h4" color="primary" align="left">
+													<Typography
+														variant="h4"
+														color={theme.palette.text.light}
+														align="left"
+													>
 														{contract.title}
 													</Typography>
 													<Stack>
-														<Typography variant="caption">Duration:</Typography>
-														<Typography variant="body">
+														<Typography
+															variant="caption"
+															color={theme.palette.text.light}
+														>
+															Duration:
+														</Typography>
+														<Typography
+															variant="body"
+															color={theme.palette.text.light}
+														>
 															{contract.length} months
 														</Typography>
 													</Stack>
 													<Stack>
-														<Typography variant="caption">Value:</Typography>
-														<Typography variant="body">
+														<Typography
+															variant="caption"
+															color={theme.palette.text.light}
+														>
+															Value:
+														</Typography>
+														<Typography
+															variant="body"
+															color={theme.palette.text.light}
+														>
 															R {contract.value}
 														</Typography>
 													</Stack>
 													<Stack>
-														<Typography variant="caption">
+														<Typography
+															variant="caption"
+															color={theme.palette.text.light}
+														>
 															Description:
 														</Typography>
-														<Typography variant="body">
+														<Typography
+															variant="body"
+															color={theme.palette.text.light}
+														>
 															{contract.description}
 														</Typography>
 													</Stack>
@@ -137,24 +191,25 @@ function Contract() {
 										<TableContainer>
 											<Table stickyHeader size="small">
 												<TableHead>
-													<TableRow>
-														<TableCell align="center" colSpan={4}>
+													<StyledTableRow>
+														<StyledTableCell align="center" colSpan={4}>
 															<Typography
 																align="center"
 																variant="h5"
 																id="tableTitle"
 																component="div"
 																xs={12}
+																color={theme.palette.primary.main}
 															>
 																Applicants
 															</Typography>
-														</TableCell>
-													</TableRow>
+														</StyledTableCell>
+													</StyledTableRow>
 												</TableHead>
 												<TableBody>
 													{developers.map((developer) => (
-														<TableRow key={developer.name}>
-															<TableCell>
+														<StyledTableRow key={developer.name}>
+															<StyledTableCell>
 																<Link
 																	to={`/profile/developer/${developer.username}`}
 																>
@@ -163,8 +218,8 @@ function Contract() {
 																		src={developer.avatar}
 																	></Avatar>
 																</Link>
-															</TableCell>
-															<TableCell>
+															</StyledTableCell>
+															<StyledTableCell>
 																<StyledLink
 																	to={`/profile/developer/${developer.username}`}
 																	style={{
@@ -175,8 +230,8 @@ function Contract() {
 																		{developer.name} {developer.surname}
 																	</Typography>
 																</StyledLink>
-															</TableCell>
-															<TableCell>
+															</StyledTableCell>
+															<StyledTableCell>
 																<AvatarGroup variant="round" spacing={0}>
 																	{Object.keys(
 																		developer.developer_languages
@@ -198,9 +253,10 @@ function Contract() {
 																		</Tooltip>
 																	))}
 																</AvatarGroup>
-															</TableCell>
-															<TableCell align="right">
+															</StyledTableCell>
+															<StyledTableCell align="right">
 																<Button
+																	variant="contained"
 																	onClick={() => {
 																		closeContract(
 																			developer["username"],
@@ -210,8 +266,8 @@ function Contract() {
 																>
 																	Accept
 																</Button>
-															</TableCell>
-														</TableRow>
+															</StyledTableCell>
+														</StyledTableRow>
 													))}
 												</TableBody>
 											</Table>
