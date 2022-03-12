@@ -146,75 +146,90 @@ function ContractList({
 			//Return small table version of contracts
 			<>
 				<Paper elevation={4} sx={{ backgroundColor: theme.palette.primary.g5 }}>
-					<Table>
-						<TableHead>
-							<TableRow>
-								{viewUser.userType == "developer" && (
+					<Box padding={1}>
+						<Typography variant="caption" color="inherit">
+							{viewUser.userType == "developer"
+								? "My Applications:"
+								: "My Contracts:"}
+						</Typography>
+					</Box>
+					{contractsData.length == 0 ? (
+						<Box padding={1}>
+							{viewUser.userType == "developer" ? (
+								<Stack spacing={2}>
+									<Typography variant="body" color="inherit">
+										You have not applied to a contract.
+									</Typography>
+									<Button
+										onClick={() => navigate("/contracts")}
+										variant="contained"
+									>
+										See Available Contracts
+									</Button>
+								</Stack>
+							) : (
+								<Stack spacing={2}>
+									<Typography variant="body" color="inherit">
+										{"You don't have any contracts yet."}
+									</Typography>
+									<Button
+										onClick={() => navigate("/addContract")}
+										variant="contained"
+									>
+										Create Contract
+									</Button>
+								</Stack>
+							)}
+						</Box>
+					) : (
+						<Table>
+							<TableHead>
+								<TableRow>
+									{viewUser.userType == "developer" && (
+										<TableCell>
+											<b>Company</b>
+										</TableCell>
+									)}
 									<TableCell>
-										<b>Company</b>
+										<b>Title</b>
 									</TableCell>
-								)}
-								<TableCell>
-									<b>Title</b>
-								</TableCell>
-								<TableCell>
-									<b>Value</b>
-								</TableCell>
-								<TableCell>
-									<b>Duration</b>
-								</TableCell>
-								<TableCell />
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{contractsData.map((contract) => (
-								<ContractTable
-									key={contract.contract_id}
-									contract={contract}
-									viewUser={viewUser}
-								>
-									{authUser.userType === "company" ? ( //If a company is viewing
-										<>
-											{authUser.username == viewUser.username && ( //If a company is viewing their own
-												<>
-													<Button
-														size="small"
-														variant="contained"
-														component={Link}
-														to={`/contract/${contract.contract_id}`}
-													>
-														View
-													</Button>
-													<Button
-														color="error"
-														size="small"
-														onClick={() =>
-															deleteContract(contract.contract_id).then(() => {
-																getContracts();
-															})
-														}
-													>
-														<DeleteIcon />
-													</Button>
-												</>
-											)}
-										</>
-									) : (
-										//If a dev is viewing
-										<>
+									<TableCell>
+										<b>Value</b>
+									</TableCell>
+									<TableCell>
+										<b>Duration</b>
+									</TableCell>
+									<TableCell />
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{contractsData.map((contract) => (
+									<ContractTable
+										key={contract.contract_id}
+										contract={contract}
+										viewUser={viewUser}
+									>
+										{authUser.userType === "company" ? ( //If a company is viewing
 											<>
-												{authUser.username == viewUser.username && ( //If a dev is viewing their own
+												{authUser.username == viewUser.username && ( //If a company is viewing their own
 													<>
+														<Button
+															size="small"
+															variant="contained"
+															component={Link}
+															to={`/contract/${contract.contract_id}`}
+														>
+															View
+														</Button>
 														<Button
 															color="error"
 															size="small"
 															onClick={() =>
-																cancelApplication(
-																	authUser.username,
-																	contract.contract_id
-																).then(() => {
-																	getContracts();
-																})
+																deleteContract(contract.contract_id).then(
+																	() => {
+																		getContracts();
+																	}
+																)
 															}
 														>
 															<DeleteIcon />
@@ -222,32 +237,56 @@ function ContractList({
 													</>
 												)}
 											</>
+										) : (
+											//If a dev is viewing
 											<>
-												{viewUser.userType == "company" && ( //If a dev is viewing a company
-													<>
-														<Button
-															variant="contained"
-															size="small"
-															onClick={() =>
-																applyToContract(
-																	authUser.username,
-																	contract.contract_id
-																).then(() => {
-																	getContracts();
-																})
-															}
-														>
-															Apply
-														</Button>
-													</>
-												)}
+												<>
+													{authUser.username == viewUser.username && ( //If a dev is viewing their own
+														<>
+															<Button
+																color="error"
+																size="small"
+																onClick={() =>
+																	cancelApplication(
+																		authUser.username,
+																		contract.contract_id
+																	).then(() => {
+																		getContracts();
+																	})
+																}
+															>
+																<DeleteIcon />
+															</Button>
+														</>
+													)}
+												</>
+												<>
+													{viewUser.userType == "company" && ( //If a dev is viewing a company
+														<>
+															<Button
+																variant="contained"
+																size="small"
+																onClick={() =>
+																	applyToContract(
+																		authUser.username,
+																		contract.contract_id
+																	).then(() => {
+																		getContracts();
+																	})
+																}
+															>
+																Apply
+															</Button>
+														</>
+													)}
+												</>
 											</>
-										</>
-									)}
-								</ContractTable>
-							))}
-						</TableBody>
-					</Table>
+										)}
+									</ContractTable>
+								))}
+							</TableBody>
+						</Table>
+					)}
 				</Paper>
 			</>
 		);

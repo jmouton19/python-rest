@@ -1,37 +1,35 @@
-import React, { useState } from "react";
-
 import {
 	Box,
-	FormControl,
+	Button,
 	Container,
+	FormControl,
+	FormControlLabel,
+	FormHelperText,
+	FormLabel,
+	Grid,
+	IconButton,
+	InputAdornment,
 	InputLabel,
 	OutlinedInput,
-	Grid,
-	Typography,
-	InputAdornment,
-	IconButton,
-	RadioGroup,
-	FormControlLabel,
-	FormLabel,
 	Radio,
-	Button,
-	Stepper,
+	RadioGroup,
 	Step,
-	StepLabel,
 	StepContent,
-	FormHelperText,
+	StepLabel,
+	Stepper,
+	Typography,
 } from "@mui/material";
-
-import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
-import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
-
+import React, { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
 import {
 	checkIfUniqueEmail,
 	checkIfUniqueUsername,
 	signUp,
 } from "../../utils/apiCalls";
+
+import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
+import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
+import StyledLink from "../../components/StyledLink";
 import { useLogin } from "../../AuthProvider";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
@@ -217,6 +215,11 @@ function SignUp() {
 			<Container maxWidth="sm">
 				<Typography variant="h3" color="primary" gutterBottom paddingTop={3}>
 					Sign Up
+				</Typography>
+				<Typography variant="caption" color="primary">
+					<StyledLink to="/login">
+						{"Already have an account? Log in instead."}
+					</StyledLink>
 				</Typography>
 				<Box>
 					<Stepper activeStep={activeStep} orientation="vertical">

@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-import About from "./pages/About/About";
 import AddContract from "./pages/AddContract/AddContract";
 import AppBar from "./components/AppBar/AppBar";
 import Contract from "./pages/Contract/Contract";
@@ -97,7 +96,6 @@ function App() {
 							<Route path="/signup" element={<SignUp />} />
 							<Route path="/" element={<Home />} />
 							<Route path="/login" element={<Login />} />
-							<Route path="/about" element={<About />} />
 						</Routes>
 					</ThemeProvider>
 				</AuthProvider>

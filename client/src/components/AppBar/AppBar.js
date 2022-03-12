@@ -19,6 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
+import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material";
@@ -78,7 +79,14 @@ export default function PrimarySearchAppBar() {
 
 	const sampleLogin = useLogin();
 
-	const user = useUser();
+	const authUser = useUser();
+
+	let URLToProfile;
+	if (authUser) {
+		URLToProfile = `./profile/${authUser.userType}/${authUser.username}`;
+	} else {
+		URLToProfile = "/signUp";
+	}
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -109,7 +117,10 @@ export default function PrimarySearchAppBar() {
 
 	return (
 		<React.Fragment>
-			<AppBar position="static" sx={{backgroundColor: theme.palette.primary.b1}}>
+			<AppBar
+				position="static"
+				sx={{ backgroundColor: theme.palette.primary.b1 }}
+			>
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -121,16 +132,22 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<ToggleButtonGroup >
+					<ToggleButtonGroup>
 						<ToggleButton
-							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
+							sx={{
+								color: theme.palette.primary.w1,
+								borderColor: alpha(theme.palette.primary.w1, 0.2),
+							}}
 							value="left"
 							onClick={() => sampleLogin("admin@disney.com", "12341234")}
 						>
 							<BusinessIcon />
 						</ToggleButton>
 						<ToggleButton
-							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
+							sx={{
+								color: theme.palette.primary.w1,
+								borderColor: alpha(theme.palette.primary.w1, 0.2),
+							}}
 							value="center"
 							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
 						>
@@ -138,9 +155,11 @@ export default function PrimarySearchAppBar() {
 						</ToggleButton>
 					</ToggleButtonGroup>
 					<Box sx={{ flexGrow: 3 }} />
-					<Typography variant="h6" component="div">
-						<b>KONTRA</b>
-					</Typography>
+					<StyledLink to="/">
+						<Typography variant="h6" component="div">
+							<b>KONTRA</b>
+						</Typography>
+					</StyledLink>
 					<Box sx={{ flexGrow: 2 }} />
 					<Search>
 						<SearchIconWrapper>
@@ -161,8 +180,8 @@ export default function PrimarySearchAppBar() {
 					>
 						<Avatar
 							src={
-								user
-									? user.avatarUrl
+								authUser
+									? authUser.avatarUrl
 									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 							}
 						></Avatar>
@@ -183,31 +202,15 @@ export default function PrimarySearchAppBar() {
 						open={Boolean(anchorEl)}
 						onClose={handleMenuClose}
 					>
-						{user ? (
+						{authUser ? (
 							<div>
 								<MenuItem
 									component={Link}
-									to={`/profile/${user.userType}/${user.username}`}
+									to={`/profile/${authUser.userType}/${authUser.username}`}
 									onClick={handleMenuClose}
 								>
 									My Profile
 								</MenuItem>
-								<MenuItem 
-									component={Link}
-									to={"/contracts"}
-									onClick={handleMenuClose}
-								>
-									My Contracts
-								</MenuItem>
-								{user.userType == "company" ? (
-									<MenuItem
-										component={Link}
-										to="/addcontract"
-										onClick={handleMenuClose}
-									>
-										Add a Contract
-									</MenuItem>
-								) : null}
 								<MenuItem
 									onClick={() => {
 										handleMenuClose();
@@ -280,12 +283,12 @@ export default function PrimarySearchAppBar() {
 					</Button>
 					<Button
 						component={Link}
-						to="/about"
+						to={URLToProfile}
 						color="inherit"
 						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
-						<b>About</b>
+						<b>My Profile</b>
 					</Button>
 				</Stack>
 			</Drawer>
