@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
 import {
 	Avatar,
+	Container,
+	Grid,
 	Paper,
 	Stack,
 	Table,
@@ -10,16 +11,15 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
-	Grid,
-	Container,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { groupByAccepted, totalMoney } from "../../utils/contractSorting";
 
-import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
 import ContractList from "../../components/ContractList/ContractList";
+import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
+import { devicons } from "../../utils/mapLanguageToIcon";
 import { fetchDevelopersContracts } from "../../utils/apiCalls";
 import { useTheme } from "@mui/material";
-import { devicons } from "../../utils/mapLanguageToIcon";
-import { groupByAccepted, totalMoney } from "../../utils/contractSorting";
 
 function DeveloperProfile(props) {
 	const theme = useTheme();
@@ -39,12 +39,15 @@ function DeveloperProfile(props) {
 		});
 	}
 
-	return(
+	return (
 		<>
 			<Container>
 				<Grid container spacing={2} padding={3}>
 					<Grid item xs={12} md={4}>
-						<Paper elevation={5} sx={{backgroundColor: theme.palette.primary.g1}}>
+						<Paper
+							elevation={5}
+							sx={{ backgroundColor: theme.palette.primary.g1 }}
+						>
 							<Grid
 								container
 								alignItems="center"
@@ -53,7 +56,13 @@ function DeveloperProfile(props) {
 							>
 								<Grid item>
 									<Avatar
-										sx={{ width: 100, height: 100, borderRadius:"16px",border:4,borderColor: theme.palette.text.light}}
+										sx={{
+											width: 100,
+											height: 100,
+											borderRadius: "16px",
+											border: 4,
+											borderColor: theme.palette.text.light,
+										}}
 										src={viewUser.avatarUrl}
 									></Avatar>
 								</Grid>
@@ -62,26 +71,41 @@ function DeveloperProfile(props) {
 										<Typography variant="h3" color={theme.palette.text.light}>
 											{viewUser.firstName} {viewUser.lastName}
 										</Typography>
-										<Typography variant="h5" color={theme.palette.text.light}>{viewUser.username}</Typography>
-										<Typography variant="h6" color={theme.palette.text.light}>{viewUser.email}</Typography>
+										<Typography variant="h5" color={theme.palette.text.light}>
+											{viewUser.username}
+										</Typography>
+										<Typography variant="h6" color={theme.palette.text.light}>
+											{viewUser.email}
+										</Typography>
 									</Stack>
 								</Grid>
 							</Grid>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={8}>
-						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g2}}>
+						<Paper
+							elevation={4}
+							sx={{ backgroundColor: theme.palette.primary.g2 }}
+						>
 							<TableContainer>
 								<Table>
 									<TableHead>
 										<TableRow>
 											<TableCell>
-												<Typography variant="h5" color={theme.palette.text.light}>
+												<Typography
+													variant="h5"
+													color={theme.palette.text.light}
+												>
 													Programming Languages
 												</Typography>
 											</TableCell>
 											<TableCell>
-												<Typography variant="h5" color={theme.palette.text.light}>Experience</Typography>
+												<Typography
+													variant="h5"
+													color={theme.palette.text.light}
+												>
+													Experience
+												</Typography>
 											</TableCell>
 										</TableRow>
 									</TableHead>
@@ -93,9 +117,24 @@ function DeveloperProfile(props) {
 												return (
 													<TableRow key={language}>
 														<TableCell>
-															<Stack direction="row" spacing={1} alignItems="center">
-																<Avatar sx={{ width: 24, height: 24, backgroundColor: "white", border:3, borderColor: "white"}} src={devicons[language]}/>
-																<Typography color={theme.palette.text.light}>{language}</Typography>
+															<Stack
+																direction="row"
+																spacing={1}
+																alignItems="center"
+															>
+																<Avatar
+																	sx={{
+																		width: 24,
+																		height: 24,
+																		backgroundColor: "white",
+																		border: 3,
+																		borderColor: "white",
+																	}}
+																	src={devicons[language]}
+																/>
+																<Typography color={theme.palette.text.light}>
+																	{language}
+																</Typography>
 															</Stack>
 														</TableCell>
 														<TableCell>
@@ -114,37 +153,55 @@ function DeveloperProfile(props) {
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g2}}>
-							<Stack >
+						<Paper
+							elevation={4}
+							sx={{ backgroundColor: theme.palette.primary.g2 }}
+						>
+							<Stack>
 								{authUser.username == viewUser.username && (
-									<Stack backgroundColor="#388e3c" padding={1} borderRadius= {1} justifyContent="flex-start">
-										<Typography variant="caption" color={theme.palette.text.light}>
+									<Stack
+										backgroundColor="#388e3c"
+										padding={1}
+										borderRadius={1}
+										justifyContent="flex-start"
+									>
+										<Typography
+											variant="caption"
+											color={theme.palette.text.light}
+										>
 											Money made:
 										</Typography>
-										<Typography  variant="h4" color={theme.palette.text.light} align="center">
+										<Typography
+											variant="h4"
+											color={theme.palette.text.light}
+											align="center"
+										>
 											$ {moneyMade}
 										</Typography>
 									</Stack>
 								)}
 								<Stack padding={1} justifyContent="flex-start">
-									<Typography variant="h6" color={theme.palette.text.light} align="center">
-										Times employed: {employed}
+									<Typography
+										variant="h6"
+										color={theme.palette.text.light}
+										align="center"
+									>
+										Number of Successful Applications: {employed}
 									</Typography>
 								</Stack>
 							</Stack>
-						</Paper>	
+						</Paper>
 					</Grid>
 					{authUser["username"] == viewUser["username"] && (
-						<Grid item xs={12} md={8}>				
-							<ContractList 
+						<Grid item xs={12} md={8}>
+							<ContractList
 								method="value"
 								descending={true}
 								condensed
 								viewUser={viewUser}
 								authUser={authUser}
 								status="applied"
-							>
-							</ContractList>
+							></ContractList>
 						</Grid>
 					)}
 				</Grid>

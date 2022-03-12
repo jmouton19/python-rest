@@ -73,7 +73,7 @@ function AddContract() {
 
 	return (
 		<React.Fragment>
-			<Container maxWidth="md">
+			<Container maxWidth="sm">
 				<Box container alignItems="stretch" mt={2} mb={2}>
 					<Typography variant="h3" color="primary" align="center">
 						Add New Contract

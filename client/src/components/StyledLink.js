@@ -9,7 +9,7 @@ const StyledLink = styled(Link)`
 	&:visited,
 	&:link,
 	&:active {
-		color: black;
+		color: inherit;
 	}
 `;
 

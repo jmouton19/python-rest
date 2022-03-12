@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { Avatar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React, { useState } from "react";
 import { alpha, styled } from "@mui/material/styles";
 import { useLogin, useLogout, useUser } from "../../AuthProvider";
 
@@ -19,6 +18,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
+import SearchMenu from "./SearchMenu";
+import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material";
@@ -73,27 +74,36 @@ const drawerWidth = 240;
 export default function PrimarySearchAppBar() {
 	const theme = useTheme();
 	const logout = useLogout();
-	const [open, setOpen] = React.useState(false);
-	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [userMenuOpen, setUserMenuOpen] = useState(false);
+	const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+	const [searchValue, setSearchValue] = useState("");
 
 	const sampleLogin = useLogin();
+	const authUser = useUser();
 
-	const user = useUser();
+	const [searchMenuOpen, setSearchMenuOpen] = useState(false);
+
+	let URLToProfile;
+	if (authUser) {
+		URLToProfile = `./profile/${authUser.userType}/${authUser.username}`;
+	} else {
+		URLToProfile = "/signUp";
+	}
 
 	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
+		setUserMenuAnchorEl(event.currentTarget);
 	};
 
-	const handleMenuClose = () => {
-		setAnchorEl(null);
+	const handleUserMenuClose = () => {
+		setUserMenuAnchorEl(null);
 	};
 
 	const handleDrawerOpen = () => {
-		setOpen(true);
+		setUserMenuOpen(true);
 	};
 
 	const handleDrawerClose = () => {
-		setOpen(false);
+		setUserMenuOpen(false);
 	};
 
 	const DrawerHeader = styled("div")(({ theme }) => ({
@@ -109,7 +119,11 @@ export default function PrimarySearchAppBar() {
 
 	return (
 		<React.Fragment>
-			<AppBar position="static" sx={{backgroundColor: theme.palette.primary.b1}}>
+			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
+			<AppBar
+				position="static"
+				sx={{ backgroundColor: theme.palette.primary.b1 }}
+			>
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -121,16 +135,22 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<ToggleButtonGroup >
+					<ToggleButtonGroup>
 						<ToggleButton
-							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
+							sx={{
+								color: theme.palette.primary.w1,
+								borderColor: alpha(theme.palette.primary.w1, 0.2),
+							}}
 							value="left"
 							onClick={() => sampleLogin("admin@disney.com", "12341234")}
 						>
 							<BusinessIcon />
 						</ToggleButton>
 						<ToggleButton
-							sx={{color: theme.palette.primary.w1, borderColor: alpha(theme.palette.primary.w1, 0.2)}}
+							sx={{
+								color: theme.palette.primary.w1,
+								borderColor: alpha(theme.palette.primary.w1, 0.2),
+							}}
 							value="center"
 							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
 						>
@@ -138,11 +158,36 @@ export default function PrimarySearchAppBar() {
 						</ToggleButton>
 					</ToggleButtonGroup>
 					<Box sx={{ flexGrow: 3 }} />
-					<Typography variant="h6" component="div">
-						<b>KONTRA</b>
-					</Typography>
+					<StyledLink to="/">
+						<Typography variant="h6" component="div">
+							<b>KONTRA</b>
+						</Typography>
+					</StyledLink>
 					<Box sx={{ flexGrow: 2 }} />
-					<Search>
+					<Search
+						onChange={(event) => {
+							setSearchValue(event.target.value);
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
+						}}
+						onFocus={(event) => {
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
+						}}
+						onBlur={() => {
+							console.log("Focus away from search");
+							setTimeout(() => {
+								// wait a little bit before closing menu to allow focus to go to search results
+								setSearchMenuOpen(false);
+							}, 200);
+						}}
+					>
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>
@@ -161,8 +206,8 @@ export default function PrimarySearchAppBar() {
 					>
 						<Avatar
 							src={
-								user
-									? user.avatarUrl
+								authUser
+									? authUser.avatarUrl
 									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 							}
 						></Avatar>
@@ -170,7 +215,7 @@ export default function PrimarySearchAppBar() {
 
 					<Menu
 						id="menu-appbar"
-						anchorEl={anchorEl}
+						anchorEl={userMenuAnchorEl}
 						anchorOrigin={{
 							vertical: "top",
 							horizontal: "right",
@@ -180,37 +225,21 @@ export default function PrimarySearchAppBar() {
 							vertical: "top",
 							horizontal: "right",
 						}}
-						open={Boolean(anchorEl)}
-						onClose={handleMenuClose}
+						open={Boolean(userMenuAnchorEl)}
+						onClose={handleUserMenuClose}
 					>
-						{user ? (
+						{authUser ? (
 							<div>
 								<MenuItem
 									component={Link}
-									to={`/profile/${user.userType}/${user.username}`}
-									onClick={handleMenuClose}
+									to={`/profile/${authUser.userType}/${authUser.username}`}
+									onClick={handleUserMenuClose}
 								>
 									My Profile
 								</MenuItem>
-								<MenuItem 
-									component={Link}
-									to={"/contracts"}
-									onClick={handleMenuClose}
-								>
-									My Contracts
-								</MenuItem>
-								{user.userType == "company" ? (
-									<MenuItem
-										component={Link}
-										to="/addcontract"
-										onClick={handleMenuClose}
-									>
-										Add a Contract
-									</MenuItem>
-								) : null}
 								<MenuItem
 									onClick={() => {
-										handleMenuClose();
+										handleUserMenuClose();
 										logout();
 									}}
 									component={Link}
@@ -224,14 +253,14 @@ export default function PrimarySearchAppBar() {
 								<MenuItem
 									component={Link}
 									to="/login"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Login
 								</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/signup"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Sign Up
 								</MenuItem>
@@ -250,7 +279,7 @@ export default function PrimarySearchAppBar() {
 					},
 				}}
 				anchor="left"
-				open={open}
+				open={userMenuOpen}
 				onClose={handleDrawerClose}
 			>
 				<DrawerHeader>
@@ -280,12 +309,12 @@ export default function PrimarySearchAppBar() {
 					</Button>
 					<Button
 						component={Link}
-						to="/about"
+						to={URLToProfile}
 						color="inherit"
 						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
-						<b>About</b>
+						<b>My Profile</b>
 					</Button>
 				</Stack>
 			</Drawer>

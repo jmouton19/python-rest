@@ -44,5 +44,27 @@ export const groupByApplied = (contracts) => {
 };
 
 export const totalMoney = (contracts) => {
-	return contracts.reduce((total, contract) => contract.value + total,0);
+	return contracts.reduce((total, contract) => contract.value + total, 0);
+};
+
+export const filterBySearchValue = (searchValue, companies, developers) => {
+	let companyResults = companies.filter(
+		(company) =>
+			company.company_name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+	);
+	let developerResults = developers.filter(
+		(developer) =>
+			developer.username.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+	);
+
+	companyResults = companyResults.map((company) => {
+		return { userType: "company", username: company.company_name, ...company };
+	});
+
+	developerResults = developerResults.map((developer) => {
+		return { userType: "developer", ...developer };
+	});
+
+	const results = companyResults.concat(developerResults);
+	return results;
 };
