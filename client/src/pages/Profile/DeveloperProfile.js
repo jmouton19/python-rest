@@ -117,7 +117,7 @@ function DeveloperProfile(props) {
 						<Paper elevation={4} sx={{backgroundColor: theme.palette.primary.g2}}>
 							<Stack >
 								{authUser.username == viewUser.username && (
-									<Stack backgroundColor="#388e3c" padding={1} borderRadius= {1}>
+									<Stack backgroundColor={theme.palette.primary.main} padding={1} borderRadius= {1} justifyContent="flex-start">
 										<Typography variant="caption" color={theme.palette.text.light}>
 											Money made:
 										</Typography>
