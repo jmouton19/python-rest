@@ -18,7 +18,7 @@ def contract():
             description=request_data['description'],
             remote=request_data['remote'],
             open=request_data['open'],
-            developer_id=None,
+            developer_username=None,
             date_posted=datetime.datetime.now()
             )
             company.contracts.append(new_contract)
@@ -65,7 +65,7 @@ def delete_contract(contract_id):
             if dev:
                 application=db.session.query(Application).filter(Application.contract_id==contract.contract_id,Application.developer_id==dev.developer_id).one_or_none()
                 if application:
-                    setattr(contract,"developer_id",dev.developer_id)
+                    setattr(contract,"developer_username",dev.username)
                     setattr(contract,"open",False)
                     db.session.commit()
                     return jsonify(success=True,message="Contract updated")

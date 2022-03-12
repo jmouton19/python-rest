@@ -24,7 +24,7 @@ languages_dict={'C': "c",
 "Perl":"perl",
 "Lua":"lua",}
 
-@app.route('/api/developer', methods=['POST','DELETE','GET'])
+@app.route('/api/developer', methods=['POST','GET'])
 def signup_developer():
     if request.method=='POST':
         request_data = request.get_json()
@@ -56,12 +56,6 @@ def signup_developer():
         else:
             return jsonify(checker)
         return jsonify(success=True,message="Developer has been registered")
-    elif request.method=='DELETE':
-        users=db.session.query(Developer).all()
-        for user in users:
-            db.session.delete(user)
-        db.session.commit()
-        return jsonify(success=True,message="All developers deleted")
     elif request.method=='GET':
         dev_list=[]
         developers=db.session.query(Developer).all()
@@ -91,7 +85,7 @@ def check_username(username):
             return jsonify(success=True,developer=instance)
         elif request.method=='DELETE':
             for job in result.jobs:
-                job.developer_id=None
+                job.developer_username=None
                 job.open=True
             db.session.delete(result)
             db.session.commit()
