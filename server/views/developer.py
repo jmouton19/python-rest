@@ -224,7 +224,7 @@ def unblock_company(username,company_name):
     db.session.commit()
     return jsonify(success=True,message="Company unblocked")
 
-@app.route('/api/developer/<dev_id>', methods=['GET'])
+@app.route('/api/developer/id=<dev_id>', methods=['GET'])
 def check_id(dev_id):
     result=db.session.query(Developer).filter(Developer.developer_id==dev_id).one_or_none()
     if result:
