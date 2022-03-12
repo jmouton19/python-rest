@@ -42,3 +42,7 @@ export const groupByAccepted = (contracts, developer_id) => {
 export const groupByApplied = (contracts) => {
 	return contracts.filter((contract) => contract.developer_id == null);
 };
+
+export const totalMoney = (contracts) => {
+	return contracts.reduce((total, contract) => contract.value + total,0);
+};

@@ -192,7 +192,13 @@ export default function PrimarySearchAppBar() {
 								>
 									My Profile
 								</MenuItem>
-								<MenuItem onClick={handleMenuClose}>My Contracts</MenuItem>
+								<MenuItem 
+									component={Link}
+									to={"/contracts"}
+									onClick={handleMenuClose}
+								>
+									My Contracts
+								</MenuItem>
 								{user.userType == "company" ? (
 									<MenuItem
 										component={Link}
