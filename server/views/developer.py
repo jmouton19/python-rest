@@ -107,6 +107,8 @@ def check_username(username):
                 elif key=='username':
                     if not value==result.username:
                         if not db.session.query(Developer).filter(Developer.username==value).one_or_none() :
+                            for job in result.jobs:
+                                setattr(job,"developer_username",value)
                             setattr(result,key,value)
                         else:
                             return jsonify(success=False, message="Username taken")
