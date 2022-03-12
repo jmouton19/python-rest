@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { Avatar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React, { useState } from "react";
 import { alpha, styled } from "@mui/material/styles";
 import { useLogin, useLogout, useUser } from "../../AuthProvider";
 
@@ -19,6 +18,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
+import SearchMenu from "./SearchMenu";
 import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -74,12 +74,14 @@ const drawerWidth = 240;
 export default function PrimarySearchAppBar() {
 	const theme = useTheme();
 	const logout = useLogout();
-	const [open, setOpen] = React.useState(false);
-	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [userMenuOpen, setUserMenuOpen] = useState(false);
+	const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+	const [searchValue, setSearchValue] = useState("");
 
 	const sampleLogin = useLogin();
-
 	const authUser = useUser();
+
+	const [searchMenuOpen, setSearchMenuOpen] = useState(false);
 
 	let URLToProfile;
 	if (authUser) {
@@ -89,19 +91,19 @@ export default function PrimarySearchAppBar() {
 	}
 
 	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
+		setUserMenuAnchorEl(event.currentTarget);
 	};
 
-	const handleMenuClose = () => {
-		setAnchorEl(null);
+	const handleUserMenuClose = () => {
+		setUserMenuAnchorEl(null);
 	};
 
 	const handleDrawerOpen = () => {
-		setOpen(true);
+		setUserMenuOpen(true);
 	};
 
 	const handleDrawerClose = () => {
-		setOpen(false);
+		setUserMenuOpen(false);
 	};
 
 	const DrawerHeader = styled("div")(({ theme }) => ({
@@ -115,8 +117,11 @@ export default function PrimarySearchAppBar() {
 		justifyContent: "flex-end",
 	}));
 
+	console.log(searchValue);
+
 	return (
 		<React.Fragment>
+			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
 			<AppBar
 				position="static"
 				sx={{ backgroundColor: theme.palette.primary.b1 }}
@@ -161,7 +166,19 @@ export default function PrimarySearchAppBar() {
 						</Typography>
 					</StyledLink>
 					<Box sx={{ flexGrow: 2 }} />
-					<Search>
+					<Search
+						onChange={(event) => {
+							setSearchValue(event.target.value);
+						}}
+						onFocus={() => {
+							console.log("Focus on search");
+							setSearchMenuOpen(true);
+						}}
+						onBlur={() => {
+							console.log("Focus away from search");
+							setSearchMenuOpen(false);
+						}}
+					>
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>
@@ -189,7 +206,7 @@ export default function PrimarySearchAppBar() {
 
 					<Menu
 						id="menu-appbar"
-						anchorEl={anchorEl}
+						anchorEl={userMenuAnchorEl}
 						anchorOrigin={{
 							vertical: "top",
 							horizontal: "right",
@@ -199,21 +216,21 @@ export default function PrimarySearchAppBar() {
 							vertical: "top",
 							horizontal: "right",
 						}}
-						open={Boolean(anchorEl)}
-						onClose={handleMenuClose}
+						open={Boolean(userMenuAnchorEl)}
+						onClose={handleUserMenuClose}
 					>
 						{authUser ? (
 							<div>
 								<MenuItem
 									component={Link}
 									to={`/profile/${authUser.userType}/${authUser.username}`}
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									My Profile
 								</MenuItem>
 								<MenuItem
 									onClick={() => {
-										handleMenuClose();
+										handleUserMenuClose();
 										logout();
 									}}
 									component={Link}
@@ -227,14 +244,14 @@ export default function PrimarySearchAppBar() {
 								<MenuItem
 									component={Link}
 									to="/login"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Login
 								</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/signup"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Sign Up
 								</MenuItem>
@@ -253,7 +270,7 @@ export default function PrimarySearchAppBar() {
 					},
 				}}
 				anchor="left"
-				open={open}
+				open={userMenuOpen}
 				onClose={handleDrawerClose}
 			>
 				<DrawerHeader>

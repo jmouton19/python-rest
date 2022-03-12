@@ -226,3 +226,29 @@ export async function closeContract(developerUsername, contract_id) {
 		});
 	});
 }
+
+export async function getAllDevelopersForSearching() {
+	const url = `${baseUrl}/api/developer`;
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			if (res.data.success) {
+				resolve(res.data.developers);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}
+
+export async function getAllCompaniesForSearching() {
+	const url = `${baseUrl}/api/company`;
+	return new Promise((resolve, reject) => {
+		axios.get(url).then((res) => {
+			if (res.data.success) {
+				resolve(res.data.companies);
+			} else {
+				reject(res.data.message);
+			}
+		});
+	});
+}
