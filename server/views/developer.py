@@ -129,33 +129,35 @@ def check_username(username):
 @app.route('/api/developer/<username>/application', methods=['POST','GET'])
 def apply_contract(username):
     developer=db.session.query(Developer).filter(Developer.username==username).one_or_none()
-    if request.method == 'POST':
-        request_data = request.get_json()
-        contract_id=request_data['contract_id']
-        contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
-        application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
-        if application==None:        
-            new_application=Application(
-                contract_id=contract_id,
-                developer_id=developer.developer_id
-            )
-            developer.applications.append(new_application)
-            contract.applications.append(new_application)
-            db.session.commit()
-            return jsonify(success=True)
-        else:
-            return jsonify(success=False,message="Developer has already applied for this contract")
-    elif request.method == 'GET':
-        applied_contract_list=[]
-        applied_contracts=db.session.query(Application).filter(Application.developer_id==developer.developer_id)
-        for applied in applied_contracts:
-            instance = dict(applied.contract.__dict__)
-            instance.pop('_sa_instance_state', None)
-            instance['company_name']=applied.contract.company.company_name
-            instance['company_avatar']=applied.contract.company.avatar
-            applied_contract_list.append(instance)
-        response= {"success":True, "contracts": applied_contract_list }
-        return jsonify(response)
+    if developer:
+        if request.method == 'POST':
+            request_data = request.get_json()
+            contract_id=request_data['contract_id']
+            contract=db.session.query(Contract).filter(Contract.contract_id==contract_id).one_or_none()
+            application=db.session.query(Application).filter(Application.contract_id==contract.contract_id, Application.developer_id==developer.developer_id).one_or_none()
+            if application==None:        
+                new_application=Application(
+                    contract_id=contract_id,
+                    developer_id=developer.developer_id
+                )
+                developer.applications.append(new_application)
+                contract.applications.append(new_application)
+                db.session.commit()
+                return jsonify(success=True)
+            else:
+                return jsonify(success=False,message="Developer has already applied for this contract")
+        elif request.method == 'GET':
+            applied_contract_list=[]
+            applied_contracts=db.session.query(Application).filter(Application.developer_id==developer.developer_id)
+            for applied in applied_contracts:
+                instance = dict(applied.contract.__dict__)
+                instance.pop('_sa_instance_state', None)
+                instance['company_name']=applied.contract.company.company_name
+                instance['company_avatar']=applied.contract.company.avatar
+                applied_contract_list.append(instance)
+            return jsonify(success=True, contracts= applied_contract_list)
+    else:
+        return jsonify(success=False,message="Developer not found")
 
 @app.route('/api/developer/<username>/application/<contract_id>', methods=['DELETE'])
 def delete_apply(username,contract_id):
