@@ -169,10 +169,11 @@ export default function PrimarySearchAppBar() {
 					<Search
 						onChange={(event) => {
 							setSearchValue(event.target.value);
-						}}
-						onFocus={() => {
-							console.log("Focus on search");
-							setSearchMenuOpen(true);
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
 						}}
 						onBlur={() => {
 							console.log("Focus away from search");

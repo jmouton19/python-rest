@@ -44,5 +44,11 @@ export const groupByApplied = (contracts) => {
 };
 
 export const totalMoney = (contracts) => {
-	return contracts.reduce((total, contract) => contract.value + total,0);
+	return contracts.reduce((total, contract) => contract.value + total, 0);
+};
+
+export const filterBySearchValue = (searchValue, companies, developers) => {
+	console.log(`Searching for ${searchValue}`);
+	companies.filter(() => true);
+	developers.filter(() => true);
 };
