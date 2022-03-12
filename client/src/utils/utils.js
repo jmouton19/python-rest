@@ -1,11 +1,13 @@
 export function mapUserProfileFromDBToFrontend(userType, userData) {
 	let newUserData;
 
+	console.log(userData);
+
 	if (userType == "developer") {
 		newUserData = {
 			userType,
 			avatarUrl: userData.avatar,
-			developerID: userData.developerID,
+			developerID: userData.developer_id,
 			email: userData.email,
 			githubURL: userData.github_url,
 			linkedInURL: userData.linkedin_url,

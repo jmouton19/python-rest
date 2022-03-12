@@ -1,23 +1,23 @@
-import React from "react";
+import AuthProvider, { useUser } from "./AuthProvider";
 import {
+	Navigate,
+	Route,
 	BrowserRouter as Router,
 	Routes,
-	Route,
-	Navigate,
 	useLocation,
 } from "react-router-dom";
-import AppBar from "./components/AppBar/AppBar";
-import Home from "./pages/Home";
-import SignUp from "./pages/SignUp/SignUp";
-import Login from "./pages/Login/Login";
-import AuthProvider, { useUser } from "./AuthProvider";
-import Profile from "./pages/Profile/Profile";
-import Contracts from "./pages/Contracts/Contracts";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 import About from "./pages/About/About";
 import AddContract from "./pages/AddContract/AddContract";
+import AppBar from "./components/AppBar/AppBar";
 import Contract from "./pages/Contract/Contract";
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Contracts from "./pages/Contracts/Contracts";
+import Home from "./pages/Home";
+import Login from "./pages/Login/Login";
+import Profile from "./pages/Profile/Profile";
+import React from "react";
+import SignUp from "./pages/SignUp/SignUp";
 
 const theme = createTheme({
 	palette: {

@@ -95,7 +95,6 @@ export async function deleteContract(contract_id) {
 export async function applyToContract(developerUsername, contract_id) {
 	const url = `${baseUrl}/api/developer/${developerUsername}/application`;
 	const data = { contract_id };
-
 	return new Promise((resolve, reject) => {
 		axios.post(url, data).then((res) => {
 			if (res.data.success) {
@@ -109,7 +108,6 @@ export async function applyToContract(developerUsername, contract_id) {
 
 export async function fetchSingleContract(contract_id) {
 	const url = `${baseUrl}/api/contract/${contract_id}`;
-
 	return new Promise((resolve, reject) => {
 		axios.get(url).then((res) => {
 			if (res.data.success) {
@@ -123,7 +121,6 @@ export async function fetchSingleContract(contract_id) {
 
 export async function fetchAppliedDevelopers(contract_id) {
 	const url = `${baseUrl}/api/contract/${contract_id}/developer`;
-
 	return new Promise((resolve, reject) => {
 		axios.get(url).then((res) => {
 			if (res.data.success) {
@@ -137,7 +134,6 @@ export async function fetchAppliedDevelopers(contract_id) {
 
 export async function cancelApplication(developerUsername, contract_id) {
 	const url = `${baseUrl}/api/developer/${developerUsername}/application/${contract_id}`;
-
 	return new Promise((resolve, reject) => {
 		axios.delete(url).then((res) => {
 			if (res.data.success) {
@@ -195,7 +191,7 @@ export async function updateUser(userType, username, data) {
 	const url = `${baseUrl}/api/${userType}/${username}`;
 	return new Promise((resolve, reject) => {
 		axios.put(url, data).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(res);
 			} else {
 				reject(res.data.message);
@@ -208,7 +204,7 @@ export async function deleteUser(userType, username) {
 	const url = `${baseUrl}/api/${userType}/${username}`;
 	return new Promise((resolve, reject) => {
 		axios.delete(url).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(true);
 			} else {
 				reject(res.data.message);
@@ -218,11 +214,11 @@ export async function deleteUser(userType, username) {
 }
 
 export async function closeContract(developerUsername, contract_id) {
-	const data = {username: developerUsername};
+	const data = { username: developerUsername };
 	const url = `${baseUrl}/api/contract/${contract_id}`;
 	return new Promise((resolve, reject) => {
 		axios.put(url, data).then((res) => {
-			if(res.data.success) {
+			if (res.data.success) {
 				resolve(true);
 			} else {
 				reject(res.data.message);

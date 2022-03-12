@@ -1,39 +1,47 @@
-import React, { useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
 import {
 	Avatar,
+	AvatarGroup,
 	Button,
 	Container,
+	Grid,
 	Paper,
+	Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
-	Grid,
 	TableRow,
-	Stack,
-	AvatarGroup,
 	Tooltip,
 } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+	closeContract,
+	fetchAppliedDevelopers,
+	fetchSingleContract,
+} from "../../utils/apiCalls";
+
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
-import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
+import Typography from "@mui/material/Typography";
 import { devicons } from "../../utils/mapLanguageToIcon";
-import { fetchSingleContract, fetchAppliedDevelopers, closeContract } from "../../utils/apiCalls";
+import styled from "@emotion/styled";
+import { useUser } from "../../AuthProvider";
 
 function Contract() {
-	const contract_id = window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
+	const params = useParams();
 	const [contract, setContract] = useState({});
 	const [developers, setDevelopers] = useState([]);
+	const authUser = useUser();
 
 	useEffect(() => {
-		fetchSingleContract(contract_id).then((data) => {
-			setContract(data);
-			fetchAppliedDevelopers(contract_id).then((data) => {
-				setDevelopers(data);
-			});
-		})
+		fetchSingleContract(params.contract_id)
+			.then((data) => {
+				setContract(data);
+				fetchAppliedDevelopers(params.contract_id).then((data) => {
+					setDevelopers(data);
+				});
+			})
 			.catch((err) => console.log(err));
 	}, []);
 
@@ -111,54 +119,68 @@ function Contract() {
 										</Grid>
 									</Grid>
 								</Grid>
-
-								<Grid item xs={12} md={8}>
-									<TableContainer>
-										<Table stickyHeader size="small">
-											<TableHead>
-												<TableRow>
-													<TableCell align="center" colSpan={4}>
-														<Typography
-															align="center"
-															variant="h5"
-															id="tableTitle"
-															component="div"
-															xs={12}
-														>
-															Applicants
-														</Typography>
-													</TableCell>
-												</TableRow>
-											</TableHead>
-											<TableBody>
-												{developers.map((developer) => (
-													<TableRow key={developer.name}>
-														<TableCell>
-															<Link
-																to={`/profile/developer/${developer.username}`}
+								{authUser.userType == "developer" ? (
+									<Grid item xs={12} md={8}>
+										<Button
+											onClick={() => {
+												closeContract(
+													authUser.username,
+													params.contract_id
+												).then(() => console.log("test"));
+											}}
+										>
+											Accept
+										</Button>
+									</Grid>
+								) : (
+									<Grid item xs={12} md={8}>
+										<TableContainer>
+											<Table stickyHeader size="small">
+												<TableHead>
+													<TableRow>
+														<TableCell align="center" colSpan={4}>
+															<Typography
+																align="center"
+																variant="h5"
+																id="tableTitle"
+																component="div"
+																xs={12}
 															>
-																<Avatar
-																	sx={{ width: 40, height: 40 }}
-																	src={developer.avatar}
-																></Avatar>
-															</Link>
+																Applicants
+															</Typography>
 														</TableCell>
-														<TableCell>
-															<StyledLink
-																to={`/profile/developer/${developer.username}`}
-																style={{
-																	textDecoration: "none",
-																}}
-															>
-																<Typography sx={{ color: "primary" }}>
-																	{developer.name} {developer.surname}
-																</Typography>
-															</StyledLink>
-														</TableCell>
-														<TableCell>
-															<AvatarGroup variant="round" spacing={0}>
-																{Object.keys(developer.developer_languages).map(
-																	(language, experience) => (
+													</TableRow>
+												</TableHead>
+												<TableBody>
+													{developers.map((developer) => (
+														<TableRow key={developer.name}>
+															<TableCell>
+																<Link
+																	to={`/profile/developer/${developer.username}`}
+																>
+																	<Avatar
+																		sx={{ width: 40, height: 40 }}
+																		src={developer.avatar}
+																	></Avatar>
+																</Link>
+															</TableCell>
+															<TableCell>
+																<StyledLink
+																	to={`/profile/developer/${developer.username}`}
+																	style={{
+																		textDecoration: "none",
+																	}}
+																>
+																	<Typography sx={{ color: "primary" }}>
+																		{developer.name} {developer.surname}
+																	</Typography>
+																</StyledLink>
+															</TableCell>
+															<TableCell>
+																<AvatarGroup variant="round" spacing={0}>
+																	{Object.keys(
+																		developer.developer_languages
+																	).map((language, experience) => (
 																		<Tooltip
 																			key={language}
 																			title={`${language}: ${experience} \n ${
@@ -174,23 +196,28 @@ function Contract() {
 																				src={devicons[language]}
 																			/>
 																		</Tooltip>
-																	)
-																)}
-															</AvatarGroup>
-														</TableCell>
-														<TableCell align="right">
-															<Button onClick={() => {
-																closeContract(developer["username"], contract_id).then(() => console.log("test"));
-															}}>
-																Accept
-															</Button>
-														</TableCell>
-													</TableRow>
-												))}
-											</TableBody>
-										</Table>
-									</TableContainer>
-								</Grid>
+																	))}
+																</AvatarGroup>
+															</TableCell>
+															<TableCell align="right">
+																<Button
+																	onClick={() => {
+																		closeContract(
+																			developer["username"],
+																			params.contract_id
+																		).then(() => console.log("test"));
+																	}}
+																>
+																	Accept
+																</Button>
+															</TableCell>
+														</TableRow>
+													))}
+												</TableBody>
+											</Table>
+										</TableContainer>
+									</Grid>
+								)}
 							</Grid>
 						</Grid>
 					</Grid>

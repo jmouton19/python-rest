@@ -1,20 +1,71 @@
 import * as React from "react";
+
+import { Avatar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { alpha, styled } from "@mui/material/styles";
+import { useLogin, useLogout, useUser } from "../../AuthProvider";
+
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuIcon from "@mui/icons-material/Menu";
-import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
+import BusinessIcon from "@mui/icons-material/Business";
+import Button from "@mui/material/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Avatar, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
+import { Link } from "react-router-dom";
 import Menu from "@mui/material/Menu";
-import { useUser, useLogout } from "../../AuthProvider";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PersonIcon from "@mui/icons-material/Person";
+import SearchIcon from "@mui/icons-material/Search";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+
+// source https://mui.com/components/app-bar/
+const Search = styled("div")(({ theme }) => ({
+	position: "relative",
+	borderRadius: theme.shape.borderRadius,
+	backgroundColor: alpha(theme.palette.common.white, 0.15),
+	"&:hover": {
+		backgroundColor: alpha(theme.palette.common.white, 0.25),
+	},
+	marginLeft: 0,
+	width: "100%",
+	[theme.breakpoints.up("sm")]: {
+		marginLeft: theme.spacing(1),
+		width: "auto",
+	},
+}));
+
+// source https://mui.com/components/app-bar/
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+	padding: theme.spacing(0, 2),
+	height: "100%",
+	position: "absolute",
+	pointerEvents: "none",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+}));
+
+// source https://mui.com/components/app-bar/
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+	color: "inherit",
+	"& .MuiInputBase-input": {
+		padding: theme.spacing(1, 1, 1, 0),
+		// vertical padding + font size from searchIcon
+		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+		transition: theme.transitions.create("width"),
+		width: "100%",
+		[theme.breakpoints.up("sm")]: {
+			width: "12ch",
+			"&:focus": {
+				width: "20ch",
+			},
+		},
+	},
+}));
 
 const drawerWidth = 240;
 
@@ -22,6 +73,8 @@ export default function PrimarySearchAppBar() {
 	const logout = useLogout();
 	const [open, setOpen] = React.useState(false);
 	const [anchorEl, setAnchorEl] = React.useState(null);
+
+	const sampleLogin = useLogin();
 
 	const user = useUser();
 
@@ -66,11 +119,36 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Box sx={{ flexGrow: 1 }} />
+					<ToggleButtonGroup>
+						<ToggleButton
+							value="left"
+							aria-label="left aligned"
+							onClick={() => sampleLogin("admin@disney.com", "12341234")}
+						>
+							<BusinessIcon />
+						</ToggleButton>
+						<ToggleButton
+							value="center"
+							aria-label="centered"
+							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
+						>
+							<PersonIcon />
+						</ToggleButton>
+					</ToggleButtonGroup>
+					<Box sx={{ flexGrow: 3 }} />
 					<Typography variant="h6" component="div">
 						<b>KONTRA</b>
 					</Typography>
-					<Box sx={{ flexGrow: 1 }} />
+					<Box sx={{ flexGrow: 2 }} />
+					<Search>
+						<SearchIconWrapper>
+							<SearchIcon />
+						</SearchIconWrapper>
+						<StyledInputBase
+							placeholder="Search…"
+							inputProps={{ "aria-label": "search" }}
+						/>
+					</Search>
 					<IconButton
 						size="large"
 						aria-label="account of current user"
@@ -124,7 +202,7 @@ export default function PrimarySearchAppBar() {
 								) : null}
 								<MenuItem
 									onClick={() => {
-										handleMenuClose() ;
+										handleMenuClose();
 										logout();
 									}}
 									component={Link}

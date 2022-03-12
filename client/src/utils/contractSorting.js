@@ -28,17 +28,17 @@ export const sortByDate = (contracts, descending) => {
 };
 
 export const groupByOpen = (contracts) => {
-	return contracts.filter((contract) => (contract.open));
+	return contracts.filter((contract) => contract.open);
 };
 
 export const groupByClosed = (contracts) => {
-	return contracts.filter((contract) => (!contract.open));
+	return contracts.filter((contract) => !contract.open);
 };
 
 export const groupByAccepted = (contracts, developer_id) => {
-	return contracts.filter((contract) => (contract.developer == developer_id));
+	return contracts.filter((contract) => contract.developer_id == developer_id);
 };
 
 export const groupByApplied = (contracts) => {
-	return contracts.filter((contract) => (contract.developer_id == null));
+	return contracts.filter((contract) => contract.developer_id == null);
 };

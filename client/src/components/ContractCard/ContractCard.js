@@ -1,27 +1,27 @@
-import React from "react";
+import { Button, Chip, Divider, Grid, Stack } from "@mui/material";
+
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import BusinessIcon from "@mui/icons-material/Business";
 import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Chip, Container, Divider, Stack } from "@mui/material";
-
-import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
-import BusinessIcon from "@mui/icons-material/Business";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import React from "react";
 import RouterIcon from "@mui/icons-material/Router";
-import { Link } from "react-router-dom";
+import StyledLink from "../StyledLink";
+import Typography from "@mui/material/Typography";
 
 const Label = ({ children }) => (
 	<Typography variant="caption">{children}</Typography>
 );
 
-function ContractCard({ contract, children }) {
+function ContractCard({ contract, actions, onAction, noAvatar }) {
 	const company_name = contract.company_name;
 	const avatarUrl = contract.company_avatar;
 	const title = contract.title;
@@ -31,6 +31,8 @@ function ContractCard({ contract, children }) {
 	const remote = contract.remote;
 	const length = contract.length;
 	const value = contract.value;
+	const contract_id = contract.contract_id;
+	const developer_id = contract.developer_id;
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -44,55 +46,66 @@ function ContractCard({ contract, children }) {
 
 	return (
 		<>
-			<Card elevation={2}>
-				<CardHeader
-					avatar={
-						<Link to={`/profile/company/${company_name}`}>
-							<Avatar src={avatarUrl} />
-						</Link>
-					}
-					action={
-						<IconButton onClick={handleMenu}>
-							<MoreVertIcon />
-						</IconButton>
-					}
-					title={title}
-					subheader={
-						<Link to={`/profile/company/${company_name}`}>{company_name}</Link>
-					}
-				/>
+			<Card elevation={4}>
+				{noAvatar ? (
+					<CardHeader
+						action={
+							<IconButton onClick={handleMenu}>
+								<MoreVertIcon />
+							</IconButton>
+						}
+						title={
+							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+						}
+						subheader={
+							<StyledLink to={`/profile/company/${company_name}`}>
+								{company_name}
+							</StyledLink>
+						}
+					/>
+				) : (
+					<CardHeader
+						avatar={
+							<StyledLink to={`/profile/company/${company_name}`}>
+								<Avatar src={noAvatar ? null : avatarUrl} />
+							</StyledLink>
+						}
+						action={
+							<IconButton onClick={handleMenu}>
+								<MoreVertIcon />
+							</IconButton>
+						}
+						title={
+							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+						}
+						subheader={
+							<StyledLink to={`/profile/company/${company_name}`}>
+								{company_name}
+							</StyledLink>
+						}
+					/>
+				)}
 				<Divider />
 				<CardContent>
-					<Stack spacing={0.5}>
-						<Typography component="span" variant="caption" color="gray">
-							{`Posted: ${date_posted}`}
-						</Typography>
-						<Stack direction="row" spacing={1}>
-							<Container>
-								<Label>Duration</Label>
-								<Typography>{`${length} ${
-									length == 1 ? "month" : "months"
-								}`}</Typography>
-							</Container>
-							<Container>
-								<Label>Value</Label>
-								<Typography>{`$ ${value}`}</Typography>
-							</Container>
-						</Stack>
-						<Container>
-							<Label>Description</Label>
-							<Typography>
-								{description ? description : "No Description"}
+					<Grid container spacing={2}>
+						<Grid item xs={12}>
+							<Typography component="span" variant="caption" color="gray">
+								{`Posted: ${date_posted}`}
 							</Typography>
-						</Container>
-						<Container>
-							<Stack spacing={1} direction="row">
-								<Chip
-									label={open ? "Looking For Applicants" : "Closed"}
-									color={open ? "success" : "info"}
-									icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
-									size="small"
-								/>
+						</Grid>
+						<Grid item xs={6} sm={3}>
+							<Label>Value</Label>
+							<Typography>{`$ ${value}`}</Typography>
+						</Grid>
+						<Grid item xs={6} sm={3}>
+							<Label>Duration</Label>
+							<Typography>{`${length} ${
+								length == 1 ? "month" : "months"
+							}`}</Typography>
+						</Grid>
+						<Grid item xs={6} sm={3}>
+							<Stack>
+								<Label>Location</Label>
 								<Chip
 									label={remote ? "Remote" : "In-Office"}
 									color="info"
@@ -100,11 +113,45 @@ function ContractCard({ contract, children }) {
 									size="small"
 								/>
 							</Stack>
-						</Container>
-					</Stack>
+						</Grid>
+						<Grid item xs={6} sm={3}>
+							<Stack>
+								<Label>Status</Label>
+								<Chip
+									label={open ? "Open" : "Closed"}
+									color={open ? "success" : "info"}
+									icon={open ? <PersonSearchIcon /> : <PersonOffIcon />}
+									size="small"
+								/>
+							</Stack>
+						</Grid>
+						<Grid item xs={8}>
+							<Label>Description</Label>
+							<Typography>
+								{description ? description : "No Description"}
+							</Typography>
+						</Grid>
+						<Grid item xs={8}>
+							<Label>Employed Developer</Label>
+							<Typography>{developer_id}</Typography>
+						</Grid>
+					</Grid>
 				</CardContent>
 				<Divider />
-				<CardActions disableSpacing>{children}</CardActions>
+				{actions.length > 0 && (
+					<CardActions>
+						{actions.map((action) => (
+							<Button
+								key={action}
+								variant="contained"
+								size="small"
+								onClick={() => onAction(action)}
+							>
+								{action}
+							</Button>
+						))}
+					</CardActions>
+				)}
 			</Card>
 			<Menu
 				id="menu-appbar"

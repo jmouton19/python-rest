@@ -1,22 +1,9 @@
+import { Avatar, Stack, TableCell, TableRow, Typography } from "@mui/material";
+
 import React from "react";
-import { Typography, TableCell, Stack, Avatar, TableRow } from "@mui/material";
-import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
+import StyledLink from "../../components/StyledLink";
 
 function ContractTable({ contract, children, viewUser }) {
-
-	const StyledLink = styled(Link)`
-		text-decoration: none;
-
-		&:focus,
-		&:hover,
-		&:visited,
-		&:link,
-		&:active {
-			color: black;
-		}
-	`;
-
 	return (
 		<>
 			<TableRow key={contract.contract_id}>
