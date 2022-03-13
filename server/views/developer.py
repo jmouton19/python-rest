@@ -163,7 +163,7 @@ def apply_contract(username):
             for applied in applied_contracts:
                 instance = dict(applied.contract.__dict__)
                 instance.pop('_sa_instance_state', None)
-                dev_id=contract.developer_id
+                dev_id=applied.contract.developer_id
                 if dev_id:
                     dev=db.session.query(Developer).filter(Developer.developer_id==dev_id).one_or_none()
                     instance['username']=dev.username
