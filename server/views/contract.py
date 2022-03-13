@@ -62,6 +62,12 @@ def delete_contract(contract_id):
             instance.pop('_sa_instance_state', None)
             instance['company_name']=contract.company.company_name
             instance['company_avatar']=contract.company.avatar
+            dev_id=contract.developer_id
+            if dev_id:
+                dev=db.session.query(Developer).filter(Developer.developer_id==dev_id).one_or_none()
+                instance['username']=dev.username
+            else:
+                instance['username']=None
             return jsonify(success=True,contract=instance)
         elif request.method=='PUT':
             request_data = request.get_json()

@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from server import app
-from server.models import db, Company, Contract
+from server.models import db, Company, Contract, Developer
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
 from server.views.developer import languages_dict
@@ -102,6 +102,12 @@ def comp_contracts(company_name):
         for contract in contracts:
             instance = dict(contract.__dict__)
             instance.pop('_sa_instance_state', None)
+            dev_id=contract.developer_id
+            if dev_id:
+                dev=db.session.query(Developer).filter(Developer.developer_id==dev_id).one_or_none()
+                instance['username']=dev.username
+            else:
+                instance['username']=None
             contract_lang=dict(contract.contract_languages.__dict__)
             contract_lang.pop('_sa_instance_state', None)
             filtered={k: v for k, v in contract_lang.items() if v is not None}
