@@ -354,7 +354,7 @@ function ContractList({
 						filteredContractsData.map((contract) => {
 							return (
 								<ContractCard
-									noAvatar
+									noAvatar={authUser.userType === "company"}
 									key={contract.contract_id}
 									contract={contract}
 									actions={actions}
