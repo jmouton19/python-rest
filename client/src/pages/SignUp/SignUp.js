@@ -27,6 +27,7 @@ import {
 	checkIfUniqueUsername,
 	signUp,
 } from "../../utils/apiCalls";
+import { useNotifyError, useNotifySuccess } from "../../NotificationProvider";
 
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
 import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
@@ -60,6 +61,8 @@ function SignUp() {
 	const [programmingLanguages, setProgrammingLanguages] = useState({});
 
 	const login = useLogin();
+	const notifySuccess = useNotifySuccess();
+	const notifyError = useNotifyError();
 
 	const navigate = useNavigate();
 
@@ -185,7 +188,12 @@ function SignUp() {
 
 		signUp(userType, data).then((res) => {
 			if (res) {
-				login(email, password).then(() => navigate("/"));
+				login(email, password)
+					.then(() => {
+						notifySuccess("Successfully signed up.");
+						navigate("/");
+					})
+					.catch((msg) => notifyError(msg));
 			}
 		});
 	}

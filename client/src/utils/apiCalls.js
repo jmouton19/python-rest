@@ -181,7 +181,7 @@ export async function signUp(userType, data) {
 			if (success) {
 				resolve(true);
 			} else {
-				reject(res);
+				reject(res.data.message);
 			}
 		});
 	});

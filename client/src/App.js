@@ -17,6 +17,7 @@ import Forbidden from "./pages/Forbidden";
 import Home from "./pages/Home";
 import Login from "./pages/Login/Login";
 import NotFound from "./pages/NotFound";
+import NotificationProvider from "./NotificationProvider";
 import Profile from "./pages/Profile/Profile";
 import React from "react";
 import SignUp from "./pages/SignUp/SignUp";
@@ -52,46 +53,48 @@ function App() {
 			<Router>
 				<AuthProvider>
 					<ThemeProvider theme={darkTheme}>
-						<CssBaseline />
-						<AppBar />
-						<Routes>
-							<Route
-								path="/profile/:userType/:username"
-								element={
-									<PrivateRoute roles={["developer", "company"]}>
-										<Profile />
-									</PrivateRoute>
-								}
-							/>
-							<Route
-								path="/contracts"
-								element={
-									<PrivateRoute roles={["developer", "company"]}>
-										<Contracts />
-									</PrivateRoute>
-								}
-							/>
-							<Route
-								path="/addcontract"
-								element={
-									<PrivateRoute roles={["developer", "company"]}>
-										<AddContract />
-									</PrivateRoute>
-								}
-							/>
-							<Route
-								path="/applications/:contract_id"
-								element={
-									<PrivateRoute roles={["company"]}>
-										<Applications />
-									</PrivateRoute>
-								}
-							/>
-							<Route path="/signup" element={<SignUp />} />
-							<Route path="/" element={<Home />} />
-							<Route path="/login" element={<Login />} />
-							<Route path="*" element={<NotFound />} />
-						</Routes>
+						<NotificationProvider>
+							<CssBaseline />
+							<AppBar />
+							<Routes>
+								<Route
+									path="/profile/:userType/:username"
+									element={
+										<PrivateRoute roles={["developer", "company"]}>
+											<Profile />
+										</PrivateRoute>
+									}
+								/>
+								<Route
+									path="/contracts"
+									element={
+										<PrivateRoute roles={["developer", "company"]}>
+											<Contracts />
+										</PrivateRoute>
+									}
+								/>
+								<Route
+									path="/addcontract"
+									element={
+										<PrivateRoute roles={["developer", "company"]}>
+											<AddContract />
+										</PrivateRoute>
+									}
+								/>
+								<Route
+									path="/applications/:contract_id"
+									element={
+										<PrivateRoute roles={["company"]}>
+											<Applications />
+										</PrivateRoute>
+									}
+								/>
+								<Route path="/signup" element={<SignUp />} />
+								<Route path="/" element={<Home />} />
+								<Route path="/login" element={<Login />} />
+								<Route path="*" element={<NotFound />} />
+							</Routes>
+						</NotificationProvider>
 					</ThemeProvider>
 				</AuthProvider>
 			</Router>
