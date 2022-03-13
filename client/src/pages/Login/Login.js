@@ -1,8 +1,3 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import {
 	Button,
 	FormControl,
@@ -11,10 +6,17 @@ import {
 	InputLabel,
 	OutlinedInput,
 } from "@mui/material";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
-import { useLogin } from "../../AuthProvider";
+import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import StyledLink from "../../components/StyledLink";
+import Typography from "@mui/material/Typography";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useLogin } from "../../AuthProvider";
 
 function Login() {
 	const [email, setEmail] = useState("");
@@ -97,6 +99,13 @@ function Login() {
 									Login
 								</Button>
 							</FormControl>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography variant="caption" color="primary">
+								<StyledLink to="/signup">
+									{"Don`t have an account? Sign up instead."}
+								</StyledLink>
+							</Typography>
 						</Grid>
 					</Grid>
 				</Box>

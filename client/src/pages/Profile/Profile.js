@@ -1,137 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { useUser } from "../../AuthProvider";
-import {
-	Avatar,
-	Container,
-	Paper,
-	Stack,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Typography,
-	Grid,
-} from "@mui/material";
+import { Stack, Switch, Typography } from "@mui/material";
 
-import ExperiencePicker from "../../components/LanguagesPicker/ExperiencePicker";
+import CompanyProfile from "./CompanyProfile";
+import DeveloperProfile from "./DeveloperProfile";
 import EditProfile from "./EditProfile";
-import { useParams } from "react-router-dom";
-
-import { fetchUserProfile } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
+import { fetchUserProfile } from "../../utils/apiCalls";
+import { useParams } from "react-router-dom";
+import { useUser } from "../../AuthProvider";
 
 function Profile() {
 	const authUser = useUser();
 	const [viewUser, setViewUser] = useState(null);
-
 	const params = useParams();
+	const [preview, setPreview] = useState(false);
+	const dummy = {
+		username: "*****",
+		userType: authUser.userType == "developer" ? "company" : "developer",
+	};
 
 	useEffect(() => {
-		// TODO: only fetches developer profiles
 		fetchUserProfile(params.userType, params.username).then((data) => {
+			setViewUser(null); // fixes bug with setting new state with objects
 			setViewUser(data);
 		});
 	}, [params]);
 
 	if (!viewUser) {
-		// shows user is loading
 		return <LoadingPage />;
 	}
 
 	return (
-		<React.Fragment>
-			{authUser.username == viewUser.username ? (
+		<>
+			{authUser.username == viewUser.username && (
 				<>
-					<EditProfile />
+					<Stack
+						direction="row"
+						mt={1}
+						mr={3}
+						justifyContent="flex-end"
+						alignItems="center"
+					>
+						<Typography variant="caption" color="gray">
+							Preview as {dummy.userType}
+						</Typography>
+						<Switch onClick={() => setPreview(!preview)} />
+					</Stack>
+					{!preview && <EditProfile />}
 				</>
-			) : null}
+			)}
 
-			<Container>
-				<Grid container alignItems="flex-start" spacing={2} padding={3}>
-					<Grid item xs={4}>
-						<Paper elevation={4}>
-							<Grid
-								container
-								alignItems="center"
-								padding={2}
-								justifyContent="space-between"
-							>
-								<Grid item>
-									<Avatar
-										sx={{ width: 100, height: 100 }}
-										src={viewUser.avatarUrl}
-									></Avatar>
-								</Grid>
-								<Grid item>
-									{viewUser.userType === "developer" ? (
-										<Stack>
-											<Typography variant="h3">
-												{viewUser.firstName} {viewUser.lastName}
-											</Typography>
-											<Typography variant="h5">{viewUser.username}</Typography>
-											<Typography variant="h6">{viewUser.email}</Typography>
-										</Stack>
-									) : (
-										<Stack>
-											<Typography variant="h3">{viewUser.username}</Typography>
-											<Typography variant="h6">{viewUser.email}</Typography>
-										</Stack>
-									)}
-								</Grid>
-							</Grid>
-						</Paper>
-					</Grid>
-					<Grid item xs={8}>
-						<Paper elevation={4}>
-							{viewUser.userType === "developer" ? ( //Table for developer experience
-								<TableContainer>
-									<Table>
-										<TableHead>
-											<TableRow>
-												<TableCell>
-													<Typography variant="h5">
-														Programming Languages
-													</Typography>
-												</TableCell>
-												<TableCell>
-													<Typography variant="h5">Experience</Typography>
-												</TableCell>
-											</TableRow>
-											{Object.keys(viewUser.programmingLanguages).map(
-												(language) => {
-													const experience =
-														viewUser.programmingLanguages[language];
+			{viewUser.userType == "developer" && (
+				<DeveloperProfile
+					viewUser={viewUser}
+					authUser={preview ? dummy : authUser}
+				/>
+			)}
 
-													return (
-														<TableRow key={language}>
-															<TableCell>
-																<Typography>{language}</Typography>
-															</TableCell>
-															<TableCell>
-																<ExperiencePicker
-																	disabled={true}
-																	presetValue={experience}
-																/>
-															</TableCell>
-														</TableRow>
-													);
-												}
-											)}
-										</TableHead>
-										<TableBody></TableBody>
-									</Table>
-								</TableContainer>
-							) : (
-								//random stuff for company? maybe money too
-								<div>Test</div>
-							)}
-						</Paper>
-					</Grid>
-				</Grid>
-			</Container>
-		</React.Fragment>
+			{viewUser.userType == "company" && (
+				<CompanyProfile
+					viewUser={viewUser}
+					authUser={preview ? dummy : authUser}
+				/>
+			)}
+		</>
 	);
 }
 

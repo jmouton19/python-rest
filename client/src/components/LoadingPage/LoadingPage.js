@@ -1,7 +1,8 @@
 import { CircularProgress, Grid } from "@mui/material";
+
 import React from "react";
 
-function LoadingPage() {
+function LoadingPage({ minHeight }) {
 	return (
 		<Grid
 			container
@@ -9,7 +10,7 @@ function LoadingPage() {
 			direction="column"
 			alignItems="center"
 			justifyContent="center"
-			style={{ minHeight: "90vh" }}
+			style={{ minHeight: minHeight ? minHeight : "90vh" }}
 		>
 			<CircularProgress />
 		</Grid>

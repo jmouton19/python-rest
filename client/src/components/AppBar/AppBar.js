@@ -1,50 +1,71 @@
-import * as React from "react";
+import { Avatar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React, { useState } from "react";
+import { useLogin, useLogout, useUser } from "../../AuthProvider";
+
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuIcon from "@mui/icons-material/Menu";
-import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
+import BusinessIcon from "@mui/icons-material/Business";
+import Button from "@mui/material/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Avatar, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import { Link } from "react-router-dom";
 import Menu from "@mui/material/Menu";
-import { useUser, useLogout } from "../../AuthProvider";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PersonIcon from "@mui/icons-material/Person";
+import { Search } from "../searchbar";
+import SearchIcon from "@mui/icons-material/Search";
+import { SearchIconWrapper } from "../searchbar";
+import SearchMenu from "./SearchMenu";
+import { StyledInputBase } from "../searchbar";
+import StyledLink from "../StyledLink";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import logo from "../../logo.svg";
+import { styled } from "@mui/material/styles";
 
 const drawerWidth = 240;
 
 export default function PrimarySearchAppBar() {
 	const logout = useLogout();
-	const [open, setOpen] = React.useState(false);
-	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [userMenuOpen, setUserMenuOpen] = useState(false);
+	const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+	const [searchValue, setSearchValue] = useState("");
 
-	const user = useUser();
+	const sampleLogin = useLogin();
+	const authUser = useUser();
+
+	const [searchMenuOpen, setSearchMenuOpen] = useState(false);
+
+	let URLToProfile;
+	if (authUser) {
+		URLToProfile = `./profile/${authUser.userType}/${authUser.username}`;
+	} else {
+		URLToProfile = "/signUp";
+	}
 
 	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
+		setUserMenuAnchorEl(event.currentTarget);
 	};
 
-	const handleMenuClose = () => {
-		setAnchorEl(null);
+	const handleUserMenuClose = () => {
+		setUserMenuAnchorEl(null);
 	};
 
 	const handleDrawerOpen = () => {
-		setOpen(true);
+		setUserMenuOpen(true);
 	};
 
 	const handleDrawerClose = () => {
-		setOpen(false);
+		setUserMenuOpen(false);
 	};
 
 	const DrawerHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
-		backgroundColor: theme.palette.primary.main,
+		backgroundColor: "primary",
 		minHeight: "63px",
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
@@ -54,7 +75,8 @@ export default function PrimarySearchAppBar() {
 
 	return (
 		<React.Fragment>
-			<AppBar position="static">
+			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
+			<AppBar position="static" sx={{ backgroundColor: "primary" }}>
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -66,11 +88,56 @@ export default function PrimarySearchAppBar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Box sx={{ flexGrow: 1 }} />
-					<Typography variant="h6" component="div">
-						<b>KONTRA</b>
-					</Typography>
-					<Box sx={{ flexGrow: 1 }} />
+					<ToggleButtonGroup>
+						<ToggleButton
+							value="left"
+							onClick={() => sampleLogin("admin@disney.com", "12341234")}
+						>
+							<BusinessIcon />
+						</ToggleButton>
+						<ToggleButton
+							value="center"
+							onClick={() => sampleLogin("nicolvisser@yahoo.com", "12341234")}
+						>
+							<PersonIcon />
+						</ToggleButton>
+					</ToggleButtonGroup>
+					<Box sx={{ flexGrow: 3 }} />
+					<img src={logo} style={{ width: 25, height: 25, marginRight: 10 }} />
+					<StyledLink to="/">
+						<Typography variant="h6" component="div">
+							<b>KONTRA</b>
+						</Typography>
+					</StyledLink>
+					<Box sx={{ flexGrow: 2 }} />
+					<Search
+						onChange={(event) => {
+							setSearchValue(event.target.value);
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
+						}}
+						onFocus={(event) => {
+							if (event.target.value !== "") {
+								setSearchMenuOpen(true);
+							} else {
+								setSearchMenuOpen(false);
+							}
+						}}
+						onBlur={() => {
+							setTimeout(() => {
+								// wait a little bit before closing menu to allow focus to go to search results
+								setSearchMenuOpen(false);
+							}, 200);
+						}}
+					>
+						<SearchIconWrapper>
+							<SearchIcon />
+						</SearchIconWrapper>
+						<StyledInputBase placeholder="Search…" />
+					</Search>
 					<IconButton
 						size="large"
 						aria-label="account of current user"
@@ -81,8 +148,8 @@ export default function PrimarySearchAppBar() {
 					>
 						<Avatar
 							src={
-								user
-									? user.avatarUrl
+								authUser
+									? authUser.avatarUrl
 									: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 							}
 						></Avatar>
@@ -90,7 +157,7 @@ export default function PrimarySearchAppBar() {
 
 					<Menu
 						id="menu-appbar"
-						anchorEl={anchorEl}
+						anchorEl={userMenuAnchorEl}
 						anchorOrigin={{
 							vertical: "top",
 							horizontal: "right",
@@ -100,30 +167,23 @@ export default function PrimarySearchAppBar() {
 							vertical: "top",
 							horizontal: "right",
 						}}
-						open={Boolean(anchorEl)}
-						onClose={handleMenuClose}
+						open={Boolean(userMenuAnchorEl)}
+						onClose={handleUserMenuClose}
 					>
-						{user ? (
+						{authUser ? (
 							<div>
 								<MenuItem
 									component={Link}
-									to={`/profile/${user.userType}/${user.username}`}
-									onClick={handleMenuClose}
+									to={`/profile/${authUser.userType}/${authUser.username}`}
+									onClick={handleUserMenuClose}
 								>
 									My Profile
 								</MenuItem>
-								<MenuItem onClick={handleMenuClose}>My Contracts</MenuItem>
-								{user.userType == "company" ? (
-									<MenuItem
-										component={Link}
-										to="/addcontract"
-										onClick={handleMenuClose}
-									>
-										Add a Contract
-									</MenuItem>
-								) : null}
 								<MenuItem
-									onClick={(handleMenuClose, logout)}
+									onClick={() => {
+										handleUserMenuClose();
+										logout();
+									}}
 									component={Link}
 									to="/"
 								>
@@ -135,14 +195,14 @@ export default function PrimarySearchAppBar() {
 								<MenuItem
 									component={Link}
 									to="/login"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Login
 								</MenuItem>
 								<MenuItem
 									component={Link}
 									to="/signup"
-									onClick={handleMenuClose}
+									onClick={handleUserMenuClose}
 								>
 									Sign Up
 								</MenuItem>
@@ -161,7 +221,7 @@ export default function PrimarySearchAppBar() {
 					},
 				}}
 				anchor="left"
-				open={open}
+				open={userMenuOpen}
 				onClose={handleDrawerClose}
 			>
 				<DrawerHeader>
@@ -191,12 +251,12 @@ export default function PrimarySearchAppBar() {
 					</Button>
 					<Button
 						component={Link}
-						to="/about"
+						to={URLToProfile}
 						color="inherit"
 						onClick={handleDrawerClose}
 						style={{ minHeight: "63px" }}
 					>
-						<b>About</b>
+						<b>My Profile</b>
 					</Button>
 				</Stack>
 			</Drawer>

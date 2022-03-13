@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import Rating from "@mui/material/Rating";
+import { alpha, styled } from "@mui/material/styles";
+
 import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
 import WorkIcon from "@mui/icons-material/Work";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import { Stack } from "@mui/material";
 
 const labels = {
 	0: "< 1 Year",
@@ -21,20 +22,23 @@ const labels = {
 	5: "10+ Years",
 };
 
-const StyledRating = styled(Rating)({
+const StyledRating = styled(Rating)(({ theme }) => ({
 	"& .MuiRating-iconFilled": {
-		color: "#85571e",
+		color: theme.palette.primary.main,
 	},
 	"& .MuiRating-iconHover": {
-		color: "green",
+		color: alpha(theme.palette.primary.main, 0.5),
 	},
-});
+	"& .MuiRating-iconEmpty": {
+		color: "divider",
+	},
+}));
 
 function ExperiencePicker({
 	language,
 	updateLanguage,
 	presetValue,
-	disabled,
+	readOnly,
 	width,
 }) {
 	const [value, setValue] = React.useState(0);
@@ -49,7 +53,7 @@ function ExperiencePicker({
 	return (
 		<Stack direction="row" width={width}>
 			<StyledRating
-				disabled={disabled}
+				readOnly={readOnly}
 				value={value}
 				precision={0.5}
 				onChange={(event, newValue) => {

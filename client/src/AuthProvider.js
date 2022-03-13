@@ -5,13 +5,11 @@ const baseUrl = "https://cs334proj1group8.herokuapp.com";
 
 const UserContext = createContext();
 const LogoutContext = createContext();
-const CheckUsernameContext = createContext();
-const CheckEmailContext = createContext();
 const LoginContext = createContext();
 const LoadUserProfileContext = createContext();
 const CheckPasswordContext = createContext();
 
-import { fetchUserProfile, checkPassword } from "./utils/utils";
+import { fetchUserProfile, checkPassword } from "./utils/apiCalls";
 
 export function useUser() {
 	return useContext(UserContext);
@@ -19,14 +17,6 @@ export function useUser() {
 
 export function useLogout() {
 	return useContext(LogoutContext);
-}
-
-export function useCheckUsername() {
-	return useContext(CheckUsernameContext);
-}
-
-export function useCheckEmail() {
-	return useContext(CheckEmailContext);
 }
 
 export function useLogin() {
@@ -53,26 +43,6 @@ function AuthProvider({ children }) {
 	useEffect(() => {
 		window.sessionStorage.setItem("kontra-user", JSON.stringify(user));
 	}, [user]);
-
-	async function checkUsername(username) {
-		const url = `${baseUrl}/api/developer?username=${username}`;
-		try {
-			await axios.get(url);
-		} catch (error) {
-			return false;
-		}
-		return true;
-	}
-
-	async function checkEmail(email) {
-		const url = `${baseUrl}/api/developer?email=${email}`;
-		try {
-			await axios.get(url);
-		} catch (error) {
-			return false;
-		}
-		return true;
-	}
 
 	async function login(email, password) {
 		const url = `${baseUrl}/api/login`;
@@ -118,17 +88,13 @@ function AuthProvider({ children }) {
 	return (
 		<UserContext.Provider value={user}>
 			<LogoutContext.Provider value={logout}>
-				<CheckUsernameContext.Provider value={checkUsername}>
-					<CheckEmailContext.Provider value={checkEmail}>
-						<LoginContext.Provider value={login}>
-							<LoadUserProfileContext.Provider value={loadUserProfile}>
-								<CheckPasswordContext.Provider value={checkPassword}>
-									{children}
-								</CheckPasswordContext.Provider>
-							</LoadUserProfileContext.Provider>
-						</LoginContext.Provider>
-					</CheckEmailContext.Provider>
-				</CheckUsernameContext.Provider>
+				<LoginContext.Provider value={login}>
+					<LoadUserProfileContext.Provider value={loadUserProfile}>
+						<CheckPasswordContext.Provider value={checkPassword}>
+							{children}
+						</CheckPasswordContext.Provider>
+					</LoadUserProfileContext.Provider>
+				</LoginContext.Provider>
 			</LogoutContext.Provider>
 		</UserContext.Provider>
 	);
