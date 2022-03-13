@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { checkPassword, fetchUserProfile } from "./utils/apiCalls";
+
 import axios from "axios";
 
 const baseUrl = "https://cs334proj1group8.herokuapp.com";
@@ -8,8 +10,6 @@ const LogoutContext = createContext();
 const LoginContext = createContext();
 const LoadUserProfileContext = createContext();
 const CheckPasswordContext = createContext();
-
-import { fetchUserProfile, checkPassword } from "./utils/apiCalls";
 
 export function useUser() {
 	return useContext(UserContext);
@@ -56,9 +56,9 @@ function AuthProvider({ children }) {
 				const { success, type: userType, name: username } = res.data;
 
 				if (success) {
-					loadUserProfile(userType.toLowerCase(), username)
-						.then(() => resolve(true))
-						.catch((err) => console.error(err));
+					loadUserProfile(userType.toLowerCase(), username).then(() =>
+						resolve(true)
+					);
 				} else {
 					reject(res);
 				}

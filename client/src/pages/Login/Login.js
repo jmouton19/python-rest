@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNotifyError, useNotifySuccess } from "../../NotificationProvider";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -29,6 +30,8 @@ function Login() {
 	const navigate = useNavigate();
 
 	const login = useLogin();
+	const notifySuccess = useNotifySuccess();
+	const notifyError = useNotifyError();
 
 	function toggleShowPassword() {
 		setShowPassword(!showPassword);
@@ -87,13 +90,16 @@ function Login() {
 								<Button
 									variant="contained"
 									onClick={() => {
-										login(email, password).then(() => {
-											if (redirect) {
-												navigate(redirect);
-											} else {
-												navigate("/");
-											}
-										});
+										login(email, password)
+											.then(() => {
+												notifySuccess("You have been Logged In.");
+												if (redirect) {
+													navigate(redirect);
+												} else {
+													navigate("/");
+												}
+											})
+											.catch((err) => notifyError(err.data.message));
 									}}
 								>
 									Login

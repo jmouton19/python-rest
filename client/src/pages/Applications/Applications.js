@@ -20,6 +20,7 @@ import {
 	fetchAppliedDevelopers,
 	fetchSingleContract,
 } from "../../utils/apiCalls";
+import { useNotifyError, useNotifySuccess } from "../../NotificationProvider";
 
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import StyledLink from "../../components/StyledLink";
@@ -31,6 +32,9 @@ function Contract() {
 	const params = useParams();
 	const [contract, setContract] = useState({});
 	const [developers, setDevelopers] = useState([]);
+
+	const notifySuccess = useNotifySuccess();
+	const notifyError = useNotifyError();
 
 	useEffect(() => {
 		getData();
@@ -215,9 +219,14 @@ function Contract() {
 																		closeContract(
 																			developer["username"],
 																			params.contract_id
-																		).then(() => {
-																			getData();
-																		});
+																		)
+																			.then(() => {
+																				notifySuccess(
+																					"The contract was closed."
+																				);
+																				getData();
+																			})
+																			.catch((msg) => notifyError(msg));
 																	}}
 																>
 																	Accept

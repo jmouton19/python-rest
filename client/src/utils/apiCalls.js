@@ -59,7 +59,7 @@ export async function checkPassword(email, password) {
 			if (success) {
 				resolve(true);
 			} else {
-				reject(res);
+				reject(res.data.message);
 			}
 		});
 	});
@@ -73,7 +73,7 @@ export async function fetchAllOpenContracts() {
 			if (success) {
 				resolve(res.data.contracts);
 			} else {
-				reject(res);
+				reject(res.data.message);
 			}
 		});
 	});
@@ -86,7 +86,7 @@ export async function deleteContract(contract_id) {
 			if (res.data.success) {
 				resolve(true);
 			} else {
-				reject();
+				reject(res.data.message);
 			}
 		});
 	});
@@ -100,7 +100,7 @@ export async function applyToContract(developerUsername, contract_id) {
 			if (res.data.success) {
 				resolve(true);
 			} else {
-				reject();
+				reject(res.data.message);
 			}
 		});
 	});
@@ -113,7 +113,7 @@ export async function fetchSingleContract(contract_id) {
 			if (res.data.success) {
 				resolve(res.data.contract);
 			} else {
-				reject();
+				reject(res.data.message);
 			}
 		});
 	});
@@ -126,7 +126,7 @@ export async function fetchAppliedDevelopers(contract_id) {
 			if (res.data.success) {
 				resolve(res.data.developers);
 			} else {
-				reject();
+				reject(res.data.message);
 			}
 		});
 	});
@@ -139,7 +139,7 @@ export async function cancelApplication(developerUsername, contract_id) {
 			if (res.data.success) {
 				resolve(true);
 			} else {
-				reject();
+				reject(res.data.message);
 			}
 		});
 	});
@@ -153,7 +153,7 @@ export async function fetchDevelopersContracts(developerUsername) {
 			if (success) {
 				resolve(res.data.contracts);
 			} else {
-				reject(res);
+				reject(res.data.message);
 			}
 		});
 	});
@@ -167,7 +167,7 @@ export async function fetchCompanysContracts(companyUsername) {
 			if (success) {
 				resolve(res.data.contracts);
 			} else {
-				reject(res);
+				reject(res.data.message);
 			}
 		});
 	});

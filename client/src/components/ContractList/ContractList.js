@@ -26,6 +26,7 @@ import {
 	sortByDuration,
 	sortByValue,
 } from "../../utils/contractSorting";
+import { useNotifyError, useNotifySuccess } from "../../NotificationProvider";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/system";
@@ -54,6 +55,8 @@ function ContractList({
 	}
 
 	const navigate = useNavigate();
+	const notifySuccess = useNotifySuccess();
+	const notifyError = useNotifyError();
 
 	useEffect(() => {
 		getContracts();
@@ -221,11 +224,14 @@ function ContractList({
 															color="error"
 															size="small"
 															onClick={() =>
-																deleteContract(contract.contract_id).then(
-																	() => {
+																deleteContract(contract.contract_id)
+																	.then(() => {
+																		notifySuccess("Contract was deleted.");
 																		getContracts();
-																	}
-																)
+																	})
+																	.catch((msg) => {
+																		notifyError(msg);
+																	})
 															}
 														>
 															<DeleteIcon />
@@ -246,9 +252,14 @@ function ContractList({
 																	cancelApplication(
 																		authUser.username,
 																		contract.contract_id
-																	).then(() => {
-																		getContracts();
-																	})
+																	)
+																		.then(() => {
+																			notifySuccess(
+																				"The application was withdrawn"
+																			);
+																			getContracts();
+																		})
+																		.catch((msg) => notifyError(msg))
 																}
 															>
 																<DeleteIcon />
@@ -274,9 +285,14 @@ function ContractList({
 																	applyToContract(
 																		authUser.username,
 																		contract.contract_id
-																	).then(() => {
-																		getContracts();
-																	})
+																	)
+																		.then(() => {
+																			notifySuccess(
+																				"You have successfully applied."
+																			);
+																			getContracts();
+																		})
+																		.catch((msg) => notifyError(msg))
 																}
 															>
 																Apply
@@ -360,25 +376,34 @@ function ContractList({
 									actions={actions}
 									onAction={(action) => {
 										if (action == "apply") {
-											applyToContract(
-												authUser.username,
-												contract.contract_id
-											).then(() => {
-												getContracts();
-											});
+											applyToContract(authUser.username, contract.contract_id)
+												.then(() => {
+													notifySuccess("You have sucessfuly applied.");
+													getContracts();
+												})
+												.catch((msg) => notifyError(msg));
 										}
 										if (action == "delete") {
-											deleteContract(contract.contract_id).then(() => {
-												getContracts();
-											});
+											deleteContract(contract.contract_id)
+												.then(() => {
+													notifySuccess("Contract was deleted.");
+													getContracts();
+												})
+												.catch((msg) => {
+													notifyError(msg);
+												});
 										}
 										if (action == "cancel application") {
-											cancelApplication(
-												authUser.username,
-												contract.contract_id
-											).then(() => {
-												getContracts();
-											});
+											cancelApplication(authUser.username, contract.contract_id)
+												.then(() => {
+													notifySuccess(
+														"Application to contract was withdrawn."
+													);
+													getContracts();
+												})
+												.catch((msg) => {
+													notifyError(msg);
+												});
 										}
 										if (action == "view applicants") {
 											navigate(`/applications/${contract.contract_id}`);
