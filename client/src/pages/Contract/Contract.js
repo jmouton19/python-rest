@@ -41,7 +41,7 @@ function Contract() {
 					setDevelopers(data);
 				});
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.error(err));
 	}, []);
 
 	const StyledLink = styled(Link)`

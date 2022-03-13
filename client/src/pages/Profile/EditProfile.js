@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react";
-import {
-	useUser,
-	//useLoadUserProfile,
-	useLogin,
-	useLogout,
-	useLoadUserProfile,
-} from "../../AuthProvider";
-import { deepEqual } from "../../utils/utils";
-
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
-import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
 	Button,
 	Dialog,
 	DialogActions,
 	DialogTitle,
-	Fab,
-	TextField,
-	FormControl,
 	Divider,
+	Fab,
+	FormControl,
+	FormHelperText,
+	Grid,
+	IconButton,
+	InputAdornment,
 	InputLabel,
 	OutlinedInput,
-	InputAdornment,
-	IconButton,
-	FormHelperText,
 	Stack,
-	Grid,
+	TextField,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { deleteUser, updateUser } from "../../utils/apiCalls";
+import {
+	useLoadUserProfile,
+	useLogin,
+	useLogout,
+	useUser,
+} from "../../AuthProvider";
+
+import AvatarPicker from "../../components/AvatarPicker/AvatarPicker";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import LanguagesPicker from "../../components/LanguagesPicker/LanguagesPicker";
+import SaveIcon from "@mui/icons-material/Save";
+import Typography from "@mui/material/Typography";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { deepEqual } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const fabStyle = {
 	margin: 0,
@@ -95,7 +95,11 @@ function EditProfile() {
 				return true;
 			}
 		} else {
-			if (user["username"] != username || user["industry"] != industry || user["avatarUrl"] != avatarUrl) {
+			if (
+				user["username"] != username ||
+				user["industry"] != industry ||
+				user["avatarUrl"] != avatarUrl
+			) {
 				return false;
 			} else {
 				return true;
@@ -136,30 +140,39 @@ function EditProfile() {
 				};
 			}
 		}
-		if(user["userType"] == "developer") {
-			if(!deepEqual(user["programmingLanguages"], programmingLanguages)) {
+		if (user["userType"] == "developer") {
+			if (!deepEqual(user["programmingLanguages"], programmingLanguages)) {
 				Object.keys(user["programmingLanguages"]).forEach((language) => {
-					if(programmingLanguages[language] == undefined) { //Add null entries for removed languages
+					if (programmingLanguages[language] == undefined) {
+						//Add null entries for removed languages
 						let deleteLanguage = {};
 						deleteLanguage[language] = null;
-						developer_languages ={
+						developer_languages = {
 							...developer_languages,
 							...deleteLanguage,
 						};
-					} else if(user["programmingLanguages"][language] != programmingLanguages[language]) { //Update changed entries
+					} else if (
+						user["programmingLanguages"][language] !=
+						programmingLanguages[language]
+					) {
+						//Update changed entries
 						let updatedLanguage = {};
 						updatedLanguage[language] = programmingLanguages[language];
-						developer_languages ={
+						developer_languages = {
 							...developer_languages,
 							...updatedLanguage,
 						};
 					}
 				});
-				Object.keys(programmingLanguages).forEach((language) => { //Add new language entries
-					if(user["programmingLanguages"][language] != programmingLanguages[language]) {
+				Object.keys(programmingLanguages).forEach((language) => {
+					//Add new language entries
+					if (
+						user["programmingLanguages"][language] !=
+						programmingLanguages[language]
+					) {
 						let newLanguage = {};
 						newLanguage[language] = programmingLanguages[language];
-						developer_languages ={
+						developer_languages = {
 							...developer_languages,
 							...newLanguage,
 						};
@@ -167,13 +180,13 @@ function EditProfile() {
 				});
 				let temp = {};
 				temp["developer_languages"] = developer_languages;
-				data ={
+				data = {
 					...data,
 					...temp,
 				};
 			}
 		}
-		
+
 		updateUser(user["userType"], user["username"], data)
 			.then(() => {
 				loadUserProfile(user["userType"], username).then((data) => {
@@ -181,7 +194,7 @@ function EditProfile() {
 					navigate(`/profile/${data["userType"]}/${data["username"]}`);
 				});
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.error(err));
 	}
 
 	return (
@@ -196,7 +209,9 @@ function EditProfile() {
 			</Fab>
 			<Dialog open={edit} onClose={() => setEdit(false)}>
 				<DialogTitle>
-					<u>Edit Details</u>
+					<Typography sx={{ fontSize: 30 }} color="primary">
+						<b>Edit Profile</b>
+					</Typography>
 				</DialogTitle>
 				<Grid container padding={1} rowSpacing={3} alignItems="center">
 					<Grid item xs={12}>
@@ -452,14 +467,15 @@ function EditProfile() {
 							</Button>
 							<Button
 								onClick={() => {
-									login().then(() => {
-										deleteUser()
-											.then(() => {
-												logout().then(() => navigate("/"));
-											})
-											.catch((err) => console.log(err));
-									})
-										.catch((err) => console.log(err));
+									login()
+										.then(() => {
+											deleteUser()
+												.then(() => {
+													logout().then(() => navigate("/"));
+												})
+												.catch((err) => console.error(err));
+										})
+										.catch((err) => console.error(err));
 								}}
 								variant="contained"
 								disabled={saveDeleteDisableChecks()}

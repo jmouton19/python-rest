@@ -22,6 +22,7 @@ import SearchMenu from "./SearchMenu";
 import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import logo from "../../logo.svg";
 
 // source https://mui.com/components/app-bar/
 const Search = styled("div")(({ theme }) => ({
@@ -118,10 +119,7 @@ export default function PrimarySearchAppBar() {
 	return (
 		<React.Fragment>
 			<SearchMenu searchValue={searchValue} open={searchMenuOpen} />
-			<AppBar
-				position="static"
-				sx={{ backgroundColor: "primary" }}
-			>
+			<AppBar position="static" sx={{ backgroundColor: "primary" }}>
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -148,6 +146,7 @@ export default function PrimarySearchAppBar() {
 						</ToggleButton>
 					</ToggleButtonGroup>
 					<Box sx={{ flexGrow: 3 }} />
+					<img src={logo} style={{ width: 25, height: 25, marginRight: 10 }} />
 					<StyledLink to="/">
 						<Typography variant="h6" component="div">
 							<b>KONTRA</b>
@@ -171,7 +170,6 @@ export default function PrimarySearchAppBar() {
 							}
 						}}
 						onBlur={() => {
-							console.log("Focus away from search");
 							setTimeout(() => {
 								// wait a little bit before closing menu to allow focus to go to search results
 								setSearchMenuOpen(false);

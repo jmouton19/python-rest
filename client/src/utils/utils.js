@@ -1,8 +1,6 @@
 export function mapUserProfileFromDBToFrontend(userType, userData) {
 	let newUserData;
 
-	console.log(userData);
-
 	if (userType == "developer") {
 		newUserData = {
 			userType,
@@ -52,3 +50,9 @@ export function deepEqual(object1, object2) {
 function isObject(object) {
 	return object != null && typeof object === "object";
 }
+
+export const currencyFormatter = new Intl.NumberFormat("en-ZA", {
+	style: "currency",
+	currency: "ZAR",
+	minimumFractionDigits: 0,
+});

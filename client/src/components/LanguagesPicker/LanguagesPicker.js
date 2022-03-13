@@ -86,7 +86,6 @@ function LanguagesPicker(props) {
 				const { success } = res_GET.data;
 				if (success) {
 					setLanguageList(res_GET.data["languages"]);
-					console.log("Language List successfully retrieved!");
 				} else {
 					setLanguageList([
 						"Python",
@@ -100,13 +99,13 @@ function LanguagesPicker(props) {
 						"Swift",
 						"PHP",
 					]);
-					console.log(
+					console.error(
 						"Unable to retrieve languages, falling back on default 10."
 					);
 				}
 			})
 			.catch((err) => {
-				console.log(err);
+				console.error(err);
 			});
 	}
 

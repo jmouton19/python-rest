@@ -94,18 +94,18 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
-							<Label>Value</Label>
+							<Label>Value:</Label>
 							<Typography>{`$ ${value}`}</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
-							<Label>Duration</Label>
+							<Label>Duration:</Label>
 							<Typography>{`${length} ${
 								length == 1 ? "month" : "months"
 							}`}</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Stack>
-								<Label>Location</Label>
+								<Label>Location:</Label>
 								<Chip
 									label={remote ? "Remote" : "In-Office"}
 									color="info"
@@ -116,7 +116,7 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Stack>
-								<Label>Status</Label>
+								<Label>Status:</Label>
 								<Chip
 									label={open ? "Open" : "Closed"}
 									color={open ? "success" : "warning"}
@@ -126,13 +126,13 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</Stack>
 						</Grid>
 						<Grid item xs={8}>
-							<Label>Description</Label>
+							<Label>Description:</Label>
 							<Typography>
 								{description ? description : "No Description"}
 							</Typography>
 						</Grid>
 						<Grid item xs={8}>
-							<Label>Employed Developer</Label>
+							<Label>Accepted Developer:</Label>
 							<Typography>{developer_id}</Typography>
 						</Grid>
 					</Grid>

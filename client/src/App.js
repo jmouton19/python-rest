@@ -15,6 +15,7 @@ import Contracts from "./pages/Contracts/Contracts";
 import CssBaseline from "@mui/material/CssBaseline";
 import Home from "./pages/Home";
 import Login from "./pages/Login/Login";
+import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile/Profile";
 import React from "react";
 import SignUp from "./pages/SignUp/SignUp";
@@ -84,6 +85,7 @@ function App() {
 							<Route path="/signup" element={<SignUp />} />
 							<Route path="/" element={<Home />} />
 							<Route path="/login" element={<Login />} />
+							<Route path="*" element={<NotFound />} />
 						</Routes>
 					</ThemeProvider>
 				</AuthProvider>

@@ -13,6 +13,7 @@ import {
 	OutlinedInput,
 	Radio,
 	RadioGroup,
+	Stack,
 	Step,
 	StepContent,
 	StepLabel,
@@ -213,9 +214,12 @@ function SignUp() {
 	return (
 		<React.Fragment>
 			<Container maxWidth="sm">
-				<Typography variant="h3" color="primary" gutterBottom paddingTop={3}>
-					Sign Up
-				</Typography>
+				<Stack alignItems="center">
+					<Typography variant="h3" color="primary" gutterBottom paddingTop={3}>
+						Sign Up
+					</Typography>
+				</Stack>
+
 				<Typography variant="caption" color="primary">
 					<StyledLink to="/login">
 						{"Already have an account? Log in instead."}

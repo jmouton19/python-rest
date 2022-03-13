@@ -59,9 +59,9 @@ function ContractList({
 		const developer_id = condensed
 			? viewUser.developer_id
 			: authUser.developerID;
+
 		switch (status) {
 		case "available":
-			// all open contracts that the developer have not applied for
 			fetchAllOpenContracts().then((openContracts) => {
 				fetchDevelopersContracts(username).then((appliedContracts) => {
 					const openNotAppliedContracts = openContracts.filter(
@@ -138,44 +138,33 @@ function ContractList({
 
 	if (condensed) {
 		if (contractsData === null) {
-			return <LoadingPage />;
+			return <LoadingPage minHeight="150px" />;
 		}
 		return (
 			//Return small table version of contracts
 			<>
-				<Paper elevation={4}>
+				<Paper elevation={4} sx={{ height: "100%" }}>
 					<Box padding={1}>
 						<Typography variant="caption" color="primary">
 							{viewUser.userType == "developer"
-								? "My Applications:"
-								: "Contracts:"}
+								? "Pending Applications:"
+								: "Open Contracts:"}
 						</Typography>
 					</Box>
 					{contractsData.length == 0 ? (
 						<Box padding={1}>
-							{viewUser.userType == "developer" ? (
-								<Stack spacing={2}>
-									<Typography variant="body" color="primary">
-										You have not applied to a contract.
+							{viewUser.userType == "developer" && (
+								<Stack padding={1}>
+									<Typography variant="body" color="text">
+										No pending applications.
 									</Typography>
-									<Button
-										onClick={() => navigate("/contracts")}
-										variant="contained"
-									>
-										See Available Contracts
-									</Button>
 								</Stack>
-							) : (
-								<Stack spacing={2}>
-									<Typography variant="body" color="primary">
-										{"You don't have any contracts yet."}
+							)}
+							{viewUser.userType == "company" && (
+								<Stack padding={1}>
+									<Typography variant="body" color="text">
+										No open contracts.
 									</Typography>
-									<Button
-										onClick={() => navigate("/addContract")}
-										variant="contained"
-									>
-										Create Contract
-									</Button>
 								</Stack>
 							)}
 						</Box>
@@ -335,7 +324,6 @@ function ContractList({
 						</Box>
 					) : (
 						contractsData.map((contract) => {
-							console.log(contract);
 							return (
 								<ContractCard
 									noAvatar
@@ -365,7 +353,6 @@ function ContractList({
 											});
 										}
 										if (action == "view applicants") {
-											console.log(contract.contract_id);
 											navigate(`/contract/${contract.contract_id}`);
 										}
 									}}
