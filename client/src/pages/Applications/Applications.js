@@ -23,8 +23,8 @@ import {
 
 import LoadingPage from "../../components/LoadingPage/LoadingPage";
 import Typography from "@mui/material/Typography";
+import { currencyFormatter } from "../../utils/utils";
 import { devicons } from "../../utils/mapLanguageToIcon";
-import { styled } from "@mui/material/styles";
 import { useUser } from "../../AuthProvider";
 
 function Contract() {
@@ -43,18 +43,6 @@ function Contract() {
 			})
 			.catch((err) => console.error(err));
 	}, []);
-
-	const StyledLink = styled(Link)`
-		text-decoration: none;
-
-		&:focus,
-		&:hover,
-		&:visited,
-		&:link,
-		&:active {
-			color: black;
-		}
-	`;
 
 	if (contract === null || developers == null) {
 		return <LoadingPage />;
@@ -106,7 +94,7 @@ function Contract() {
 													<Stack>
 														<Typography variant="caption">Value:</Typography>
 														<Typography variant="body">
-															R {contract.value}
+															{currencyFormatter.format(contract.value)}
 														</Typography>
 													</Stack>
 													<Stack>
@@ -167,13 +155,21 @@ function Contract() {
 																</Link>
 															</StyledTableCell>
 															<StyledTableCell>
-																<StyledLink
-																	to={`/profile/developer/${developer.username}`}
-																>
-																	<Typography sx={{ color: "primary" }}>
+																<Typography variant="body" color="text">
+																	<a
+																		style={{
+																			color: "white",
+																			textDecoration: "none",
+																		}}
+																		href={`/profile/developer/${developer.username}`}
+																	>
 																		{developer.name} {developer.surname}
-																	</Typography>
-																</StyledLink>
+																	</a>
+																</Typography>
+																<Button
+																	color="primary"
+																	sx={{ textTransform: "none" }}
+																></Button>
 															</StyledTableCell>
 															<StyledTableCell>
 																<AvatarGroup variant="round" spacing={0}>

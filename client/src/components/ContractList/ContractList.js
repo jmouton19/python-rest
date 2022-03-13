@@ -204,7 +204,7 @@ function ContractList({
 															size="small"
 															variant="contained"
 															component={Link}
-															to={`/contract/${contract.contract_id}`}
+															to={`/applications/${contract.contract_id}`}
 														>
 															View
 														</Button>
@@ -353,7 +353,7 @@ function ContractList({
 											});
 										}
 										if (action == "view applicants") {
-											navigate(`/contract/${contract.contract_id}`);
+											navigate(`/applications/${contract.contract_id}`);
 										}
 									}}
 								/>

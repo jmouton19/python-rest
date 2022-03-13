@@ -16,6 +16,7 @@ import React from "react";
 import RouterIcon from "@mui/icons-material/Router";
 import StyledLink from "../StyledLink";
 import Typography from "@mui/material/Typography";
+import { currencyFormatter } from "../../utils/utils";
 
 const Label = ({ children }) => (
 	<Typography variant="caption">{children}</Typography>
@@ -55,7 +56,9 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</IconButton>
 						}
 						title={
-							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+							<StyledLink to={`/applications/${contract_id}`}>
+								{title}
+							</StyledLink>
 						}
 						subheader={
 							<StyledLink to={`/profile/company/${company_name}`}>
@@ -95,7 +98,7 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Label>Value:</Label>
-							<Typography>{`$ ${value}`}</Typography>
+							<Typography>{`${currencyFormatter.format(value)}`}</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Label>Duration:</Label>
@@ -125,16 +128,18 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 								/>
 							</Stack>
 						</Grid>
-						<Grid item xs={8}>
+						<Grid item xs={12}>
 							<Label>Description:</Label>
 							<Typography>
 								{description ? description : "No Description"}
 							</Typography>
 						</Grid>
-						<Grid item xs={8}>
-							<Label>Accepted Developer:</Label>
-							<Typography>{developer_id}</Typography>
-						</Grid>
+						{developer_id && (
+							<Grid item xs={12}>
+								<Label>Accepted Developer:</Label>
+								<Typography>{developer_id}</Typography>
+							</Grid>
+						)}
 					</Grid>
 				</CardContent>
 				<Divider />
