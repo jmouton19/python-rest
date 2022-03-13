@@ -7,6 +7,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
+import LanguageList from "../LanguagesPicker/LanguageList";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -16,12 +17,19 @@ import React from "react";
 import RouterIcon from "@mui/icons-material/Router";
 import StyledLink from "../StyledLink";
 import Typography from "@mui/material/Typography";
+import { currencyFormatter } from "../../utils/utils";
 
 const Label = ({ children }) => (
 	<Typography variant="caption">{children}</Typography>
 );
 
-function ContractCard({ contract, actions, onAction, noAvatar }) {
+function ContractCard({
+	contract,
+	actions,
+	onAction,
+	noAvatar,
+	enableLinkToApplicationPage,
+}) {
 	const company_name = contract.company_name;
 	const avatarUrl = contract.company_avatar;
 	const title = contract.title;
@@ -32,7 +40,10 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 	const length = contract.length;
 	const value = contract.value;
 	const contract_id = contract.contract_id;
-	const developer_id = contract.developer_id;
+	const acceptedDeveloper = contract.username;
+	const contractLanguageList = Object.keys(contract.contract_languages);
+
+	console.log(acceptedDeveloper);
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -55,7 +66,13 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</IconButton>
 						}
 						title={
-							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+							enableLinkToApplicationPage ? (
+								<StyledLink to={`/applications/${contract_id}`}>
+									{title}
+								</StyledLink>
+							) : (
+								<>{title}</>
+							)
 						}
 						subheader={
 							<StyledLink to={`/profile/company/${company_name}`}>
@@ -76,7 +93,13 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</IconButton>
 						}
 						title={
-							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+							enableLinkToApplicationPage ? (
+								<StyledLink to={`/applications/${contract_id}`}>
+									{title}
+								</StyledLink>
+							) : (
+								<>{title}</>
+							)
 						}
 						subheader={
 							<StyledLink to={`/profile/company/${company_name}`}>
@@ -94,18 +117,18 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
-							<Label>Value</Label>
-							<Typography>{`$ ${value}`}</Typography>
+							<Label>Value:</Label>
+							<Typography>{`${currencyFormatter.format(value)}`}</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
-							<Label>Duration</Label>
+							<Label>Duration:</Label>
 							<Typography>{`${length} ${
 								length == 1 ? "month" : "months"
 							}`}</Typography>
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Stack>
-								<Label>Location</Label>
+								<Label>Location:</Label>
 								<Chip
 									label={remote ? "Remote" : "In-Office"}
 									color="info"
@@ -116,7 +139,7 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 						</Grid>
 						<Grid item xs={6} sm={3}>
 							<Stack>
-								<Label>Status</Label>
+								<Label>Status:</Label>
 								<Chip
 									label={open ? "Open" : "Closed"}
 									color={open ? "success" : "warning"}
@@ -125,16 +148,29 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 								/>
 							</Stack>
 						</Grid>
-						<Grid item xs={8}>
-							<Label>Description</Label>
+						<Grid item xs={12}>
+							<Label>Description:</Label>
 							<Typography>
 								{description ? description : "No Description"}
 							</Typography>
 						</Grid>
-						<Grid item xs={8}>
-							<Label>Employed Developer</Label>
-							<Typography>{developer_id}</Typography>
-						</Grid>
+						{contractLanguageList && (
+							<Grid item xs={12}>
+								<Label>Required Languages:</Label>
+								<LanguageList
+									languages={contractLanguageList}
+									sx={{ mt: 1 }}
+								/>
+							</Grid>
+						)}
+						{acceptedDeveloper && (
+							<Grid item xs={12}>
+								<Label>Accepted Developer:</Label>
+								<StyledLink to={`/profile/developer/${acceptedDeveloper}`}>
+									<Typography>{acceptedDeveloper}</Typography>
+								</StyledLink>
+							</Grid>
+						)}
 					</Grid>
 				</CardContent>
 				<Divider />

@@ -33,6 +33,7 @@ import ContractCard from "../ContractCard/ContractCard";
 import ContractCardSkeleton from "../ContractCard/ContractCardSkeleton";
 import ContractTable from "../ContractTable/ContractTable";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LanguageOnlyPicker from "../LanguagesPicker/LanguageOnlyPicker";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import { Typography } from "@mui/material";
 
@@ -45,10 +46,14 @@ function ContractList({
 	status,
 }) {
 	const [contractsData, setContractsData] = useState(null);
+	const [filteredContractsData, setFilteredContractsData] = useState(null);
+
+	function setBothContractsDataAndfilteredContractsData(data) {
+		setFilteredContractsData(data);
+		setContractsData(data);
+	}
 
 	const navigate = useNavigate();
-
-	console.debug(contractsData);
 
 	useEffect(() => {
 		getContracts();
@@ -59,9 +64,9 @@ function ContractList({
 		const developer_id = condensed
 			? viewUser.developer_id
 			: authUser.developerID;
+
 		switch (status) {
 		case "available":
-			// all open contracts that the developer have not applied for
 			fetchAllOpenContracts().then((openContracts) => {
 				fetchDevelopersContracts(username).then((appliedContracts) => {
 					const openNotAppliedContracts = openContracts.filter(
@@ -72,43 +77,47 @@ function ContractList({
 							return appliedIDs.indexOf(openContract.contract_id) === -1;
 						}
 					);
-					setContractsData(openNotAppliedContracts);
+					setBothContractsDataAndfilteredContractsData(
+						openNotAppliedContracts
+					);
 				});
 			});
 			break;
 		case "applied":
 			fetchDevelopersContracts(username).then((data) => {
-				setContractsData(groupByOpen(data));
+				setBothContractsDataAndfilteredContractsData(groupByOpen(data));
 			});
 			break;
 		case "accepted":
 			fetchDevelopersContracts(username).then((data) => {
-				setContractsData(groupByAccepted(data, developer_id));
+				setBothContractsDataAndfilteredContractsData(
+					groupByAccepted(data, developer_id)
+				);
 			});
 			break;
 		case "open":
 			fetchCompanysContracts(username).then((data) => {
-				setContractsData(groupByOpen(data));
+				setBothContractsDataAndfilteredContractsData(groupByOpen(data));
 			});
 			break;
 		case "closed":
 			fetchCompanysContracts(username).then((data) => {
-				setContractsData(groupByClosed(data));
+				setBothContractsDataAndfilteredContractsData(groupByClosed(data));
 			});
 			break;
 		}
 	}
 
-	if (contractsData !== null) {
+	if (filteredContractsData !== null) {
 		switch (method) {
 		case "date":
-			sortByDate(contractsData, descending);
+			sortByDate(filteredContractsData, descending);
 			break;
 		case "value":
-			sortByValue(contractsData, descending);
+			sortByValue(filteredContractsData, descending);
 			break;
 		case "duration":
-			sortByDuration(contractsData, descending);
+			sortByDuration(filteredContractsData, descending);
 			break;
 		default:
 			break;
@@ -137,45 +146,34 @@ function ContractList({
 	}
 
 	if (condensed) {
-		if (contractsData === null) {
-			return <LoadingPage />;
+		if (filteredContractsData === null) {
+			return <LoadingPage minHeight="150px" />;
 		}
 		return (
 			//Return small table version of contracts
 			<>
-				<Paper elevation={4}>
+				<Paper elevation={4} sx={{ height: "100%" }}>
 					<Box padding={1}>
 						<Typography variant="caption" color="primary">
 							{viewUser.userType == "developer"
-								? "My Applications:"
-								: "Contracts:"}
+								? "Pending Applications:"
+								: "Open Contracts:"}
 						</Typography>
 					</Box>
-					{contractsData.length == 0 ? (
+					{filteredContractsData.length == 0 ? (
 						<Box padding={1}>
-							{viewUser.userType == "developer" ? (
-								<Stack spacing={2}>
-									<Typography variant="body" color="primary">
-										You have not applied to a contract.
+							{viewUser.userType == "developer" && (
+								<Stack padding={1}>
+									<Typography variant="body" color="text">
+										No pending applications.
 									</Typography>
-									<Button
-										onClick={() => navigate("/contracts")}
-										variant="contained"
-									>
-										See Available Contracts
-									</Button>
 								</Stack>
-							) : (
-								<Stack spacing={2}>
-									<Typography variant="body" color="primary">
-										{"You don't have any contracts yet."}
+							)}
+							{viewUser.userType == "company" && (
+								<Stack padding={1}>
+									<Typography variant="body" color="text">
+										No open contracts.
 									</Typography>
-									<Button
-										onClick={() => navigate("/addContract")}
-										variant="contained"
-									>
-										Create Contract
-									</Button>
 								</Stack>
 							)}
 						</Box>
@@ -201,7 +199,7 @@ function ContractList({
 								</StyledTableRow>
 							</TableHead>
 							<TableBody>
-								{contractsData.map((contract) => (
+								{filteredContractsData.map((contract) => (
 									<ContractTable
 										key={contract.contract_id}
 										contract={contract}
@@ -215,7 +213,7 @@ function ContractList({
 															size="small"
 															variant="contained"
 															component={Link}
-															to={`/contract/${contract.contract_id}`}
+															to={`/applications/${contract.contract_id}`}
 														>
 															View
 														</Button>
@@ -265,7 +263,7 @@ function ContractList({
 																size="small"
 																variant="contained"
 																component={Link}
-																to={`/contract/${contract.contract_id}`}
+																to={`/applications/${contract.contract_id}`}
 															>
 																View
 															</Button>
@@ -313,6 +311,25 @@ function ContractList({
 		return (
 			//Return large card version of contracts
 			<>
+				<LanguageOnlyPicker
+					onChange={(languages) => {
+						if (languages.length > 0) {
+							const newData = contractsData.filter((contract) => {
+								let match = false;
+								languages.forEach((language) => {
+									if (
+										Object.keys(contract.contract_languages).includes(language)
+									) {
+										match = true;
+									}
+								});
+								return match;
+							});
+							setFilteredContractsData(newData);
+						}
+					}}
+				/>
+
 				<Stack spacing={2}>
 					{authUser.userType === "company" && status === "open" && (
 						<Paper sx={{ padding: 2, display: "flex" }} elevation={4}>
@@ -325,20 +342,19 @@ function ContractList({
 							<Box sx={{ flexGrow: 1 }} />
 						</Paper>
 					)}
-					{contractsData === null ? (
+					{filteredContractsData === null ? (
 						<ContractCardSkeleton />
-					) : contractsData.length == 0 ? (
+					) : filteredContractsData.length == 0 ? (
 						<Box mt={2}>
 							<Typography variant="caption" color="primary">
 								{emptyListMessage}
 							</Typography>
 						</Box>
 					) : (
-						contractsData.map((contract) => {
-							console.log(contract);
+						filteredContractsData.map((contract) => {
 							return (
 								<ContractCard
-									noAvatar
+									noAvatar={authUser.userType === "company"}
 									key={contract.contract_id}
 									contract={contract}
 									actions={actions}
@@ -365,8 +381,7 @@ function ContractList({
 											});
 										}
 										if (action == "view applicants") {
-											console.log(contract.contract_id);
-											navigate(`/contract/${contract.contract_id}`);
+											navigate(`/applications/${contract.contract_id}`);
 										}
 									}}
 								/>

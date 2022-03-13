@@ -49,19 +49,13 @@ function AddContract() {
 			contract_languages: selectedLanguages,
 		};
 
-		console.log("Trying to send contract data via API: ...");
-		console.log(data);
-
 		axios
 			.post("https://cs334proj1group8.herokuapp.com/api/contract", data)
-			.then(function (response) {
-				console.log(response);
+			.then(function () {
 				navigate("/contracts");
-
-				// TODO: take user to different page
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.error(error);
 			});
 	}
 

@@ -1,6 +1,7 @@
-import { Container, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Container, Grid, Stack, Typography } from "@mui/material";
 
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import Button from "@mui/material/Button";
 import ContactPageOutlinedIcon from "@mui/icons-material/ContactPageOutlined";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -11,7 +12,12 @@ import { useUser } from "../AuthProvider";
 const StyledAppButton = ({ label, Icon, to }) => {
 	return (
 		<StyledLink to={to} sx={{ textDecoration: "none" }}>
-			<Paper elevation={4} sx={{ backgroundColor: "#222222" }}>
+			<Button
+				variant="outlined"
+				color="primary"
+				sx={{ backgroundColor: "#222222" }}
+				fullWidth
+			>
 				<Stack
 					direction="column"
 					minHeight={150}
@@ -23,7 +29,7 @@ const StyledAppButton = ({ label, Icon, to }) => {
 						{label}
 					</Typography>
 				</Stack>
-			</Paper>
+			</Button>
 		</StyledLink>
 	);
 };
@@ -39,58 +45,60 @@ function Home() {
 	}
 
 	return (
-		<>
-			<Container maxWidth="sm">
-				<Grid container spacing={4} mt={2}>
-					{authUser && (
-						<Grid item xs={12}>
-							<Typography variant="h5" color="primary">
-								{`Hi, ${
-									authUser.userType == "developer"
-										? authUser.firstName
-										: authUser.username
-								}!`}
-							</Typography>
-							<Typography variant="caption" color="primary">
-								What do you want to do today?
-							</Typography>
-						</Grid>
-					)}
-					{!authUser && (
-						<Grid item xs={12} sm={6}>
-							<StyledAppButton
-								label="Sign Up"
-								Icon={AppRegistrationIcon}
-								to="./signup"
-							/>
-						</Grid>
-					)}
-					{!authUser && (
-						<Grid item xs={12} sm={6}>
-							<StyledAppButton
-								label="Log In"
-								Icon={LoginOutlinedIcon}
-								to="./login"
-							/>
-						</Grid>
-					)}
+		<Container maxWidth="sm">
+			<Grid container spacing={4} mt={2}>
+				{authUser && (
+					<Grid item xs={12}>
+						<Typography variant="h5" color="text">
+							{`Hi, ${
+								authUser.userType == "developer"
+									? authUser.firstName
+									: authUser.username
+							}!`}
+						</Typography>
+						<Typography variant="caption" color="text">
+							What do you want to do today?
+						</Typography>
+					</Grid>
+				)}
+
+				{!authUser && (
 					<Grid item xs={12} sm={6}>
 						<StyledAppButton
-							label="View Contracts"
-							Icon={ContactPageOutlinedIcon}
-							to="./contracts"
+							label="Sign Up"
+							Icon={AppRegistrationIcon}
+							to="./signup"
 						/>
 					</Grid>
+				)}
+
+				{!authUser && (
 					<Grid item xs={12} sm={6}>
 						<StyledAppButton
-							label="View My Profile"
-							Icon={FeedOutlinedIcon}
-							to={URLToProfile}
+							label="Log In"
+							Icon={LoginOutlinedIcon}
+							to="./login"
 						/>
 					</Grid>
+				)}
+
+				<Grid item xs={12} sm={6}>
+					<StyledAppButton
+						label="View Contracts"
+						Icon={ContactPageOutlinedIcon}
+						to="./contracts"
+					/>
 				</Grid>
-			</Container>
-		</>
+
+				<Grid item xs={12} sm={6}>
+					<StyledAppButton
+						label="View My Profile"
+						Icon={FeedOutlinedIcon}
+						to={URLToProfile}
+					/>
+				</Grid>
+			</Grid>
+		</Container>
 	);
 }
 
