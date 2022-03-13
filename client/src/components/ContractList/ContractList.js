@@ -46,10 +46,14 @@ function ContractList({
 	status,
 }) {
 	const [contractsData, setContractsData] = useState(null);
+	const [filteredContractsData, setFilteredContractsData] = useState(null);
+
+	function setBothContractsDataAndfilteredContractsData(data) {
+		setFilteredContractsData(data);
+		setContractsData(data);
+	}
 
 	const navigate = useNavigate();
-
-	console.debug(contractsData);
 
 	useEffect(() => {
 		getContracts();
@@ -73,43 +77,47 @@ function ContractList({
 							return appliedIDs.indexOf(openContract.contract_id) === -1;
 						}
 					);
-					setContractsData(openNotAppliedContracts);
+					setBothContractsDataAndfilteredContractsData(
+						openNotAppliedContracts
+					);
 				});
 			});
 			break;
 		case "applied":
 			fetchDevelopersContracts(username).then((data) => {
-				setContractsData(groupByOpen(data));
+				setBothContractsDataAndfilteredContractsData(groupByOpen(data));
 			});
 			break;
 		case "accepted":
 			fetchDevelopersContracts(username).then((data) => {
-				setContractsData(groupByAccepted(data, developer_id));
+				setBothContractsDataAndfilteredContractsData(
+					groupByAccepted(data, developer_id)
+				);
 			});
 			break;
 		case "open":
 			fetchCompanysContracts(username).then((data) => {
-				setContractsData(groupByOpen(data));
+				setBothContractsDataAndfilteredContractsData(groupByOpen(data));
 			});
 			break;
 		case "closed":
 			fetchCompanysContracts(username).then((data) => {
-				setContractsData(groupByClosed(data));
+				setBothContractsDataAndfilteredContractsData(groupByClosed(data));
 			});
 			break;
 		}
 	}
 
-	if (contractsData !== null) {
+	if (filteredContractsData !== null) {
 		switch (method) {
 		case "date":
-			sortByDate(contractsData, descending);
+			sortByDate(filteredContractsData, descending);
 			break;
 		case "value":
-			sortByValue(contractsData, descending);
+			sortByValue(filteredContractsData, descending);
 			break;
 		case "duration":
-			sortByDuration(contractsData, descending);
+			sortByDuration(filteredContractsData, descending);
 			break;
 		default:
 			break;
@@ -138,7 +146,7 @@ function ContractList({
 	}
 
 	if (condensed) {
-		if (contractsData === null) {
+		if (filteredContractsData === null) {
 			return <LoadingPage minHeight="150px" />;
 		}
 		return (
@@ -152,7 +160,7 @@ function ContractList({
 								: "Open Contracts:"}
 						</Typography>
 					</Box>
-					{contractsData.length == 0 ? (
+					{filteredContractsData.length == 0 ? (
 						<Box padding={1}>
 							{viewUser.userType == "developer" && (
 								<Stack padding={1}>
@@ -191,7 +199,7 @@ function ContractList({
 								</StyledTableRow>
 							</TableHead>
 							<TableBody>
-								{contractsData.map((contract) => (
+								{filteredContractsData.map((contract) => (
 									<ContractTable
 										key={contract.contract_id}
 										contract={contract}
@@ -303,7 +311,24 @@ function ContractList({
 		return (
 			//Return large card version of contracts
 			<>
-				<LanguageOnlyPicker />
+				<LanguageOnlyPicker
+					onChange={(languages) => {
+						if (languages.length > 0) {
+							const newData = contractsData.filter((contract) => {
+								let match = false;
+								languages.forEach((language) => {
+									if (
+										Object.keys(contract.contract_languages).includes(language)
+									) {
+										match = true;
+									}
+								});
+								return match;
+							});
+							setFilteredContractsData(newData);
+						}
+					}}
+				/>
 
 				<Stack spacing={2}>
 					{authUser.userType === "company" && status === "open" && (
@@ -317,16 +342,16 @@ function ContractList({
 							<Box sx={{ flexGrow: 1 }} />
 						</Paper>
 					)}
-					{contractsData === null ? (
+					{filteredContractsData === null ? (
 						<ContractCardSkeleton />
-					) : contractsData.length == 0 ? (
+					) : filteredContractsData.length == 0 ? (
 						<Box mt={2}>
 							<Typography variant="caption" color="primary">
 								{emptyListMessage}
 							</Typography>
 						</Box>
 					) : (
-						contractsData.map((contract) => {
+						filteredContractsData.map((contract) => {
 							return (
 								<ContractCard
 									noAvatar

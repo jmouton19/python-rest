@@ -40,10 +40,10 @@ function ContractCard({
 	const length = contract.length;
 	const value = contract.value;
 	const contract_id = contract.contract_id;
-	const developer_id = contract.developer_id;
-	const programming_languages = ["JavaScript", "Lua", "Kotlin", "Swift"];
+	const acceptedDeveloper = contract.username;
+	const contractLanguageList = Object.keys(contract.contract_languages);
 
-	console.log(contract);
+	console.log(acceptedDeveloper);
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -154,14 +154,21 @@ function ContractCard({
 								{description ? description : "No Description"}
 							</Typography>
 						</Grid>
-						<Grid item xs={12}>
-							<Label>Required Languages:</Label>
-							<LanguageList languages={programming_languages} sx={{ mt: 1 }} />
-						</Grid>
-						{developer_id && (
+						{contractLanguageList && (
+							<Grid item xs={12}>
+								<Label>Required Languages:</Label>
+								<LanguageList
+									languages={contractLanguageList}
+									sx={{ mt: 1 }}
+								/>
+							</Grid>
+						)}
+						{acceptedDeveloper && (
 							<Grid item xs={12}>
 								<Label>Accepted Developer:</Label>
-								<Typography>{developer_id}</Typography>
+								<StyledLink to={`/profile/developer/${acceptedDeveloper}`}>
+									<Typography>{acceptedDeveloper}</Typography>
+								</StyledLink>
 							</Grid>
 						)}
 					</Grid>
