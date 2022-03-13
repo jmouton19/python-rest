@@ -3,6 +3,7 @@ from server import app
 from server.models import db, Company, Contract
 from server.views.checkemail import email_checkr
 from argon2 import PasswordHasher
+from server.views.developer import languages_dict
 
 @app.route('/api/company', methods=['POST','DELETE','GET'])
 def signup_company():
@@ -101,6 +102,11 @@ def comp_contracts(company_name):
         for contract in contracts:
             instance = dict(contract.__dict__)
             instance.pop('_sa_instance_state', None)
+            contract_lang=dict(contract.contract_languages.__dict__)
+            contract_lang.pop('_sa_instance_state', None)
+            filtered={k: v for k, v in contract_lang.items() if v is not None}
+            filtered.pop('contract_id')
+            instance['contract_languages']=dict((list(languages_dict.keys())[list(languages_dict.values()).index(key)], value) for (key, value) in filtered.items())
             contract_list.append(instance)
         return jsonify({"success":True, "contracts": contract_list })
     else:

@@ -38,6 +38,11 @@ def contract():
             instance.pop('_sa_instance_state', None)
             instance['company_name']=contract.company.company_name
             instance['company_avatar']=contract.company.avatar
+            contract_lang=dict(contract.contract_languages.__dict__)
+            contract_lang.pop('_sa_instance_state', None)
+            filtered={k: v for k, v in contract_lang.items() if v is not None}
+            filtered.pop('contract_id')
+            instance['contract_languages']=dict((list(languages_dict.keys())[list(languages_dict.values()).index(key)], value) for (key, value) in filtered.items())
             contract_list.append(instance)
         response= {"success":True, "contracts": contract_list }
         return jsonify(response)
@@ -84,9 +89,11 @@ def contract_devs_applied(contract_id):
     if contract:
         for applicant in applications:
             dev=applicant.developer
-            instance = dict(dev.__dict__); 
-            instance.pop('_sa_instance_state', None)
-            instance.pop('password', None)
+            instance = dict(); 
+            instance['username']=dev.username
+            instance['avatar']=dev.avatar
+            instance['name']=dev.name
+            instance['surname']=dev.surname
             dev_lang=dict(dev.developer_languages.__dict__)
             dev_lang.pop('_sa_instance_state', None)
             filtered={k: v for k, v in dev_lang.items() if v is not None}

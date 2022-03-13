@@ -165,6 +165,11 @@ def apply_contract(username):
                 instance.pop('_sa_instance_state', None)
                 instance['company_name']=applied.contract.company.company_name
                 instance['company_avatar']=applied.contract.company.avatar
+                contract_lang=dict(applied.contract.contract_languages.__dict__)
+                contract_lang.pop('_sa_instance_state', None)
+                filtered={k: v for k, v in contract_lang.items() if v is not None}
+                filtered.pop('contract_id')
+                instance['contract_languages']=dict((list(languages_dict.keys())[list(languages_dict.values()).index(key)], value) for (key, value) in filtered.items())    
                 applied_contract_list.append(instance)
             return jsonify(success=True, contracts= applied_contract_list)
     else:
