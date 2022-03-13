@@ -33,6 +33,7 @@ import ContractCard from "../ContractCard/ContractCard";
 import ContractCardSkeleton from "../ContractCard/ContractCardSkeleton";
 import ContractTable from "../ContractTable/ContractTable";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LanguageOnlyPicker from "../LanguagesPicker/LanguageOnlyPicker";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import { Typography } from "@mui/material";
 
@@ -254,7 +255,7 @@ function ContractList({
 																size="small"
 																variant="contained"
 																component={Link}
-																to={`/contract/${contract.contract_id}`}
+																to={`/applications/${contract.contract_id}`}
 															>
 																View
 															</Button>
@@ -302,6 +303,8 @@ function ContractList({
 		return (
 			//Return large card version of contracts
 			<>
+				<LanguageOnlyPicker />
+
 				<Stack spacing={2}>
 					{authUser.userType === "company" && status === "open" && (
 						<Paper sx={{ padding: 2, display: "flex" }} elevation={4}>

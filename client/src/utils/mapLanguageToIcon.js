@@ -3,7 +3,7 @@ export const devicons = {
 	"C++": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
 	Go: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
 	Java: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
-	JavaScript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+	JavaScript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
 	Kotlin:"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
 	Lua: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg",
 	MATLAB:"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg",

@@ -7,6 +7,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
+import LanguageList from "../LanguagesPicker/LanguageList";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -22,7 +23,13 @@ const Label = ({ children }) => (
 	<Typography variant="caption">{children}</Typography>
 );
 
-function ContractCard({ contract, actions, onAction, noAvatar }) {
+function ContractCard({
+	contract,
+	actions,
+	onAction,
+	noAvatar,
+	enableLinkToApplicationPage,
+}) {
 	const company_name = contract.company_name;
 	const avatarUrl = contract.company_avatar;
 	const title = contract.title;
@@ -34,6 +41,9 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 	const value = contract.value;
 	const contract_id = contract.contract_id;
 	const developer_id = contract.developer_id;
+	const programming_languages = ["JavaScript", "Lua", "Kotlin", "Swift"];
+
+	console.log(contract);
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -56,9 +66,13 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</IconButton>
 						}
 						title={
-							<StyledLink to={`/applications/${contract_id}`}>
-								{title}
-							</StyledLink>
+							enableLinkToApplicationPage ? (
+								<StyledLink to={`/applications/${contract_id}`}>
+									{title}
+								</StyledLink>
+							) : (
+								<>{title}</>
+							)
 						}
 						subheader={
 							<StyledLink to={`/profile/company/${company_name}`}>
@@ -79,7 +93,13 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							</IconButton>
 						}
 						title={
-							<StyledLink to={`/contract/${contract_id}`}>{title}</StyledLink>
+							enableLinkToApplicationPage ? (
+								<StyledLink to={`/applications/${contract_id}`}>
+									{title}
+								</StyledLink>
+							) : (
+								<>{title}</>
+							)
 						}
 						subheader={
 							<StyledLink to={`/profile/company/${company_name}`}>
@@ -133,6 +153,10 @@ function ContractCard({ contract, actions, onAction, noAvatar }) {
 							<Typography>
 								{description ? description : "No Description"}
 							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<Label>Required Languages:</Label>
+							<LanguageList languages={programming_languages} sx={{ mt: 1 }} />
 						</Grid>
 						{developer_id && (
 							<Grid item xs={12}>

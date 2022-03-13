@@ -43,6 +43,11 @@ export const groupByApplied = (contracts) => {
 	return contracts.filter((contract) => contract.developer_id == null);
 };
 
+export const groupByLocation = (contracts, location) => {
+	const remote = location === "remote";
+	return contracts.filter((contract) => contract.remote == remote);
+};
+
 export const totalMoney = (contracts) => {
 	return contracts.reduce((total, contract) => contract.value + total, 0);
 };

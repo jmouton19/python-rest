@@ -1,6 +1,5 @@
 import { Avatar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React, { useState } from "react";
-import { alpha, styled } from "@mui/material/styles";
 import { useLogin, useLogout, useUser } from "../../AuthProvider";
 
 import AppBar from "@mui/material/AppBar";
@@ -11,63 +10,21 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
 import { Link } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
+import { Search } from "../searchbar";
 import SearchIcon from "@mui/icons-material/Search";
+import { SearchIconWrapper } from "../searchbar";
 import SearchMenu from "./SearchMenu";
+import { StyledInputBase } from "../searchbar";
 import StyledLink from "../StyledLink";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import logo from "../../logo.svg";
-
-// source https://mui.com/components/app-bar/
-const Search = styled("div")(({ theme }) => ({
-	position: "relative",
-	borderRadius: theme.shape.borderRadius,
-	backgroundColor: alpha(theme.palette.common.white, 0.15),
-	"&:hover": {
-		backgroundColor: alpha(theme.palette.common.white, 0.25),
-	},
-	marginLeft: 0,
-	width: "100%",
-	[theme.breakpoints.up("sm")]: {
-		marginLeft: theme.spacing(1),
-		width: "auto",
-	},
-}));
-
-// source https://mui.com/components/app-bar/
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-	padding: theme.spacing(0, 2),
-	height: "100%",
-	position: "absolute",
-	pointerEvents: "none",
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
-}));
-
-// source https://mui.com/components/app-bar/
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-	color: "inherit",
-	"& .MuiInputBase-input": {
-		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
-		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-		transition: theme.transitions.create("width"),
-		width: "100%",
-		[theme.breakpoints.up("sm")]: {
-			width: "12ch",
-			"&:focus": {
-				width: "20ch",
-			},
-		},
-	},
-}));
+import { styled } from "@mui/material/styles";
 
 const drawerWidth = 240;
 
@@ -179,10 +136,7 @@ export default function PrimarySearchAppBar() {
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>
-						<StyledInputBase
-							placeholder="Search…"
-							inputProps={{ "aria-label": "search" }}
-						/>
+						<StyledInputBase placeholder="Search…" />
 					</Search>
 					<IconButton
 						size="large"
