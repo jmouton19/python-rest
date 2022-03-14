@@ -36,7 +36,7 @@ function PrivateRoute({ children, roles }) {
 	const user = useUser();
 	const location = useLocation();
 
-	if (!roles.includes(user.userType)) {
+	if (user && !roles.includes(user.userType)) {
 		return <Forbidden />;
 	}
 

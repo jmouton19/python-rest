@@ -34,6 +34,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { deepEqual } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
+import { useNotifySuccess, useNotifyError } from "../../NotificationProvider";
 
 const fabStyle = {
 	margin: 0,
@@ -46,6 +47,8 @@ const fabStyle = {
 
 function EditProfile() {
 	const user = useUser();
+	const notifySuccess = useNotifySuccess();
+	const notifyError = useNotifyError();
 	//const loadUserProfile = useLoadUserProfile();
 	const login = useLogin();
 	const logout = useLogout();
@@ -192,9 +195,10 @@ function EditProfile() {
 				loadUserProfile(user["userType"], username).then((data) => {
 					setEdit(false);
 					navigate(`/profile/${data["userType"]}/${data["username"]}`);
+					notifySuccess("Updated successfully.");
 				});
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => notifyError(err));
 	}
 
 	return (
@@ -467,15 +471,17 @@ function EditProfile() {
 							</Button>
 							<Button
 								onClick={() => {
-									login()
+									login(email, password)
 										.then(() => {
-											deleteUser()
+											deleteUser(user.userType, user.username)
 												.then(() => {
-													logout().then(() => navigate("/"));
+													notifySuccess("Account successfully deleted.");
+													logout();
+													setTimeout(() => navigate("/"), 200);
 												})
-												.catch((err) => console.error(err));
+												.catch((err) => notifyError(err));
 										})
-										.catch((err) => console.error(err));
+										.catch((err) => notifyError(err));
 								}}
 								variant="contained"
 								disabled={saveDeleteDisableChecks()}
