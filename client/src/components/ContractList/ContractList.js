@@ -271,14 +271,6 @@ function ContractList({
 													{viewUser.userType == "company" && ( //If a dev is viewing a company
 														<>
 															<Button
-																size="small"
-																variant="contained"
-																component={Link}
-																to={`/applications/${contract.contract_id}`}
-															>
-																View
-															</Button>
-															<Button
 																variant="contained"
 																size="small"
 																onClick={() =>
