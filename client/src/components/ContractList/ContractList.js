@@ -334,6 +334,8 @@ function ContractList({
 								return match;
 							});
 							setFilteredContractsData(newData);
+						} else {
+							setFilteredContractsData(contractsData);
 						}
 					}}
 				/>

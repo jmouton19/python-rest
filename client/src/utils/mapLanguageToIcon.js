@@ -10,7 +10,7 @@ export const devicons = {
 	"Objective-C":
 		"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/objectivec/objectivec-plain.svg",
 	Perl: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/perl/perl-original.svg",
-	Python: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+	Python: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
 	PHP: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
 	Rust: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg",
 	Swift: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
