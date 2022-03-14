@@ -76,7 +76,7 @@ function App() {
 								<Route
 									path="/addcontract"
 									element={
-										<PrivateRoute roles={["developer", "company"]}>
+										<PrivateRoute roles={["company"]}>
 											<AddContract />
 										</PrivateRoute>
 									}
