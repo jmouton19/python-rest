@@ -2,9 +2,9 @@ from flask import send_from_directory
 from server import app
 
 @app.route('/')
-@app.route('/profile')
+@app.route('/profile/*')
 @app.route('/contracts')
-@app.route('/applications')
+@app.route('/applications/*')
 @app.route('/addcontract')
 @app.route('/signup')
 @app.route('/login')
