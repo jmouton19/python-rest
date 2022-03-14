@@ -102,14 +102,14 @@ export default function PrimarySearchAppBar() {
 							<PersonIcon />
 						</ToggleButton>
 					</ToggleButtonGroup>
-					<Box sx={{ flexGrow: 3 }} />
+					<Box sx={{ flexGrow: 1.11 }} />
 					<img src={logo} style={{ width: 25, height: 25, marginRight: 10 }} />
 					<StyledLink to="/">
 						<Typography variant="h6" component="div">
 							<b>KONTRA</b>
 						</Typography>
 					</StyledLink>
-					<Box sx={{ flexGrow: 2 }} />
+					<Box sx={{ flexGrow: 1 }} />
 					<Search
 						onChange={(event) => {
 							setSearchValue(event.target.value);
