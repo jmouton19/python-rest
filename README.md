@@ -1,6 +1,6 @@
 # Computer Science 334 - Project 1 - Group 8
 
-Workspace for website with a Flask backend and React frontend deployed on Heroku.
+Workspace for website with a Flask backend and React frontend deployed on Heroku, going by the name KONTRA.
 
 Heroku deployed website (please note that we are using a free tier of Heroku; loading might take a while):
 https://cs334proj1group8.herokuapp.com/
